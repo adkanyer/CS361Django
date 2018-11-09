@@ -5,5 +5,11 @@
 {% csrf_token %}
 command: <input type="text" name="command"/><input type="submit"/>
 </form>
-<div id="out">{{list}}</div>
+<div id="out">
+<ul>
+    {% for i in list %}
+        <li> {{ i.time }}: {{ i.text }}</li>
+    {% endfor %}
+</ul>
+</div>
 {% endblock content %}

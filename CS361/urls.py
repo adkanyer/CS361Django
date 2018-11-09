@@ -21,5 +21,5 @@ from TaApp.views import Home
 
 urlpatterns = [
   url(r'^admin/', admin.site.urls),
-  path('', Home.as_view()),
+  path('', Home.as_view())
 ]
