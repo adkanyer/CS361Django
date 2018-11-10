@@ -19,10 +19,11 @@ class ContactInfo(models.Model):
 
 
 class User(models.Model):
-    name = models.TextField(max_length=30)
+    name = models.CharField(max_length=30)
+    password = models.CharField(max_length=30)
     email = models.EmailField()
-    role = models.TextField(max_length=30)
-    contact_info = models.OneToOneField(ContactInfo, on_delete=models.CASCADE)
+    role = models.CharField(max_length=10)
+    #contact_info = models.OneToOneField(ContactInfo, on_delete=models.CASCADE)
 
 
 class Lab(models.Model):
@@ -32,7 +33,7 @@ class Lab(models.Model):
 
 class Course(models.Model):
     number = models.IntegerField()
-    name = models.TextField(max_length=30)
+    name = models.CharField(max_length=30)
     instructor = models.ManyToManyField(User, related_name="instructor_profile")
     tas = models.ManyToManyField(User, related_name="ta_profile")
     labs = models.ManyToManyField(Lab)
