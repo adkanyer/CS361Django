@@ -1,5 +1,5 @@
 import abc
-import TaCLI.User
+from TaCLI import User
 
 
 class Command(abc.ABC):

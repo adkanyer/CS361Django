@@ -41,6 +41,7 @@ class Login(Command.Command):
         h.update(f"{entered_password}".encode("ascii"))
         hashed_password = h.hexdigest()
 
+        print(f"acctpw: {account['password']}\npasswd: {hashed_password}")
         if account["password"] != hashed_password:
             self.environment.debug("User name or Password is Incorrect")
             return FAILURE_MESSAGE

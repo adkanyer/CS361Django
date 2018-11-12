@@ -21,6 +21,8 @@ class UI:
 
     def command(self, string):
         # parse input into a list, splitting by strings
+        if(string == ""):
+            return "Invalid Command"
         args = self.parse_commands(string)
 
         # get valid inputs that map to commands
