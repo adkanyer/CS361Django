@@ -29,8 +29,10 @@ class DjangoModelInterface(DataInterface):
         return accounts
 
     def get_logged_in(self):
-        acct = LoggedIn.objects.first()
-        return acct.name
+        logged_in = LoggedIn.objects.first()
+        if logged_in is None:
+            return ""
+        return logged_in.account.name
 
     def set_logged_in(self, account_name):
         acct = Account.objects.filter(name=account_name).first()
