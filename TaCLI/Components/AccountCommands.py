@@ -25,11 +25,11 @@ class CreateAccount(Command.Command):
             self.environment.debug("Invalid Arguments")
             return FAILURE_MESSAGE
 
-        if self.get_user(args[1]) is not None:
+        if self.environment.database.get_user(args[1]) is not None:
             self.environment.debug("Username is already taken.")
             return FAILURE_MESSAGE
 
-        if not self.is_valid_role(args[3]):
+        if not self.environment.database.is_valid_role(args[3]):
             self.environment.debug("Invalid Role")
             return FAILURE_MESSAGE
 
@@ -62,7 +62,7 @@ class DeleteAccount(Command.Command):
             self.environment.debug("Invalid arguments")
             return FAILURE_MESSAGE
 
-        if self.get_user(args[1]) is None:
+        if self.environment.database.get_user(args[1]) is None:
             self.environment.debug("User to delete doesn't exist")
             return FAILURE_MESSAGE
 

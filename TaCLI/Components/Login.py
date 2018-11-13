@@ -24,15 +24,9 @@ class Login(Command.Command):
             self.environment.debug("Username or Password is Incorrect")
             return FAILURE_MESSAGE
 
-        user_list = self.environment.database.get_accounts()
+        account = self.environment.database.get_user(args[1])
 
-        account = {}
-
-        for i in user_list:
-            if i["name"] == args[1]:
-                account = i
-
-        if len(account) == 0:
+        if account is None:
             self.environment.debug("Username or Password is Incorrect")
             return FAILURE_MESSAGE
 
@@ -41,12 +35,11 @@ class Login(Command.Command):
         h.update(f"{entered_password}".encode("ascii"))
         hashed_password = h.hexdigest()
 
-        print(f"acctpw: {account['password']}\npasswd: {hashed_password}")
-        if account["password"] != hashed_password:
+        if account.password != hashed_password:
             self.environment.debug("User name or Password is Incorrect")
             return FAILURE_MESSAGE
 
-        self.environment.database.set_logged_in(account["name"])
-        self.environment.user = TaCLI.User.User(account["name"], account["role"])
+        self.environment.database.set_logged_in(account.username)
+        self.environment.user = account
         self.environment.debug("Logged in successfully")
         return SUCCESS_MESSAGE

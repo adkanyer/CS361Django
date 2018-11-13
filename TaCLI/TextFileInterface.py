@@ -1,4 +1,4 @@
-from TaCLI import DataInterface
+from TaCLI import DataInterface, User
 import hashlib
 
 
@@ -142,3 +142,42 @@ class TextFileInterface(DataInterface.DataInterface):
             ta_name = fields[2].rstrip()
             assignments.append({"course_number": course_number, "lab_number": lab_number, "ta_name": ta_name})
         return assignments
+
+    def get_user(self, user_name):
+        accounts = self.get_accounts()
+        for account in accounts:
+            if account["name"] == user_name:
+                return User.User(account["name"], account["role"], account["password"])
+        return None
+
+    def course_exists(self, course_number):
+        courses = self.get_courses()
+        for course in courses:
+            if course["course_number"] == str(course_number):
+                return True
+        return False
+
+    def is_course_assigned(self, course_number):
+        course_assignments = self.get_course_assignments()
+        for assignment in course_assignments:
+            if assignment["course_number"] == course_number:
+                return True
+        return False
+
+    def lab_exists(self, course_number, lab_number):
+        labs = self.get_labs()
+        for lab in labs:
+            if lab["course_number"] == str(course_number) and lab["lab_number"] == str(lab_number):
+                return True
+        return False
+
+    def is_lab_assigned(self, course_number, lab_number):
+        lab_assignments = self.get_lab_assignments()
+        for assignment in lab_assignments:
+            if assignment["course_number"] == course_number and assignment["lab_number"] == lab_number:
+                return True
+        return False
+
+    def is_valid_role(self, role):
+        roles = ["supervisor", "administrator", "instructor", "TA"]
+        return role in roles

@@ -26,11 +26,11 @@ class CreateLab(Command.Command):
 
         course_num = args[1]
         lab_num = args[2]
-        if not self.course_exists(course_num):
+        if not self.environment.database.course_exists(course_num):
             self.environment.debug("Course does not exist")
             return FAILURE_MESSAGE
 
-        if self.lab_exists(course_num, lab_num):
+        if self.environment.database.lab_exists(course_num, lab_num):
             self.environment.debug("Lab already exists")
             return FAILURE_MESSAGE
 
@@ -68,15 +68,15 @@ class AssignLab(Command.Command):
 
         course_num = args[1]
         lab_num = args[2]
-        if not self.lab_exists(course_num, lab_num):
+        if not self.environment.database.lab_exists(course_num, lab_num):
             self.environment.debug("Lab does not exist")
             return FAILURE_MESSAGE
 
-        if self.lab_assigned(course_num, lab_num):
+        if self.environment.database.is_lab_assigned(course_num, lab_num):
             self.environment.debug("Lab already assigned to a TA")
             return FAILURE_MESSAGE
 
-        ta = self.get_user(args[3])
+        ta = self.environment.database.get_user(args[3])
         if ta is None:
             self.environment.debug("Instructor for course does not exist")
             return FAILURE_MESSAGE
@@ -111,10 +111,10 @@ class ViewLabs(Command.Command):
             return FAILURE_MESSAGE
 
         labs = self.environment.database.get_labs()
-        lab_assignemnts = self.environment.database.get_lab_assignments()
+        lab_assignments = self.environment.database.get_lab_assignments()
         for lab in labs:
             result += f"{lab['course_number']} {lab['lab_number']}"
-            for lab_assignment in lab_assignemnts:
+            for lab_assignment in lab_assignments:
                 if lab["course_number"] == lab_assignment["course_number"] and lab["lab_number"] == lab_assignment["lab_number"]:
                     result += f" {lab_assignment['ta_name']}"
             result += "\n"

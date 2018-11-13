@@ -28,14 +28,14 @@ class AssignCourse(Command.Command):
             return FAILURE_MESSAGE
 
         course_num = args[1]
-        if not self.course_exists(course_num):
+        if not self.environment.database.course_exists(course_num):
             self.environment.debug("Course does not exist")
             return FAILURE_MESSAGE
-        if self.course_assigned(course_num):
+        if self.environment.database.is_course_assigned(course_num):
             self.environment.debug("Course already assigned to instructor")
             return FAILURE_MESSAGE
 
-        instructor = self.get_user(args[2])
+        instructor = self.environment.database.get_user(args[2])
         if instructor is None:
             self.environment.debug("Instructor for course does not exist")
             return FAILURE_MESSAGE
@@ -76,7 +76,7 @@ class CreateCourse(Command.Command):
         course_number = args[1]
         course_name = args[2]
 
-        if self.course_exists(course_number):
+        if self.environment.database.course_exists(course_number):
             self.environment.debug("Course already exists")
             return FAILURE_MESSAGE
 

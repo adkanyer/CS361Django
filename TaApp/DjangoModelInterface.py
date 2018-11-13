@@ -1,4 +1,5 @@
 from TaCLI.DataInterface import DataInterface
+import TaCLI.User
 from TaApp.models import *
 import hashlib
 
@@ -72,3 +73,28 @@ class DjangoModelInterface(DataInterface):
 
     def get_lab_assignments(self):
         return []
+
+    def get_user(self, user_name):
+        userobj = Account.objects.filter(name=user_name).first()
+        if userobj is None:
+            return None
+        return TaCLI.User.User(userobj.name, userobj.role, userobj.password)
+
+    def course_exists(self, course_number):
+        course = Course.objects.filter(number=course_number).first()
+        return course is not None
+
+    def is_course_assigned(self, course_number):
+        course = Course.objects.filter(number=course_number).first()
+        return course is not None and course.instructor is not None
+
+    def lab_exists(self, course_number, lab_number):
+        lab = Lab.objects.filter(number=lab_number, course__number=course_number).first()
+        return lab is not None
+
+    def is_lab_assigned(self, course_number, lab_number):
+        lab = Lab.objects.filter(number=lab_number, course__number=course_number).first()
+        return lab is not None and lab.ta is not None
+
+    def is_valid_role(self, role):
+        return role in ["administrator", "supervisor", "instructor", "TA"]

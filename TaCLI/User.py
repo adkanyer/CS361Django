@@ -1,7 +1,8 @@
 class User:
-    def __init__(self, username, role):
+    def __init__(self, username, role, password=""):
         self.username = username
         self.role = role
+        self.password = password
 
     def set_username(self, new_name):
         self.username = new_name

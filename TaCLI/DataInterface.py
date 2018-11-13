@@ -1,5 +1,6 @@
 import abc
 
+
 class DataInterface(abc.ABC):
 
     @abc.abstractmethod
@@ -60,4 +61,28 @@ class DataInterface(abc.ABC):
 
     @abc.abstractmethod
     def get_lab_assignments(self):
+        pass
+
+    @abc.abstractmethod
+    def get_user(self, user_name):
+        pass
+
+    @abc.abstractmethod
+    def course_exists(self, course_number):
+        pass
+
+    @abc.abstractmethod
+    def is_course_assigned(self, course_number):
+        pass
+
+    @abc.abstractmethod
+    def lab_exists(self, course_number, lab_number):
+        pass
+
+    @abc.abstractmethod
+    def is_lab_assigned(self, course_number, lab_number):
+        pass
+
+    @abc.abstractmethod
+    def is_valid_role(self, role):
         pass
