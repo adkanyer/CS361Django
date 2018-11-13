@@ -6,10 +6,7 @@
 command: <input type="text" name="command"/><input type="submit"/>
 </form>
 <div id="out">
-<ul>
-    {% for i in list %}
-        <li> {{ i.time }}: {{ i.text }}</li>
-    {% endfor %}
-</ul>
+User = {{ user }}
+Response = {{ response }}
 </div>
 {% endblock content %}

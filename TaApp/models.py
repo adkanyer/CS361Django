@@ -13,27 +13,30 @@ class OfficeHour(models.Model):
     end_time = models.TimeField()
 
 
+class Account(models.Model):
+    name = models.CharField(max_length=30)
+    password = models.CharField(max_length=32)
+    role = models.CharField(max_length=15)
+
+
 class ContactInfo(models.Model):
+    account = models.OneToOneField(Account, null=True, on_delete=models.CASCADE)
     address = models.TextField(max_length=256)
     office_hours = models.ManyToManyField(OfficeHour)
 
 
-class User(models.Model):
-    name = models.TextField(max_length=30)
-    email = models.EmailField()
-    role = models.TextField(max_length=30)
-    contact_info = models.OneToOneField(ContactInfo, on_delete=models.CASCADE)
-
-
 class Lab(models.Model):
     number = models.IntegerField()
-    ta = models.ForeignKey(User, on_delete=models.CASCADE)
+    ta = models.OneToOneField(Account, null=True,on_delete=models.CASCADE)
 
 
 class Course(models.Model):
     number = models.IntegerField()
-    name = models.TextField(max_length=30)
-    instructor = models.ManyToManyField(User, related_name="instructor_profile")
-    tas = models.ManyToManyField(User, related_name="ta_profile")
+    name = models.CharField(max_length=30)
+    instructor = models.ManyToManyField(Account, related_name="instructor_profile")
+    tas = models.ManyToManyField(Account, related_name="ta_profile")
     labs = models.ManyToManyField(Lab)
 
+
+class LoggedIn(models.Model):
+    account = models.OneToOneField(Account, null=True, on_delete=models.CASCADE)
