@@ -12,41 +12,31 @@ class AssignCourse(Command.Command):
         """
         Assigns a account to a specified course
         """
-        SUCCESS_MESSAGE = "Assigned to course."
-        FAILURE_MESSAGE = "Error assigning to course."
 
         if self.environment.user is None:
-            self.environment.debug("You must be logged in to perform this action.")
-            return FAILURE_MESSAGE
+            return "You must be logged in to perform this action."
 
         if self.environment.user.get_role() not in ["supervisor"]:
-            self.environment.debug("Permission Denied")
-            return FAILURE_MESSAGE
+            return "Permission Denied."
 
         if len(args) != 3:
-            self.environment.debug("Invalid Arguments")
-            return FAILURE_MESSAGE
+            return "Invalid arguments.\nCorrect Parameters: assign_Course <COURSE NUMBER> <USERNAME>"
 
         course_num = args[1]
         if not self.environment.database.course_exists(course_num):
-            self.environment.debug("Course does not exist")
-            return FAILURE_MESSAGE
+            return "Course does not exist."
         if self.environment.database.is_course_assigned(course_num):
-            self.environment.debug("Course already assigned to instructor")
-            return FAILURE_MESSAGE
+            return "Course already assigned to instructor."
 
         instructor = self.environment.database.get_user(args[2])
         if instructor is None:
-            self.environment.debug("Instructor for course does not exist")
-            return FAILURE_MESSAGE
+            return "Inputted user does not exist."
 
         if instructor.get_role() != "instructor":
-            self.environment.debug("Instructor for course is not an instructor")
-            return FAILURE_MESSAGE
+            return "Inputted user is not an instructor."
 
         self.environment.database.set_course_assignment(args[1], args[2])
-        self.environment.debug("Course assigned successfully")
-        return SUCCESS_MESSAGE
+        return "Course assigned successfully."
 
 
 class CreateCourse(Command.Command):
@@ -58,32 +48,24 @@ class CreateCourse(Command.Command):
             ["create_course", course_number, course_name,]
     """
     def action(self, args):
-        SUCCESS_MESSAGE = "Created course."
-        FAILURE_MESSAGE = "Error creating course."
 
         if self.environment.user is None:
-            self.environment.debug("You must be logged in to perform this action.")
-            return FAILURE_MESSAGE
+            return "You must be logged in to perform this action."
 
         if self.environment.user.get_role() not in ["supervisor", "administrator"]:
-            self.environment.debug("Permission Denied")
-            return FAILURE_MESSAGE
+            return "Permission Denied."
 
         if len(args) != 3:
-            self.environment.debug("Invalid Arguments")
-            return FAILURE_MESSAGE
+            return "Invalid arguments.\nCorrect Parameters: create_course <COURSE NUMBER> <COURSE NAME>"
 
         course_number = args[1]
         course_name = args[2]
 
         if self.environment.database.course_exists(course_number):
-            self.environment.debug("Course already exists")
-            return FAILURE_MESSAGE
+            return "Course already exists."
 
         self.environment.database.create_course(course_number, course_name)
-
-        self.environment.debug("Course Created Successfully")
-        return SUCCESS_MESSAGE
+        return "Course Created Successfully"
 
 
 class ViewCourses(Command.Command):

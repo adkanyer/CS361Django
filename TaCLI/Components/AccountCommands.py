@@ -81,11 +81,11 @@ class ViewAccounts(Command.Command):
             return "You must be logged in to perform this action."
 
         if self.environment.user.get_role() not in ["administrator", "supervisor"]:
-            return "Permission denied"
+            return "Permission denied."
 
         accounts = self.environment.database.get_accounts()
         for account in accounts:
-            result += f"{account['name']} {account['role']}\n"
+            result += f"{account['name']} - {account['role']}\n"
         return result
 
 

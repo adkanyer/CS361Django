@@ -3,10 +3,10 @@
 <h1>TA Assignment Application</h1>
 <form method="post" action="/">
 {% csrf_token %}
-command: <input type="text" name="command"/><input type="submit"/>
+Command: <input type="text" name="command"/><input type="submit"/>
 </form>
 <div id="out">
-User = {{ user }}
-    Response = <pre>{{ response }}</pre>
+    <b>User:</b> {{ user }}<br>
+    <b>Response:</b><pre>{{ response }}</pre>
 </div>
 {% endblock content %}
