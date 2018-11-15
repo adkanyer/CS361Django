@@ -5,10 +5,12 @@ class CreateAccount(Command.Command):
 
     def __init__(self, environment):
         self.environment = environment
+
     """
         args is a list containing the following:
             ["create_account", "username", "password", "role"]
     """
+
     def action(self, args):
         SUCCESS_MESSAGE = "Account created."
         FAILURE_MESSAGE = "Error creating account."
@@ -46,6 +48,7 @@ class DeleteAccount(Command.Command):
         args is a list containing the following:
             ["delete_account", username]
     """
+
     def action(self, args):
         SUCCESS_MESSAGE = "Account deleted."
         FAILURE_MESSAGE = "Error deleting account."
@@ -79,6 +82,7 @@ class ViewAccounts(Command.Command):
             Username Role
             Username Role
     """
+
     def action(self, args):
         result = ""
         FAILURE_MESSAGE = "Error viewing accounts."
@@ -98,4 +102,35 @@ class ViewAccounts(Command.Command):
         accounts = self.environment.database.get_accounts()
         for account in accounts:
             result += f"{account['name']} {account['role']}\n"
+        return result
+
+
+class ViewInfo(Command.Command):
+    def __init__(self, environment):
+        self.environment = environment
+
+    """
+        if has no arguments, return logged in user's information:
+            Username, Role, Email, Office hours, Address, Phone           
+
+        if has one argument and argument is a valid user,
+
+            if user is administrator or supervisor, return all information:
+                Username, Role, Email, Office hours, Address, Phone
+
+            if user is not administrator or supervisor, return public information:
+                Username, Role, Email, Office hours
+    """
+
+    def action(self, args):
+        result = ""
+        FAILURE_MESSAGE = ""
+
+        if self.environment.user is None:
+            self.environment.debug("You must be logged in to perform this action.")
+            return FAILURE_MESSAGE
+
+        if self.environment.user.get_role() not in ["administrator", "supervisor"]:
+            pass
+
         return result
