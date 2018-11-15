@@ -21,9 +21,9 @@ class Account(models.Model):
 
 class ContactInfo(models.Model):
     account = models.OneToOneField(Account, null=True, on_delete=models.CASCADE)
-    address = models.TextField(max_length=256)
-    phone = models.TextField(max_length=16)  # not sure what to set this as
-    email = models.TextField(max_length=32)  # same here ^
+    address = models.CharField(max_length=256, null=True)
+    phone = models.CharField(max_length=16, null=True)  # not sure what to set this as
+    email = models.CharField(max_length=32, null=True)  # same here ^
     office_hours = models.ManyToManyField(OfficeHour)
 
 
