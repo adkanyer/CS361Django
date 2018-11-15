@@ -129,3 +129,26 @@ class DjangoModelInterface(DataInterface):
         s += "Email: " + info.email + "\n"
         s += "Office Hours: " + info.office_hours
         return s
+
+    def edit_phone(self, account_name, phone_number):
+        contact = ContactInfo.objects.filter(account__name=account_name).first()
+        if contact is not None:
+            contact.phone = phone_number
+            contact.save()
+
+    def edit_address(self, account_name, address):
+        contact = ContactInfo.objects.filter(account__name=account_name).first()
+        if contact is not None:
+            contact.address = address
+            contact.save()
+
+    def edit_email(self, account_name, email):
+        contact = ContactInfo.objects.filter(account__name=account_name).first()
+        print(contact)
+        print(account_name)
+        if contact is not None:
+            contact.email = email
+            contact.save()
+
+    def edit_office_hours(self, account_name, office_hours):
+        pass

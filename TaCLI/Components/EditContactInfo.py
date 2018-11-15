@@ -14,7 +14,7 @@ class EditContactInfo(Command.Command):
     def action(self, args):
         FAILURE_MESSAGE = "Unable to Edit Contact Info"
 
-        if len(args < 2):
+        if len(args) < 2:
             return FAILURE_MESSAGE
 
         valid_info = self.fields.keys()
@@ -36,9 +36,9 @@ class EditPhone(Command.Command):
         if len(args) < 3:
             return FAILURE_MESSAGE
 
-        full_argument = "".join(args[2:])
+        full_argument = " ".join(args[2:])
 
-        self.environment.database.edit_phone(self.environment.user, full_argument)
+        self.environment.database.edit_phone(self.environment.user.username, full_argument)
         return SUCCESS_MESSAGE
 
 
@@ -53,9 +53,9 @@ class EditAddress(Command.Command):
         if len(args) < 3:
             return FAILURE_MESSAGE
 
-        full_argument = "".join(args[2:])
+        full_argument = " ".join(args[2:])
 
-        self.environment.database.edit_address(self.environment.user, full_argument)
+        self.environment.database.edit_address(self.environment.user.username, full_argument)
         return SUCCESS_MESSAGE
 
 
@@ -72,7 +72,7 @@ class EditEmail(Command.Command):
 
         full_argument = "".join(args[2:])
 
-        self.environment.database.edit_email(self.environment.user, full_argument)
+        self.environment.database.edit_email(self.environment.user.username, full_argument)
         return SUCCESS_MESSAGE
 
 
