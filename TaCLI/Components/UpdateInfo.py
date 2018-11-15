@@ -23,7 +23,7 @@ class EditInfo(Command.Command):
             return "ERROR"
 
         if len(args) != 4:
-            self.environment.debug("Invalid arguments.\nCorrect Parameters: edit_info <USERNAME> <FIELD> <NEW VALUE>")
+            self.environment.debug("Invalid arguments.\nCorrect Parameters: update_info <USERNAME> <FIELD> <NEW VALUE>")
             return "ERROR"
 
         if self.environment.database.get_user(args[1]) is None:
