@@ -12,7 +12,7 @@ class EditInfo(Command.Command):
         }
 
     def action(self, args):
-        FAILURE_MESSAGE = "Unable to Edit Contact Info"
+        FAILURE_MESSAGE = "Unable to edit Contact Info."
 
         if len(args) < 2:
             return FAILURE_MESSAGE
@@ -30,16 +30,14 @@ class EditPhone(Command.Command):
         self.environment = environment
 
     def action(self, args):
-        SUCCESS_MESSAGE = "Phone Number has been updated Successfully"
-        FAILURE_MESSAGE = "Unable to Update Phone Number"
-
         if len(args) < 3:
-            return FAILURE_MESSAGE
+            self.environment.debug("Unable to update Phone Number")
+            return "ERROR"
 
         full_argument = " ".join(args[2:])
 
         self.environment.database.edit_phone(self.environment.user.username, full_argument)
-        return SUCCESS_MESSAGE
+        return "Phone Number has been updated successfully"
 
 
 class EditAddress(Command.Command):
@@ -47,16 +45,15 @@ class EditAddress(Command.Command):
         self.environment = environment
 
     def action(self, args):
-        SUCCESS_MESSAGE = "Address has been updated Successfully"
-        FAILURE_MESSAGE = "Unable to Update Address"
 
         if len(args) < 3:
-            return FAILURE_MESSAGE
+            self.environment.debug("Unable to update Address.")
+            return "ERROR"
 
         full_argument = " ".join(args[2:])
 
         self.environment.database.edit_address(self.environment.user.username, full_argument)
-        return SUCCESS_MESSAGE
+        return "Address has been updated successfully."
 
 
 class EditEmail(Command.Command):
@@ -64,16 +61,14 @@ class EditEmail(Command.Command):
         self.environment = environment
 
     def action(self, args):
-        SUCCESS_MESSAGE = "Email has been updated Successfully"
-        FAILURE_MESSAGE = "Unable to Update Email"
-
         if len(args) < 3:
-            return FAILURE_MESSAGE
+            self.environment.debug("Unable to update Email.")
+            return "ERROR"
 
         full_argument = "".join(args[2:])
 
         self.environment.database.edit_email(self.environment.user.username, full_argument)
-        return SUCCESS_MESSAGE
+        return "Email has been updated successfully."
 
 
 class EditOfficeHours(Command.Command):
@@ -81,14 +76,12 @@ class EditOfficeHours(Command.Command):
         self.environment = environment
 
     def action(self, args):
-        SUCCESS_MESSAGE = "Office Hours have been updated Successfully"
-        FAILURE_MESSAGE = "Unable to Office Hours"
 
         if len(args) < 3:
-            return FAILURE_MESSAGE
+            self.environment.debug("Unable to update Office Hours.")
+            return "ERROR"
 
         hours = args[2:]
-        print(hours)
         self.environment.database.edit_office_hours(self.environment.user.username, hours)
-        return SUCCESS_MESSAGE
+        return "Office Hours have been updated successfully."
 
