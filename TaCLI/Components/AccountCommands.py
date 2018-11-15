@@ -12,32 +12,26 @@ class CreateAccount(Command.Command):
     """
 
     def action(self, args):
-        SUCCESS_MESSAGE = "Account created."
-        FAILURE_MESSAGE = "Error creating account."
 
         if self.environment.user is None:
-            self.environment.debug("You must be logged in to perform this action.")
-            return FAILURE_MESSAGE
+            return "You must be logged in to perform this action."
 
         if self.environment.user.get_role() not in ["supervisor", "administrator"]:
-            self.environment.debug("Permission Denied")
-            return FAILURE_MESSAGE
+            return "Permission Denied."
 
         if len(args) != 4:
-            self.environment.debug("Invalid Arguments")
-            return FAILURE_MESSAGE
+            return "Invalid Arguments.\nCorrect Parameters: create_account <USERNAME> <PASSWORD> <ROLE>"
 
         if self.environment.database.get_user(args[1]) is not None:
-            self.environment.debug("Username is already taken.")
-            return FAILURE_MESSAGE
+            return "Username is already taken."
 
         if not self.environment.database.is_valid_role(args[3]):
             self.environment.debug("Invalid Role")
-            return FAILURE_MESSAGE
+            return "Invalid Role.\nValid Roles: administrator, supervisor, instructor, TA"
 
         self.environment.database.create_account(args[1], args[2], args[3])
 
-        return SUCCESS_MESSAGE
+        return "Account created."
 
 
 class DeleteAccount(Command.Command):
@@ -50,27 +44,21 @@ class DeleteAccount(Command.Command):
     """
 
     def action(self, args):
-        SUCCESS_MESSAGE = "Account deleted."
-        FAILURE_MESSAGE = "Error deleting account."
 
         if self.environment.user is None:
-            self.environment.debug("You must be logged in to perform this action.")
-            return FAILURE_MESSAGE
+            return "You must be logged in to perform this action."
 
         if self.environment.user.get_role() not in ["administrator", "supervisor"]:
-            self.environment.debug("Permission denied")
-            return FAILURE_MESSAGE
+            return "Permission denied."
 
         if len(args) != 2:
-            self.environment.debug("Invalid arguments")
-            return FAILURE_MESSAGE
+            return "Invalid arguments.\nCorrect Parameters: delete_account <USERNAME>"
 
         if self.environment.database.get_user(args[1]) is None:
-            self.environment.debug("User to delete doesn't exist")
-            return FAILURE_MESSAGE
+            return "User to delete doesn't exist."
 
         self.environment.database.delete_account(args[1])
-        return SUCCESS_MESSAGE
+        return "Account deleted."
 
 
 class ViewAccounts(Command.Command):
@@ -85,23 +73,19 @@ class ViewAccounts(Command.Command):
 
     def action(self, args):
         result = ""
-        FAILURE_MESSAGE = "Error viewing accounts."
 
         if len(args) != 1:
-            self.environment.debug("Invalid arguments.")
-            return FAILURE_MESSAGE
+            return "Invalid arguments."
 
         if self.environment.user is None:
-            self.environment.debug("You must be logged in to perform this action.")
-            return FAILURE_MESSAGE
+            return "You must be logged in to perform this action."
 
         if self.environment.user.get_role() not in ["administrator", "supervisor"]:
-            self.environment.debug("Permission denied")
-            return FAILURE_MESSAGE
+            return "Permission denied."
 
         accounts = self.environment.database.get_accounts()
         for account in accounts:
-            result += f"{account['name']} {account['role']}\n"
+            result += f"{account['name']} - {account['role']}\n"
         return result
 
 
@@ -123,14 +107,18 @@ class ViewInfo(Command.Command):
     """
 
     def action(self, args):
-        result = ""
-        FAILURE_MESSAGE = ""
-
         if self.environment.user is None:
-            self.environment.debug("You must be logged in to perform this action.")
-            return FAILURE_MESSAGE
+            return "You must be logged in to perform this action."
 
-        if self.environment.user.get_role() not in ["administrator", "supervisor"]:
-            pass
-
-        return result
+        if len(args) == 1:
+            user = self.environment.database.get_user(self.environment.database.get_logged_in())
+            return self.environment.database.get_private_info(user)
+        else:
+            user = self.environment.database.get_user(args[1])
+            if user is not None:
+                if self.environment.user.get_role() not in ["administrator", "supervisor"]:
+                    return self.environment.database.get_private_info(user)
+                else:
+                    return self.environment.database.get_public_info(user)
+            else:
+                return "That user does not exist."
