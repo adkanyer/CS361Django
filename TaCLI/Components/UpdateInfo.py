@@ -8,7 +8,8 @@ class EditInfo(Command.Command):
             "phone": EditPhone(self.environment),
             "address": EditAddress(self.environment),
             "email": EditEmail(self.environment),
-            "office_hours": EditOfficeHours(self.environment)
+            "office_hours": EditOfficeHours(self.environment),
+            "name": EditName(self.environment),
         }
 
     def action(self, args):
@@ -22,12 +23,12 @@ class EditInfo(Command.Command):
             self.environment.debug("Permission denied.")
             return "ERROR"
 
-        if len(args) != 4:
-            self.environment.debug("Invalid arguments.\nCorrect Parameters: update_info <USERNAME> <FIELD> <NEW VALUE>")
-            return "ERROR"
-
         if self.environment.database.get_user(args[1]) is None:
             self.environment.debug("User to edit doesn't exist.")
+            return "ERROR"
+
+        if len(args) < 4:
+            self.environment.debug(FAILURE_MESSAGE)
             return "ERROR"
 
         valid_info = self.fields.keys()
@@ -43,10 +44,6 @@ class EditPhone(Command.Command):
         self.environment = environment
 
     def action(self, args):
-        if len(args) < 4:
-            self.environment.debug("Unable to update Phone Number")
-            return "ERROR"
-
         full_argument = " ".join(args[3:])
 
         user = self.environment.database.get_user(args[1]).username
@@ -59,11 +56,6 @@ class EditAddress(Command.Command):
         self.environment = environment
 
     def action(self, args):
-
-        if len(args) < 4:
-            self.environment.debug("Unable to update Address.")
-            return "ERROR"
-
         full_argument = " ".join(args[3:])
 
         user = self.environment.database.get_user(args[1]).username
@@ -76,10 +68,6 @@ class EditEmail(Command.Command):
         self.environment = environment
 
     def action(self, args):
-        if len(args) < 4:
-            self.environment.debug("Unable to update Email.")
-            return "ERROR"
-
         full_argument = "".join(args[3:])
 
         user = self.environment.database.get_user(args[1]).username
@@ -92,13 +80,21 @@ class EditOfficeHours(Command.Command):
         self.environment = environment
 
     def action(self, args):
-
-        if len(args) < 4:
-            self.environment.debug("Unable to update Office Hours.")
-            return "ERROR"
-
         hours = args[3:]
         user = self.environment.database.get_user(args[1]).username
         self.environment.database.edit_office_hours(user, hours)
         return "Office Hours have been updated successfully."
 
+
+class EditName(Command.Command):
+    def __init__(self, environment):
+        self.environment = environment
+
+    def action(self, args):
+        first_name = args[3]
+        last_name = "".join(args[4:])
+
+        user = self.environment.database.get_user(args[1]).username
+        self.environment.database.edit_name(user, first_name, last_name)
+
+        return "Name has been updated successfully."

@@ -18,6 +18,9 @@ class ContactInfo(models.Model):
     address = models.CharField(max_length=256, null=True)
     phone = models.CharField(max_length=16, null=True)  # not sure what to set this as
     email = models.CharField(max_length=32, null=True)  # same here ^
+    first_name = models.CharField(max_length=32, null=True)
+    last_name = models.CharField(max_length=32, null=True)
+
 
 
 class OfficeHour(models.Model):

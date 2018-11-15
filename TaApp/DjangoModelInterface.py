@@ -118,6 +118,8 @@ class DjangoModelInterface(DataInterface):
         s = ""
         s += "Username: " + user.username + "\n"
         s += "Role: " + user.role + "\n"
+        if info.first_name is not None and info.last_name is not None:
+            s += "Name: " + info.first_name + " " + info.last_name + "\n"
         if info.address is not None:
             s += "Address: " + info.address + "\n"
         if info.phone is not None:
@@ -136,6 +138,8 @@ class DjangoModelInterface(DataInterface):
         s = ""
         s += "Username: " + user.username + "\n"
         s += "Role: " + user.role + "\n"
+        if info.first_name is not None and info.last_name is not None:
+            s += "Name: " + info.first_name + " " + info.last_name + "\n"
         if info.email is not None:
             s += "Email: " + info.email + "\n"
         s += "Office Hours: "
@@ -170,3 +174,11 @@ class DjangoModelInterface(DataInterface):
                 oh_obj = OfficeHour.objects.create(time=oh)
                 oh_obj.contact_info.add(contact)
                 oh_obj.save()
+
+
+    def edit_name(self, account_name, first, last):
+        contact = ContactInfo.objects.filter(account__name=account_name).first()
+        if contact is not None:
+                contact.first_name = first
+                contact.last_name = last
+                contact.save()
