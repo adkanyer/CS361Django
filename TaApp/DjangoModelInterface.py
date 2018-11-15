@@ -13,13 +13,21 @@ class DjangoModelInterface(DataInterface):
         h = hashlib.new("md5")
         h.update(f"{password}".encode("ascii"))
         hashed_password = h.hexdigest()
-        Account.objects.create(name=account_name, password=hashed_password, role=role)
+        acct = Account.objects.create(name=account_name, password=hashed_password, role=role)
+        ContactInfo.objects.create(account=acct, address="")
 
     def delete_account(self, account_name):
         Account.objects.filter(name=account_name).delete()
 
     def update_account(self, account_name, password, role):
-        pass
+        account = Account.objects.filter(name=account_name).first()
+        if account is None:
+            return
+        h = hashlib.new("md5")
+        h.update(password.encode("ASCII"))
+        account.password = h.hexdigest()
+        account.role = role
+        account.save()
 
     def get_accounts(self):
         accounts = []
@@ -71,7 +79,10 @@ class DjangoModelInterface(DataInterface):
         return labs
 
     def set_lab_assignment(self, course_number, lab_number, ta_name):
-        pass
+        lab = Lab.objects.filter(number=lab_number, course__number=course_number).first()
+        ta = Account.objects.filter(name=ta_name).first()
+        lab.ta = ta
+        lab.save()
 
     def get_lab_assignments(self):
         return []
