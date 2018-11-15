@@ -74,19 +74,16 @@ class ViewCourses(Command.Command):
 
     def action(self, args):
         result = ""
-        FAILURE_MESSAGE = "Error viewing courses."
 
         if len(args) != 1:
             self.environment.debug("Invalid arguments.")
-            return FAILURE_MESSAGE
+            return "Invalid arguments.\nCorrect Parameters: view_courses"
 
         if self.environment.user is None:
-            self.environment.debug("You must be logged in to perform this action.")
-            return FAILURE_MESSAGE
+            return "You must be logged in to perform this action."
 
         if self.environment.user.get_role() not in ["instructor", "administrator", "supervisor"]:
-            self.environment.debug("Permission denied.")
-            return FAILURE_MESSAGE
+            return "Permission denied."
 
         courses = self.environment.database.get_courses()
         course_assignments = self.environment.database.get_course_assignments()
