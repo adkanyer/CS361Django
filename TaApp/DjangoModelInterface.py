@@ -121,3 +121,11 @@ class DjangoModelInterface(DataInterface):
         s += "Email: " + info.email + "\n"
         s += "Office Hours: " + info.office_hours
         return s
+
+    def get_public_info(self, user):
+        info = ContactInfo.objects.filter(account__name=user).first()
+        s = ""
+        s += "Username: " + user.username + "\n"
+        s += "Email: " + info.email + "\n"
+        s += "Office Hours: " + info.office_hours
+        return s

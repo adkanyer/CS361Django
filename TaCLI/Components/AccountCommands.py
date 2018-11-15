@@ -119,6 +119,6 @@ class ViewInfo(Command.Command):
                 if self.environment.user.get_role() not in ["administrator", "supervisor"]:
                     return self.environment.database.get_private_info(user)
                 else:
-                    return "private information"
+                    return self.environment.database.get_public_info(user)
             else:
                 return "That user does not exist."
