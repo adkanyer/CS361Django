@@ -107,21 +107,18 @@ class ViewInfo(Command.Command):
     """
 
     def action(self, args):
-        result = ""
-
         if self.environment.user is None:
             return "You must be logged in to perform this action."
 
         if len(args) == 1:
-            result = "user information"
+            user = self.environment.database.get_user(self.environment.database.get_logged_in())
+            return self.environment.database.get_private_info(user)
         else:
             user = self.environment.database.get_user(args[1])
             if user is not None:
                 if self.environment.user.get_role() not in ["administrator", "supervisor"]:
-                    result = "public information"
+                    return self.environment.database.get_private_info(user)
                 else:
-                    result = "private information"
+                    return "private information"
             else:
                 return "That user does not exist."
-
-        return result

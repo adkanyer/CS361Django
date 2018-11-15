@@ -111,3 +111,13 @@ class DjangoModelInterface(DataInterface):
 
     def is_valid_role(self, role):
         return role in ["administrator", "supervisor", "instructor", "TA"]
+
+    def get_private_info(self, user):
+        info = ContactInfo.objects.filter(account__name=user).first()
+        s = ""
+        s += "Username: " + user.username + "\n"
+        s += "Address: " + info.address + "\n"
+        s += "Phone: " + info.phone + "\n"
+        s += "Email: " + info.email + "\n"
+        s += "Office Hours: " + info.office_hours
+        return s
