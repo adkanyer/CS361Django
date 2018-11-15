@@ -14,26 +14,33 @@ class AssignCourse(Command.Command):
         """
 
         if self.environment.user is None:
-            return "You must be logged in to perform this action."
+            self.environment.debug("You must be logged in to perform this action.")
+            return "ERROR"
 
         if self.environment.user.get_role() not in ["supervisor"]:
-            return "Permission Denied."
+            self.environment.debug("Permission Denied.")
+            return "ERROR"
 
         if len(args) != 3:
-            return "Invalid arguments.\nCorrect Parameters: assign_Course <COURSE NUMBER> <USERNAME>"
+            self.environment.debug("Invalid arguments.\nCorrect Parameters: assign_Course <COURSE NUMBER> <USERNAME>")
+            return "ERROR"
 
         course_num = args[1]
         if not self.environment.database.course_exists(course_num):
-            return "Course does not exist."
+            self.environment.debug("Course does not exist.")
+            return "ERROR"
         if self.environment.database.is_course_assigned(course_num):
-            return "Course already assigned to instructor."
+            self.environment.debug("Course already assigned to instructor.")
+            return "ERROR"
 
         instructor = self.environment.database.get_user(args[2])
         if instructor is None:
-            return "Inputted user does not exist."
+            self.environment.debug("Inputted user does not exist.")
+            return "ERROR"
 
         if instructor.get_role() != "instructor":
-            return "Inputted user is not an instructor."
+            self.environment.debug("Inputted user is not an instructor.")
+            return "ERROR"
 
         self.environment.database.set_course_assignment(args[1], args[2])
         return "Course assigned successfully."
@@ -50,22 +57,26 @@ class CreateCourse(Command.Command):
     def action(self, args):
 
         if self.environment.user is None:
-            return "You must be logged in to perform this action."
+            self.environment.debug("You must be logged in to perform this action.")
+            return "ERROR"
 
         if self.environment.user.get_role() not in ["supervisor", "administrator"]:
-            return "Permission Denied."
+            self.environment.debug("Permission Denied.")
+            return "ERROR"
 
         if len(args) != 3:
-            return "Invalid arguments.\nCorrect Parameters: create_course <COURSE NUMBER> <COURSE NAME>"
+            self.environment.debug("Invalid arguments.\nCorrect Parameters: create_course <COURSE NUMBER> <COURSE NAME>")
+            return "ERROR"
 
         course_number = args[1]
         course_name = args[2]
 
         if self.environment.database.course_exists(course_number):
-            return "Course already exists."
+            self.environment.debug("Course already exists.")
+            return "ERROR"
 
         self.environment.database.create_course(course_number, course_name)
-        return "Course Created Successfully"
+        return "Course Created Successfully."
 
 
 class ViewCourses(Command.Command):
@@ -76,14 +87,16 @@ class ViewCourses(Command.Command):
         result = ""
 
         if len(args) != 1:
-            self.environment.debug("Invalid arguments.")
-            return "Invalid arguments.\nCorrect Parameters: view_courses"
+            self.environment.debug("Invalid arguments.\nCorrect Parameters: view_courses")
+            return "ERROR"
 
         if self.environment.user is None:
-            return "You must be logged in to perform this action."
+            self.environment.debug("You must be logged in to perform this action.")
+            return "ERROR"
 
         if self.environment.user.get_role() not in ["instructor", "administrator", "supervisor"]:
-            return "Permission denied."
+            self.environment.debug("Permission denied.")
+            return "ERROR"
 
         courses = self.environment.database.get_courses()
         course_assignments = self.environment.database.get_course_assignments()

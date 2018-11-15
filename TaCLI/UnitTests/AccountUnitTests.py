@@ -30,7 +30,7 @@ class CreateAccountUnitTests(unittest.TestCase):
         response = create_account.action(["create_account", user_name, "password", "TA"])
 
         self.assertIsNone(self.environment.database.get_user(user_name))
-        self.assertEqual(response, "Error creating account.")
+        self.assertEqual(response, "ERROR")
 
     def test_create_account_not_logged_in(self):
         create_account = CreateAccount(self.environment)
@@ -38,7 +38,7 @@ class CreateAccountUnitTests(unittest.TestCase):
         response = create_account.action(["create_account", user_name, "password", "TA"])
 
         self.assertIsNone(self.environment.database.get_user(user_name))
-        self.assertEqual(response, "Error creating account.")
+        self.assertEqual(response, "ERROR")
 
     def test_create_account_account_exists(self):
         self.environment.user = User("root", "administrator")
@@ -48,7 +48,7 @@ class CreateAccountUnitTests(unittest.TestCase):
         create_account = CreateAccount(self.environment)
         response = create_account.action(["create_account", user_name, "password", "TA"])
 
-        self.assertEqual(response, "Error creating account.")
+        self.assertEqual(response, "ERROR")
 
     def test_create_account_not_enough_args(self):
         self.environment.user = User("root", "administrator")
@@ -56,17 +56,17 @@ class CreateAccountUnitTests(unittest.TestCase):
         create_account = CreateAccount(self.environment)
         response = create_account.action(["create_account"])
 
-        self.assertEqual(response, "Error creating account.")
+        self.assertEqual(response, "ERROR")
 
         user_name = "new_user"
         response = create_account.action(["create_account", user_name])
 
-        self.assertEqual(response, "Error creating account.")
+        self.assertEqual(response, "ERROR")
         self.assertIsNone(self.environment.database.get_user(user_name))
 
         response = create_account.action(["create_account", user_name, "password"])
 
-        self.assertEqual(response, "Error creating account.")
+        self.assertEqual(response, "ERROR")
         self.assertIsNone(self.environment.database.get_user(user_name))
 
     def test_create_account_invalid_role(self):
@@ -76,7 +76,7 @@ class CreateAccountUnitTests(unittest.TestCase):
         user_name = "new_user"
         response = create_account.action(["create_account", user_name, "password", "invalid_role"])
 
-        self.assertEqual(response, "Error creating account.")
+        self.assertEqual(response, "ERROR")
         self.assertIsNone(self.environment.database.get_user(user_name))
 
 
@@ -106,7 +106,7 @@ class DeleteAccountUnitTests(unittest.TestCase):
         delete_command = DeleteAccount(self.environment)
         response = delete_command.action(["delete_account", user_name])
 
-        self.assertEqual(response, "Error deleting account.")
+        self.assertEqual(response, "ERROR")
 
     def test_delete_account_no_permissions(self):
         self.environment.user = User("TA_user", "TA")
@@ -117,7 +117,7 @@ class DeleteAccountUnitTests(unittest.TestCase):
         delete_command = DeleteAccount(self.environment)
         response = delete_command.action(["delete_account", user_name])
 
-        self.assertEqual(response, "Error deleting account.")
+        self.assertEqual(response, "ERROR")
         self.assertIsNotNone(self.environment.database.get_user(user_name))
 
     def test_delete_account_not_logged_in(self):
@@ -127,7 +127,7 @@ class DeleteAccountUnitTests(unittest.TestCase):
         delete_command = DeleteAccount(self.environment)
         response = delete_command.action(["delete_account", user_name])
 
-        self.assertEqual(response, "Error deleting account.")
+        self.assertEqual(response, "ERROR")
         self.assertIsNotNone(self.environment.database.get_user(user_name))
 
     def test_delete_account_no_args(self):
@@ -138,7 +138,7 @@ class DeleteAccountUnitTests(unittest.TestCase):
         delete_command = DeleteAccount(self.environment)
         response = delete_command.action(["delete_account"])
 
-        self.assertEqual(response, "Error deleting account.")
+        self.assertEqual(response, "ERROR")
         self.assertIsNotNone(self.environment.database.get_user(user_name))
 
 
@@ -164,9 +164,9 @@ class ViewAccountsUnitTests(unittest.TestCase):
         view_command = ViewAccounts(self.environment)
         response = view_command.action(["view_accounts"])
 
-        self.assertEqual(response,  "InstructorUser instructor\n" +
-                                    "AdministratorUser administrator\n" +
-                                    "SupervisorUser supervisor\n")
+        self.assertEqual(response,  "InstructorUser - instructor\n" +
+                                    "AdministratorUser - administrator\n" +
+                                    "SupervisorUser - supervisor\n")
 
     def test_view_accounts_not_logged_in(self):
         self.environment.database.create_account("InstructorUser", "password", "instructor")
@@ -175,4 +175,4 @@ class ViewAccountsUnitTests(unittest.TestCase):
 
         view_command = ViewAccounts(self.environment)
         response = view_command.action(["view_accounts"])
-        self.assertEqual(response, "Error viewing accounts.")
+        self.assertEqual(response, "ERROR")

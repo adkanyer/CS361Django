@@ -34,7 +34,7 @@ class CreateLabUnitTests(unittest.TestCase):
         response = create_command.action(["create_lab", course_number])
 
         self.assertFalse(self.environment.database.lab_exists(course_number, lab_number))
-        self.assertEqual(response, "Error creating lab.")
+        self.assertEqual(response, "ERROR")
 
     def test_create_lab_no_permissions(self):
         self.environment.user = User("root", "TA")
@@ -45,7 +45,7 @@ class CreateLabUnitTests(unittest.TestCase):
         response = create_command.action(["create_lab", course_number, lab_number])
 
         self.assertFalse(self.environment.database.lab_exists(course_number, lab_number))
-        self.assertEqual(response, "Error creating lab.")
+        self.assertEqual(response, "ERROR")
 
     def test_create_lab_not_logged_in(self):
         create_command = CreateLab(self.environment)
@@ -54,7 +54,7 @@ class CreateLabUnitTests(unittest.TestCase):
         response = create_command.action(["create_lab", course_number, lab_number])
 
         self.assertFalse(self.environment.database.lab_exists(course_number, lab_number))
-        self.assertEqual(response, "Error creating lab.")
+        self.assertEqual(response, "ERROR")
 
     def test_create_lab_already_exists(self):
         self.environment.user = User("root", "administrator")
@@ -65,7 +65,7 @@ class CreateLabUnitTests(unittest.TestCase):
         create_command = CreateLab(self.environment)
         response = create_command.action(["create_lab", course_number, lab_number])
 
-        self.assertEqual(response, "Error creating lab.")
+        self.assertEqual(response, "ERROR")
 
     def test_create_lab_course_doesnt_exist(self):
         self.environment.user = User("root", "administrator")
@@ -75,7 +75,7 @@ class CreateLabUnitTests(unittest.TestCase):
         response = create_command.action(["create_lab", course_number, lab_number])
 
         self.assertFalse(self.environment.database.lab_exists(course_number, lab_number))
-        self.assertEqual(response, "Error creating lab.")
+        self.assertEqual(response, "ERROR")
 
 
 class AssignLabUnitTests(unittest.TestCase):
@@ -108,7 +108,7 @@ class AssignLabUnitTests(unittest.TestCase):
         response = assign_command.action(["assign_lab", course_number, lab_number, "apoorv"])
 
         self.assertFalse(self.environment.database.is_lab_assigned(course_number, lab_number))
-        self.assertEqual(response, "Error assigning to lab.")
+        self.assertEqual(response, "ERROR")
 
     def test_assign_lab_not_logged_in(self):
         course_number = "361"
@@ -117,7 +117,7 @@ class AssignLabUnitTests(unittest.TestCase):
         response = assign_command.action(["assign_lab", course_number, lab_number, "apoorv"])
 
         self.assertFalse(self.environment.database.is_lab_assigned(course_number, lab_number))
-        self.assertEqual(response, "Error assigning to lab.")
+        self.assertEqual(response, "ERROR")
 
     def test_assign_lab_wrong_num_args(self):
         self.environment.user = User("root", "administrator")
@@ -128,7 +128,7 @@ class AssignLabUnitTests(unittest.TestCase):
         response = assign_command.action(["assign_lab", course_number, lab_number])
 
         self.assertFalse(self.environment.database.is_lab_assigned(course_number, lab_number))
-        self.assertEqual(response, "Error assigning to lab.")
+        self.assertEqual(response, "ERROR")
 
     def test_assign_lab_that_doesnt_exist(self):
         self.environment.user = User("root", "administrator")
@@ -139,7 +139,7 @@ class AssignLabUnitTests(unittest.TestCase):
         response = assign_command.action(["assign_lab", course_number, lab_number, "apoorv"])
 
         self.assertFalse(self.environment.database.is_lab_assigned(course_number, lab_number))
-        self.assertEqual(response, "Error assigning to lab.")
+        self.assertEqual(response, "ERROR")
 
     def test_assign_lab_that_already_assigned(self):
         self.environment.user = User("root", "administrator")
@@ -153,7 +153,7 @@ class AssignLabUnitTests(unittest.TestCase):
 
         response = assign_command.action(["assign_lab", course_number, lab_number, "apoorv"])
 
-        self.assertEqual(response, "Error assigning to lab.")
+        self.assertEqual(response, "ERROR")
 
     def test_assign_lab_to_nonexistant_user(self):
         self.environment.user = User("root", "administrator")
@@ -164,7 +164,7 @@ class AssignLabUnitTests(unittest.TestCase):
         response = assign_command.action(["assign_lab", course_number, lab_number, "IDontExist"])
 
         self.assertFalse(self.environment.database.is_lab_assigned(course_number, lab_number))
-        self.assertEqual(response, "Error assigning to lab.")
+        self.assertEqual(response, "ERROR")
 
     def test_assign_lab_to_not_a_ta(self):
         self.environment.user = User("root", "administrator")
@@ -176,7 +176,7 @@ class AssignLabUnitTests(unittest.TestCase):
         response = assign_command.action(["assign_lab", course_number, lab_number, "jayson"])
 
         self.assertFalse(self.environment.database.is_lab_assigned(course_number, lab_number))
-        self.assertEqual(response, "Error assigning to lab.")
+        self.assertEqual(response, "ERROR")
 
 
 class ViewLabsUnitTests(unittest.TestCase):
@@ -199,14 +199,14 @@ class ViewLabsUnitTests(unittest.TestCase):
         view_command = ViewLabs(self.environment)
         response = view_command.action(["view_labs"])
 
-        self.assertEqual(response, "Error viewing labs.")
+        self.assertEqual(response, "ERROR")
 
     def test_view_labs_wrong_num_args(self):
         self.environment.user = User("root", "administrator")
         view_command = ViewLabs(self.environment)
         response = view_command.action(["view_labs", "extraBogusArg"])
 
-        self.assertEqual(response, "Error viewing labs.")
+        self.assertEqual(response, "ERROR")
 
     # really dumb test - any role can view labs
     def test_view_labs_no_permissions(self):
@@ -214,7 +214,7 @@ class ViewLabsUnitTests(unittest.TestCase):
         view_command = ViewLabs(self.environment)
         response = view_command.action(["view_labs"])
 
-        self.assertEqual(response, "Error viewing labs.")
+        self.assertEqual(response, "ERROR")
 
     def test_view_labs_correct(self):
         self.environment.user = User("root", "administrator")

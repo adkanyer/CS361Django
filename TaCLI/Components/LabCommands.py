@@ -10,21 +10,27 @@ class CreateLab(Command.Command):
     """
     def action(self, args):
         if self.environment.user is None:
-            return "You must be logged in to perform this action."
+            self.environment.debug("You must be logged in to perform this action.")
+            return "ERROR"
 
         if self.environment.user.get_role() not in ["instructor", "supervisor", "administrator"]:
-            return "Permission Denied."
+            self.environment.debug("Permission Denied.")
+            return "ERROR"
 
         if len(args) != 3:
-            return "Invalid Arguments.\nCorrect Parameters: create_lab <COURSE NUMBER> <LAB NUMBER>"
+            self.environment.debug("Invalid Arguments.\nCorrect Parameters: create_lab <COURSE NUMBER> <LAB NUMBER>")
+            return "ERROR"
+
 
         course_num = args[1]
         lab_num = args[2]
         if not self.environment.database.course_exists(course_num):
-            return "Course does not exist."
+            self.environment.debug("Course does not exist.")
+            return "ERROR"
 
         if self.environment.database.lab_exists(course_num, lab_num):
-            return "Lab already exists."
+            self.environment.debug("Lab already exists.")
+            return "ERROR"
 
         self.environment.database.create_lab(course_num, lab_num)
         return "Lab created."
@@ -44,28 +50,35 @@ class AssignLab(Command.Command):
         Assigns a TA to a specified lab section
         """
         if self.environment.user is None:
-            return "You must be logged in to perform this action."
+            self.environment.debug("You must be logged in to perform this action.")
+            return "ERROR"
 
         if self.environment.user.get_role() not in ["instructor", "supervisor", "administrator"]:
-            return "Permission Denied."
+            self.environment.debug("Permission Denied.")
+            return "ERROR"
 
         if len(args) != 4:
-            return "Invalid Arguments.\nCorrect Parameters: assign_lab <COURSE NUMBER> <LAB NUMBER> <USERNAME>"
+            self.environment.debug("Invalid Arguments.\nCorrect Parameters: assign_lab <COURSE NUMBER> <LAB NUMBER> <USERNAME>")
+            return "ERROR"
 
         course_num = args[1]
         lab_num = args[2]
         if not self.environment.database.lab_exists(course_num, lab_num):
-            return "Lab does not exist."
+            self.environment.debug("Lab does not exist.")
+            return "ERROR"
 
         if self.environment.database.is_lab_assigned(course_num, lab_num):
-            return "Lab is already assigned to a TA."
+            self.environment.debug("Lab is already assigned to a TA.")
+            return "ERROR"
 
         ta = self.environment.database.get_user(args[3])
         if ta is None:
-            return "Inputted user does not exist."
+            self.environment.debug("Inputted user does not exist.")
+            return "ERROR"
 
         if ta.get_role() != "TA":
-            return "Inputted user is not a TA."
+            self.environment.debug("Inputted user is not a TA.")
+            return "ERROR"
 
         self.environment.database.set_lab_assignment(args[1], args[2], args[3])
         return "Assigned to lab."
@@ -79,13 +92,16 @@ class ViewLabs(Command.Command):
         result = ""
 
         if self.environment.user is None:
-            return "You must be logged in to perform this action."
+            self.environment.debug("You must be logged in to perform this action.")
+            return "ERROR"
 
         if self.environment.user.get_role() not in ["TA", "instructor", "administrator", "supervisor"]:
-            return "Permission denied."
+            self.environment.debug("Permission denied.")
+            return "ERROR"
 
         if len(args) != 1:
-            return "Invalid Arguments.\nCorrect Parameters: view_labs"
+            self.environment.debug("Invalid Arguments.\nCorrect Parameters: view_labs")
+            return "ERROR"
 
         labs = self.environment.database.get_labs()
         lab_assignments = self.environment.database.get_lab_assignments()

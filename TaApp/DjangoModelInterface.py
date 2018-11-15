@@ -114,6 +114,7 @@ class DjangoModelInterface(DataInterface):
 
     def get_private_info(self, user):
         info = ContactInfo.objects.filter(account__name=user.username).first()
+        hours = OfficeHour.objects.filter(contact_info=info)
         s = ""
         s += "Username: " + user.username + "\n"
         s += "Role: " + user.role + "\n"
@@ -123,17 +124,23 @@ class DjangoModelInterface(DataInterface):
             s += "Phone: " + info.phone + "\n"
         if info.email is not None:
             s += "Email: " + info.email + "\n"
-        '''s += "Office Hours: " + info.office_hours'''
+        s += "Office Hours: "
+        for hour in hours:
+            s += hour.time + " "
         return s
 
     def get_public_info(self, user):
         info = ContactInfo.objects.filter(account__name=user.username).first()
+        hours = OfficeHour.objects.filter(contact_info=info)
+        print(hours)
         s = ""
         s += "Username: " + user.username + "\n"
         s += "Role: " + user.role + "\n"
         if info.email is not None:
             s += "Email: " + info.email + "\n"
-        '''s += "Office Hours: " + info.office_hours'''
+        s += "Office Hours: "
+        for hour in hours:
+            s += hour.time + " "
         return s
 
     def edit_phone(self, account_name, phone_number):
@@ -150,11 +157,16 @@ class DjangoModelInterface(DataInterface):
 
     def edit_email(self, account_name, email):
         contact = ContactInfo.objects.filter(account__name=account_name).first()
-        print(contact)
-        print(account_name)
         if contact is not None:
             contact.email = email
             contact.save()
 
     def edit_office_hours(self, account_name, office_hours):
-        pass
+        contact = ContactInfo.objects.filter(account__name=account_name).first()
+        print(contact)
+        if contact is not None:
+            OfficeHour.objects.filter(contact_info=contact).delete()
+            for oh in office_hours:
+                oh_obj = OfficeHour.objects.create(time=oh)
+                oh_obj.contact_info.add(contact)
+                oh_obj.save()

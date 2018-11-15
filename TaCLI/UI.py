@@ -1,4 +1,4 @@
-from TaCLI.Components import LabCommands, CourseCommands, AccountCommands, Login, Logout, EditContactInfo
+from TaCLI.Components import LabCommands, CourseCommands, AccountCommands, Login, Logout, EditInfo
 
 
 class UI:
@@ -18,7 +18,7 @@ class UI:
             "create_lab": LabCommands.CreateLab(self.environment),
             "assign_lab": LabCommands.AssignLab(self.environment),
             "view_labs": LabCommands.ViewLabs(self.environment),
-            "edit_contact_info": EditContactInfo.EditContactInfo(self.environment)
+            "edit_info": EditInfo.EditInfo(self.environment)
         }
 
     def command(self, string):
