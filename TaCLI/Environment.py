@@ -1,5 +1,5 @@
 class Environment:
-    def __init__(self, database, user=None, DEBUG=False):
+    def __init__(self, database, user=None, DEBUG=True):
         self.database = database
         self.user = user
         self.DEBUG = DEBUG
