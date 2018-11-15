@@ -20,10 +20,7 @@ class EditInfo(Command.Command):
             return "ERROR"
 
         if len(args) < 2:
-            return FAILURE_MESSAGE
-
-        if len(args) < 3:
-            self.environment.debug(FAILURE_MESSAGE)
+            self.environment.debug("Invalid arguments.\nCorrect Parameters: edit_info <FIELD> <NEW VALUE>")
             return "ERROR"
 
         valid_info = self.fields.keys()

@@ -27,8 +27,8 @@ class EditInfo(Command.Command):
             self.environment.debug("User to edit doesn't exist.")
             return "ERROR"
 
-        if len(args) < 4:
-            self.environment.debug(FAILURE_MESSAGE)
+        if len(args) < 3:
+            self.environment.debug("Invalid arguments.\nCorrect Parameters: update_info <USERNAME> <FIELD> <NEW VALUE>")
             return "ERROR"
 
         valid_info = self.fields.keys()
