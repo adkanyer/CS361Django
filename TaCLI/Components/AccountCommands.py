@@ -128,9 +128,10 @@ class ViewInfo(Command.Command):
             user = self.environment.database.get_user(args[1])
             if user is not None:
                 if self.environment.user.get_role() not in ["administrator", "supervisor"]:
-                    return self.environment.database.get_private_info(user)
-                else:
                     return self.environment.database.get_public_info(user)
+                else:
+                    return self.environment.database.get_private_info(user)
+
             else:
                 self.environment.debug("That user does not exist.")
                 return "ERROR"
