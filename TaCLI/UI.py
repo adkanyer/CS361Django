@@ -11,12 +11,13 @@ class UI:
             "create_account": AccountCommands.CreateAccount(self.environment),
             "delete_account": AccountCommands.DeleteAccount(self.environment),
             "view_accounts": AccountCommands.ViewAccounts(self.environment),
+            "view_info": AccountCommands.ViewInfo(self.environment),
             "create_course": CourseCommands.CreateCourse(self.environment),
             "assign_course": CourseCommands.AssignCourse(self.environment),
             "view_courses": CourseCommands.ViewCourses(self.environment),
             "create_lab": LabCommands.CreateLab(self.environment),
             "assign_lab": LabCommands.AssignLab(self.environment),
-            "view_labs": LabCommands.ViewLabs(self.environment)
+            "view_labs": LabCommands.ViewLabs(self.environment),
         }
 
     def command(self, string):
