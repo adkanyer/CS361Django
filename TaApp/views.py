@@ -23,4 +23,4 @@ class Home(View):
     def post(self, request):
         response = self.ui.command(request.POST["command"])
         user = self.environ.database.get_logged_in()
-        return render(request, "main/index.html", {"user": user, "response": response})
+        return render(request, "main/index.html", {"user": user, "response": response, "message": self.environ.message})

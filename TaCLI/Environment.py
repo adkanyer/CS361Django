@@ -3,7 +3,8 @@ class Environment:
         self.database = database
         self.user = user
         self.DEBUG = DEBUG
+        self.message = ""
 
     def debug(self, message):
         if self.DEBUG:
-            print(message)
+            self.message = message
