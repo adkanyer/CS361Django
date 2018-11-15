@@ -1,7 +1,7 @@
 from TaCLI.Components import Command
 
 
-class EditContactInfo(Command.Command):
+class EditInfo(Command.Command):
     def __init__(self, environment):
         self.environment = environment
         self.fields = {
@@ -87,8 +87,8 @@ class EditOfficeHours(Command.Command):
         if len(args) < 3:
             return FAILURE_MESSAGE
 
-        full_argument = "".join(args[2:])
-
-        self.environment.database.edit_office_hours(self.environment.user, full_argument)
+        hours = args[2:]
+        print(hours)
+        self.environment.database.edit_office_hours(self.environment.user.username, hours)
         return SUCCESS_MESSAGE
 

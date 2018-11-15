@@ -7,12 +7,6 @@ class Command(models.Model):
     time = models.DateTimeField(auto_now=True)
 
 
-class OfficeHour(models.Model):
-    day = models.CharField(max_length=10)
-    start_time = models.TimeField()
-    end_time = models.TimeField()
-
-
 class Account(models.Model):
     name = models.CharField(max_length=30)
     password = models.CharField(max_length=32)
@@ -24,7 +18,11 @@ class ContactInfo(models.Model):
     address = models.CharField(max_length=256, null=True)
     phone = models.CharField(max_length=16, null=True)  # not sure what to set this as
     email = models.CharField(max_length=32, null=True)  # same here ^
-    office_hours = models.ManyToManyField(OfficeHour)
+
+
+class OfficeHour(models.Model):
+    contact_info = models.ManyToManyField(ContactInfo)
+    time = models.CharField(max_length=256, null=True)
 
 
 class Lab(models.Model):

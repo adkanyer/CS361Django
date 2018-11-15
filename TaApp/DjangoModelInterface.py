@@ -126,11 +126,16 @@ class DjangoModelInterface(DataInterface):
 
     def edit_email(self, account_name, email):
         contact = ContactInfo.objects.filter(account__name=account_name).first()
-        print(contact)
-        print(account_name)
         if contact is not None:
             contact.email = email
             contact.save()
 
     def edit_office_hours(self, account_name, office_hours):
-        pass
+        contact = ContactInfo.objects.filter(account__name=account_name).first()
+        print(contact)
+        if contact is not None:
+            OfficeHour.objects.filter(contact_info=contact).delete()
+            for oh in office_hours:
+                oh_obj = OfficeHour.objects.create(time=oh)
+                oh_obj.contact_info.add(contact)
+                oh_obj.save()
