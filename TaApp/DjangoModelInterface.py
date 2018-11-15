@@ -113,21 +113,27 @@ class DjangoModelInterface(DataInterface):
         return role in ["administrator", "supervisor", "instructor", "TA"]
 
     def get_private_info(self, user):
-        info = ContactInfo.objects.filter(account__name=user).first()
+        info = ContactInfo.objects.filter(account__name=user.username).first()
         s = ""
         s += "Username: " + user.username + "\n"
-        s += "Address: " + info.address + "\n"
-        s += "Phone: " + info.phone + "\n"
-        s += "Email: " + info.email + "\n"
-        s += "Office Hours: " + info.office_hours
+        s += "Role: " + user.role + "\n"
+        if info.address is not None:
+            s += "Address: " + info.address + "\n"
+        if info.phone is not None:
+            s += "Phone: " + info.phone + "\n"
+        if info.email is not None:
+            s += "Email: " + info.email + "\n"
+        '''s += "Office Hours: " + info.office_hours'''
         return s
 
     def get_public_info(self, user):
-        info = ContactInfo.objects.filter(account__name=user).first()
+        info = ContactInfo.objects.filter(account__name=user.username).first()
         s = ""
         s += "Username: " + user.username + "\n"
-        s += "Email: " + info.email + "\n"
-        s += "Office Hours: " + info.office_hours
+        s += "Role: " + user.role + "\n"
+        if info.email is not None:
+            s += "Email: " + info.email + "\n"
+        '''s += "Office Hours: " + info.office_hours'''
         return s
 
     def edit_phone(self, account_name, phone_number):
