@@ -64,8 +64,8 @@ class EditEmail(Command.Command):
         self.environment = environment
 
     def action(self, args):
-        SUCCESS_MESSAGE = "Address has been updated Successfully"
-        FAILURE_MESSAGE = "Unable to Update Address"
+        SUCCESS_MESSAGE = "Email has been updated Successfully"
+        FAILURE_MESSAGE = "Unable to Update Email"
 
         if len(args) < 3:
             return FAILURE_MESSAGE
