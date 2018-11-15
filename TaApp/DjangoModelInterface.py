@@ -114,6 +114,7 @@ class DjangoModelInterface(DataInterface):
 
     def get_private_info(self, user):
         info = ContactInfo.objects.filter(account__name=user.username).first()
+        hours = OfficeHour.objects.filter(contact_info=info)
         s = ""
         s += "Username: " + user.username + "\n"
         s += "Role: " + user.role + "\n"
@@ -123,17 +124,23 @@ class DjangoModelInterface(DataInterface):
             s += "Phone: " + info.phone + "\n"
         if info.email is not None:
             s += "Email: " + info.email + "\n"
-        '''s += "Office Hours: " + info.office_hours'''
+        s += "Office Hours: "
+        for hour in hours:
+            s += hour.time + " "
         return s
 
     def get_public_info(self, user):
         info = ContactInfo.objects.filter(account__name=user.username).first()
+        hours = OfficeHour.objects.filter(contact_info=info)
+        print(hours)
         s = ""
         s += "Username: " + user.username + "\n"
         s += "Role: " + user.role + "\n"
         if info.email is not None:
             s += "Email: " + info.email + "\n"
-        '''s += "Office Hours: " + info.office_hours'''
+        s += "Office Hours: "
+        for hour in hours:
+            s += hour.time + " "
         return s
 
     def edit_phone(self, account_name, phone_number):
