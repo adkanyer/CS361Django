@@ -1,12 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
 <h1>TA Assignment Application</h1>
+    <div id="user">
+        <b>User:</b> {{ user }}<br><br>
+    </div>
+
 <form method="post" action="/">
 {% csrf_token %}
 Command: <input type="text" name="command"/><input type="submit"/>
 </form>
+
 <div id="out">
-    <b>User:</b> {{ user }}<br>
+    <hr>
     <b>Response:</b><pre>{{ response }}</pre>
 </div>
 {% endblock content %}
