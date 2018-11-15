@@ -91,3 +91,4 @@ class EditOfficeHours(Command.Command):
         print(hours)
         self.environment.database.edit_office_hours(self.environment.user.username, hours)
         return SUCCESS_MESSAGE
+
