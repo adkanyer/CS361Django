@@ -22,7 +22,6 @@ class ContactInfo(models.Model):
     last_name = models.CharField(max_length=32, null=True)
 
 
-
 class OfficeHour(models.Model):
     contact_info = models.ManyToManyField(ContactInfo)
     time = models.CharField(max_length=256, null=True)
@@ -30,7 +29,7 @@ class OfficeHour(models.Model):
 
 class Lab(models.Model):
     number = models.IntegerField()
-    ta = models.OneToOneField(Account, null=True,on_delete=models.CASCADE)
+    ta = models.OneToOneField(Account, null=True, on_delete=models.CASCADE)
 
 
 class Course(models.Model):

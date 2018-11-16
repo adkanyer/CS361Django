@@ -53,7 +53,7 @@ class AssignLab(Command.Command):
             self.environment.debug("You must be logged in to perform this action.")
             return "ERROR"
 
-        if self.environment.user.get_role() not in ["instructor", "supervisor", "administrator"]:
+        if self.environment.user.get_role() not in ["instructor"]:
             self.environment.debug("Permission Denied.")
             return "ERROR"
 
@@ -106,9 +106,6 @@ class ViewLabs(Command.Command):
         labs = self.environment.database.get_labs()
         lab_assignments = self.environment.database.get_lab_assignments()
         for lab in labs:
-            result += f"{lab['course_number']} {lab['lab_number']}"
-            for lab_assignment in lab_assignments:
-                if lab["course_number"] == lab_assignment["course_number"] and lab["lab_number"] == lab_assignment["lab_number"]:
-                    result += f" {lab_assignment['ta_name']}"
+            result += f"{lab['course_number']} {lab['lab_number']} {lab['ta_name']}"
             result += "\n"
         return result

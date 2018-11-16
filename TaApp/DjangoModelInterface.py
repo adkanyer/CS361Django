@@ -50,22 +50,34 @@ class DjangoModelInterface(DataInterface):
         LoggedIn.objects.all().delete()
 
     def create_course(self, course_number, course_name, ):
-        Course.objects.create(number=course_number, name=course_name, instructor=None)
+        Course.objects.create(number=course_number, name=course_name)
 
     def get_courses(self):
         courses = []
         for c in Course.objects.all():
-            instructor = None
-            if c.instructor is not None:
-                instructor = c.instructor.name
-            courses.append({"course_number": str(c.number), "course_name": c.name, "instructor": instructor})
+            instructor = "No Instructor Assigned"
+            if c.instructor.first() is not None:
+                instructor = c.instructor.first().name
+            tas = []
+            for ta in c.tas.all():
+                tas.append(ta.name)
+            courses.append({"course_number": str(c.number), "course_name": c.name, "instructor": instructor, "tas": tas})
         return courses
 
     def set_course_assignment(self, course_number, instructor_name):
+        pass
+
+    def set_course_instructor(self, course_number, instructor_name):
         instructor = Account.objects.filter(name=instructor_name).first()
-        course = Course.objects.filter(number=course_number)
-        if course is not None and instructor is not None:
-            course.instructor.add(instructor)
+        course = Course.objects.filter(number=course_number).first()
+        course.instructor.add(instructor)
+        course.save()
+
+    def add_course_ta(self, course_number, ta_name):
+        ta = Account.objects.filter(name=ta_name).first()
+        course = Course.objects.filter(number=course_number).first()
+        course.tas.add(ta)
+        course.save()
 
     def get_course_assignments(self):
         return []
@@ -74,12 +86,16 @@ class DjangoModelInterface(DataInterface):
         course = Course.objects.filter(number=course_number).first()
         lab = Lab.objects.create(number=lab_number)
         course.labs.add(lab)
+        course.save()
 
     def get_labs(self):
         labs = []
         for lab in Lab.objects.all():
             course = Course.objects.filter(labs__id=lab.id).first()
-            labs.append({"course_number": course.number, "lab_number": lab.number})
+            ta_name = None
+            if lab.ta is not None:
+                ta_name = lab.ta.name
+            labs.append({"course_number": course.number, "lab_number": lab.number, "ta_name": ta_name})
         return labs
 
     def set_lab_assignment(self, course_number, lab_number, ta_name):
@@ -103,8 +119,7 @@ class DjangoModelInterface(DataInterface):
 
     def is_course_assigned(self, course_number):
         course = Course.objects.filter(number=course_number).first()
-        print(f"{course} {course.instructor is None}\n")
-        return course.instructor is not None
+        return course.instructor.first().name is not None
 
     def lab_exists(self, course_number, lab_number):
         lab = Lab.objects.filter(number=lab_number, course__number=course_number).first()
@@ -139,7 +154,6 @@ class DjangoModelInterface(DataInterface):
     def get_public_info(self, user):
         info = ContactInfo.objects.filter(account__name=user.username).first()
         hours = OfficeHour.objects.filter(contact_info=info)
-        print(hours)
         s = ""
         s += "Username: " + user.username + "\n"
         s += "Role: " + user.role + "\n"

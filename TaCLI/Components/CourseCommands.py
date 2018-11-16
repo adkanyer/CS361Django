@@ -30,23 +30,23 @@ class AssignCourse(Command.Command):
             self.environment.debug("Course does not exist.")
             return "ERROR"
 
-        print("Is course assigned? " + str(self.environment.database.is_course_assigned(course_num)))
-        if self.environment.database.is_course_assigned(course_num):
-            self.environment.debug("Course already assigned to instructor.")
-            return "ERROR"
-
-        instructor = self.environment.database.get_user(args[2])
-        if instructor is None:
+        account = self.environment.database.get_user(args[2])
+        if account is None:
             self.environment.debug("Inputted user does not exist.")
             return "ERROR"
 
-        if instructor.get_role() != "instructor":
-            self.environment.debug("Inputted user is not an instructor.")
+        if account.get_role() == "instructor":
+            if self.environment.database.is_course_assigned(course_num):
+                self.environment.debug("Course already assigned to instructor.")
+                return "ERROR"
+            self.environment.database.set_course_instructor(args[1], args[2])
+            return "Course assigned successfully."
+        elif account.get_role() == "TA":
+            self.environment.database.add_course_ta(args[1], args[2])
+            return "Course assigned successfully."
+        else:
+            self.environment.debug("User is not an Instructor or TA.")
             return "ERROR"
-
-        self.environment.database.set_course_assignment(args[1], args[2])
-        return "Course assigned successfully."
-
 
 class CreateCourse(Command.Command):
     def __init__(self, environment):
@@ -101,11 +101,9 @@ class ViewCourses(Command.Command):
             return "ERROR"
 
         courses = self.environment.database.get_courses()
-        course_assignments = self.environment.database.get_course_assignments()
         for course in courses:
-            result += f"{course['course_number']} {course['course_name']}"
-            for course_assignment in course_assignments:
-                if course["course_number"] == course_assignment["course_number"]:
-                    result += f" {course_assignment['instructor_name']}"
+            result += f"{course['course_number']} {course['course_name']} Instructor: {course['instructor']} TAs:"
+            for ta in course['tas']:
+                result += f"{ta} "
             result += "\n"
         return result
