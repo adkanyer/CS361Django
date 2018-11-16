@@ -29,6 +29,8 @@ class AssignCourse(Command.Command):
         if not self.environment.database.course_exists(course_num):
             self.environment.debug("Course does not exist.")
             return "ERROR"
+
+        print("Is course assigned? " + str(self.environment.database.is_course_assigned(course_num)))
         if self.environment.database.is_course_assigned(course_num):
             self.environment.debug("Course already assigned to instructor.")
             return "ERROR"

@@ -50,18 +50,22 @@ class DjangoModelInterface(DataInterface):
         LoggedIn.objects.all().delete()
 
     def create_course(self, course_number, course_name, ):
-        Course.objects.create(number=course_number, name=course_name)
+        Course.objects.create(number=course_number, name=course_name, instructor=None)
 
     def get_courses(self):
         courses = []
         for c in Course.objects.all():
-            courses.append({"course_number": str(c.number), "course_name": c.name})
+            instructor = None
+            if c.instructor is not None:
+                instructor = c.instructor.name
+            courses.append({"course_number": str(c.number), "course_name": c.name, "instructor": instructor})
         return courses
 
     def set_course_assignment(self, course_number, instructor_name):
         instructor = Account.objects.filter(name=instructor_name).first()
         course = Course.objects.filter(number=course_number)
-        course.instructor.add(instructor)
+        if course is not None and instructor is not None:
+            course.instructor.add(instructor)
 
     def get_course_assignments(self):
         return []
@@ -99,7 +103,8 @@ class DjangoModelInterface(DataInterface):
 
     def is_course_assigned(self, course_number):
         course = Course.objects.filter(number=course_number).first()
-        return course is not None and course.instructor is not None
+        print(f"{course} {course.instructor is None}\n")
+        return course.instructor is not None
 
     def lab_exists(self, course_number, lab_number):
         lab = Lab.objects.filter(number=lab_number, course__number=course_number).first()
