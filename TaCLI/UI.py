@@ -1,4 +1,4 @@
-from TaCLI.Components import LabCommands, CourseCommands, AccountCommands, Login, Logout, EditInfo, UpdateInfo
+from TaCLI.Components import LabCommands, CourseCommands, AccountCommands, Login, EditInfo, UpdateInfo
 
 
 class UI:
@@ -7,7 +7,7 @@ class UI:
         self.environment = environment
         self.commands = {
             "login": Login.Login(self.environment),
-            "logout": Logout.Logout(self.environment),
+            "logout": Login.Logout(self.environment),
             "create_account": AccountCommands.CreateAccount(self.environment),
             "delete_account": AccountCommands.DeleteAccount(self.environment),
             "view_accounts": AccountCommands.ViewAccounts(self.environment),
