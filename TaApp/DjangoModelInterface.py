@@ -9,6 +9,9 @@ class DjangoModelInterface(DataInterface):
     def __init__(self):
         pass
 
+    def clear_database(self):
+        pass
+
     def create_account(self, account_name, password, role):
         h = hashlib.new("md5")
         h.update(f"{password}".encode("ascii"))

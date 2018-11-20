@@ -104,7 +104,6 @@ class ViewLabs(Command.Command):
             return "ERROR"
 
         labs = self.environment.database.get_labs()
-        lab_assignments = self.environment.database.get_lab_assignments()
         for lab in labs:
             result += f"{lab['course_number']} {lab['lab_number']} {lab['ta_name']}"
             result += "\n"
