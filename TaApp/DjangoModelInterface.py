@@ -9,9 +9,6 @@ class DjangoModelInterface(DataInterface):
     def __init__(self):
         pass
 
-    def clear_database(self):
-        pass
-
     def create_account(self, account_name, password, role):
         h = hashlib.new("md5")
         h.update(f"{password}".encode("ascii"))
@@ -122,7 +119,9 @@ class DjangoModelInterface(DataInterface):
 
     def is_course_assigned(self, course_number):
         course = Course.objects.filter(number=course_number).first()
-        return course.instructor.first().name is not None
+        if course is not None and course.instructor.first() is not None:
+            return course.instructor.first().name is not None
+        return False
 
     def lab_exists(self, course_number, lab_number):
         lab = Lab.objects.filter(number=lab_number, course__number=course_number).first()

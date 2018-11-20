@@ -27,34 +27,25 @@ class DjangoModelInterfaceTests(TestCase):
         self.assertEqual(account.role, role)
 
     def test_delete_account(self):
+        name = "account2delete"
         self.di.create_account("account", "pass", "role")
-        self.di.create_account("account2", "pass", "role")
+        self.di.create_account(name, "pass", "role")
         self.di.delete_account("account")
 
-        account_file = open(self.di.account_filename, "r")
+        self.di.delete_account(name)
 
-        lines = []
-        for line in account_file.readlines():
-            lines.append(line.rstrip())
-
-        account_file.close()
-
-        h = hashlib.new("md5")
-        h.update(b"pass")
-        hashed_pass = h.hexdigest()
-
-        self.assertEqual(lines, [f"account2:{hashed_pass}:role"])
+        self.assertEqual(len(Account.objects.filter(name=name)), 0)
 
     def test_update_account(self):
-        password = "newpass"
-        self.di.create_account("account", "pass", "role")
-        self.di.update_account("account", password, "newrole")
+        name = "account"
+        new_pass = "newpass"
+        new_role = "newrole"
+        self.di.create_account(name, "pass", "role")
+        self.di.update_account(name, new_pass, new_role)
 
-        account_file = open(self.di.account_filename, "r")
-        lines = account_file.readlines()
-        account_file.close()
-
-        self.assertEqual(lines, ["account:"+self.hashed_password(password)+":newrole\n"])
+        account = Account.objects.get(name=name)
+        self.assertEqual(account.password, self.hashed_password(new_pass))
+        self.assertEqual(account.role, new_role)
 
     def test_get_accounts(self):
         password1 = "pass"
@@ -69,6 +60,7 @@ class DjangoModelInterfaceTests(TestCase):
                                     {"name":"account2","password":self.hashed_password(password2), "role":"role2"}])
 
     def test_get_set_logged_in(self):
+        self.di.create_account("account", "pass", "TA")
         self.di.set_logged_in("account")
 
         response = self.di.get_logged_in()
@@ -76,6 +68,7 @@ class DjangoModelInterfaceTests(TestCase):
         self.assertEqual(response, "account")
 
     def test_set_logged_in_set_logged_out(self):
+        self.di.create_account("account", "pass", "TA")
         self.di.set_logged_in("account")
 
         response = self.di.get_logged_in()
@@ -87,32 +80,45 @@ class DjangoModelInterfaceTests(TestCase):
         self.assertEqual(response, "")
 
     def test_create_course_get_courses(self):
-        self.di.create_course("361", "CompSci361")
+        number = "361"
+        name = "CompSci361"
+        self.di.create_course(number, name)
 
-        response = self.di.get_courses()
+        self.assertIsNotNone(Course.objects.filter(number=number, name=name).first())
 
-        self.assertEqual(response, [{"course_name":"CompSci361", "course_number":"361"}])
+    def test_create_set_course_instructor(self):
+        number = "361"
+        instructor_name = "jayson"
 
-    def test_create_course_assignments_get_courses_assignments(self):
-        self.di.set_course_assignment("361", "jayson")
+        self.di.create_course(number, "CompSci")
+        self.di.create_account(instructor_name, "pass", "instructor")
+        self.di.set_course_instructor(number, instructor_name)
 
-        response = self.di.get_course_assignments()
-
-        self.assertEqual(response, [{"instructor_name":"jayson", "course_number":"361"}])
+        course = Course.objects.get(number=number)
+        self.assertEqual(course.instructor.first().name, instructor_name)
 
     def test_create_lab_get_labs(self):
-        self.di.create_lab("361", "801")
+        course_number = "361"
+        lab_number = "801"
+        self.di.create_course(course_number, "courseName")
+        self.di.create_lab(course_number, lab_number)
 
-        response = self.di.get_labs()
+        lab = Course.objects.get(number=course_number, labs__number=lab_number)
 
-        self.assertEqual(response, [{"course_number":"361", "lab_number":"801"}])
+        self.assertIsNotNone(lab)
 
-    def test_create_lab_assignment_get_lab_assignments(self):
-        self.di.set_lab_assignment("361", "801", "apoorv")
+    def test_assign_lab(self):
+        course_number = "361"
+        lab_number = "801"
+        ta_name = "apoorv"
+        self.di.create_course(course_number, "courseName")
+        self.di.create_lab(course_number, lab_number)
+        self.di.create_account(ta_name, "pass", "TA")
 
-        response = self.di.get_lab_assignments()
+        self.di.set_lab_assignment(course_number, lab_number, ta_name)
+        lab = Course.objects.get(number=course_number).labs.get(number=lab_number)
 
-        self.assertEqual(response, [{"course_number":"361", "lab_number":"801", "ta_name":"apoorv"}])
+        self.assertEqual(lab.ta.name, ta_name)
 
     def test_get_user_exists(self):
         self.di.create_account("root", "root", "administrator")
@@ -132,10 +138,11 @@ class DjangoModelInterfaceTests(TestCase):
     def test_get_course_assigned(self):
         self.di.create_account("teacher", "root", "instructor")
         self.di.create_course("123", "test_course")
-        self.di.set_course_assignment("123", "teacher")
+        self.di.set_course_instructor("123", "teacher")
         self.assertTrue(self.di.is_course_assigned("123"))
 
     def test_get_course_not_assigned(self):
+        self.di.create_course("000", "test_course")
         self.assertFalse(self.di.is_course_assigned("000"))
 
     def test_get_lab_exists(self):
@@ -144,6 +151,7 @@ class DjangoModelInterfaceTests(TestCase):
         self.assertTrue(self.di.lab_exists("123", "001"))
 
     def test_get_lab_doesnt_exist(self):
+        self.di.create_course("123", "test_course")
         self.assertFalse(self.di.lab_exists("123", "1231231"))
 
     def test_get_lab_assigned(self):
