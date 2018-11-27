@@ -8,6 +8,10 @@ class AssignCourse(Command.Command):
         args is a list containing the following:
             ["assign_Course", course_number, account_name]
     """
+
+    def get_usage(self):
+        return ""
+
     def action(self, args):
         """
         Assigns a account to a specified course
@@ -56,6 +60,10 @@ class CreateCourse(Command.Command):
         args is a list containing the following:
             ["create_course", course_number, course_name,]
     """
+
+    def get_usage(self):
+        return ""
+
     def action(self, args):
 
         if self.environment.user is None:
@@ -85,6 +93,9 @@ class ViewCourses(Command.Command):
     def __init__(self, environment):
         self.environment = environment
 
+    def get_usage(self):
+        return ""
+
     def action(self, args):
         result = ""
 
@@ -102,8 +113,8 @@ class ViewCourses(Command.Command):
 
         courses = self.environment.database.get_courses()
         for course in courses:
-            result += f"{course['course_number']} {course['course_name']} Instructor: {course['instructor']} TAs:"
+            result += f"{course['course_number']} {course['course_name']}\n\tInstructor: {course['instructor']}\n\tTAs: "
             for ta in course['tas']:
-                result += f"{ta} "
+                result += f"{ta}, "
             result += "\n"
         return result

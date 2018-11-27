@@ -16,13 +16,21 @@ class Home(View):
         if acct is not None:
             self.environ.user = TaCLI.User.User(acct.name, acct.role)
 
+
     def get(self, request):
         user = self.environ.database.get_logged_in()
-        keys = "\n".join(self.ui.commands.keys())
-        return render(request, "main/index.html", {"user": user, "response": "", "commands": keys})
+
+        command_list = ""
+        keys = self.ui.commands.keys()
+        for key in keys:
+            command_list += key
+            command_list += "" + self.ui.commands[key].get_usage()
+            command_list += "\n"
+
+        return render(request, "main/index.html", {"user": user, "response": "", "commands": command_list})
 
     def post(self, request):
         response = self.ui.command(request.POST["command"])
         user = self.environ.database.get_logged_in()
-        keys = "\n".join(self.ui.commands.keys())
-        return render(request, "main/index.html", {"user": user, "response": response, "message": self.environ.message, "commands": keys})
+
+        return render(request, "main/index.html", {"user": user, "response": response, "message": self.environ.message, "commands": command_list})
