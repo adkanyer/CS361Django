@@ -1,4 +1,6 @@
 from django.test import TestCase
+
+import TaCLI
 from TaApp.models import *
 from TaApp.DjangoModelInterface import DjangoModelInterface
 import hashlib
@@ -181,3 +183,80 @@ class DjangoModelInterfaceTests(TestCase):
     def test_invalid_role(self):
         self.assertFalse(self.di.is_valid_role("invalid"))
 
+    def test_basic_get_private_info(self):
+        user = TaCLI.User.User("admin", "master")
+        self.di.create_account("admin", "pass", "master")
+
+        self.assertEqual(self.di.get_private_info(user),
+                         "Username: admin\nRole: master\nAddress: \nOffice Hours: ")
+
+    def test_edit_phone_get_private_info(self):
+        user = TaCLI.User.User("admin", "master")
+        self.di.create_account("admin", "pass", "master")
+        self.di.edit_phone("admin", "1414")
+
+        self.assertEqual(self.di.get_private_info(user),
+                         "Username: admin\nRole: master\nAddress: \nPhone: 1414\nOffice Hours: ")
+
+    def test_edit_name_get_private_info(self):
+        user = TaCLI.User.User("admin", "master")
+        self.di.create_account("admin", "pass", "master")
+        self.di.edit_name("admin", "first", "second")
+
+        self.assertEqual(self.di.get_private_info(user),
+                         "Username: admin\nRole: master\nName: first second\nAddress: \nOffice Hours: ")
+
+    def test_edit_address_get_private_info(self):
+        user = TaCLI.User.User("admin", "master")
+        self.di.create_account("admin", "pass", "master")
+        self.di.edit_address("admin", "somewhere")
+
+        self.assertEqual(self.di.get_private_info(user),
+                         "Username: admin\nRole: master\nAddress: somewhere\nOffice Hours: ")
+
+    def test_edit_email_get_private_info(self):
+        user = TaCLI.User.User("admin", "master")
+        self.di.create_account("admin", "pass", "master")
+        self.di.edit_email("admin", "@uwm.edu")
+
+        self.assertEqual(self.di.get_private_info(user),
+                         "Username: admin\nRole: master\nAddress: \nEmail: @uwm.edu\nOffice Hours: ")
+
+    def test_edit_office_hours_get_private_info(self):
+        user = TaCLI.User.User("admin", "master")
+        self.di.create_account("admin", "pass", "master")
+        self.di.edit_office_hours("admin", ["mon1-2", "tue2-3", "wed4-5"])
+
+        self.assertEqual(self.di.get_private_info(user),
+                         "Username: admin\nRole: master\nAddress: \nOffice Hours: mon1-2 tue2-3 wed4-5 ")
+
+    def test_basic_get_public_info(self):
+        user = TaCLI.User.User("admin", "master")
+        self.di.create_account("admin", "pass", "master")
+
+        self.assertEqual(self.di.get_public_info(user),
+                         "Username: admin\nRole: master\nOffice Hours: ")
+
+    def test_edit_name_get_public_info(self):
+        user = TaCLI.User.User("admin", "master")
+        self.di.create_account("admin", "pass", "master")
+        self.di.edit_name("admin", "first", "second")
+
+        self.assertEqual(self.di.get_public_info(user),
+                         "Username: admin\nRole: master\nName: first second\nOffice Hours: ")
+
+    def test_edit_email_get_public_info(self):
+        user = TaCLI.User.User("admin", "master")
+        self.di.create_account("admin", "pass", "master")
+        self.di.edit_email("admin", "@uwm.edu")
+
+        self.assertEqual(self.di.get_public_info(user),
+                         "Username: admin\nRole: master\nEmail: @uwm.edu\nOffice Hours: ")
+
+    def test_edit_office_hours_get_public_info(self):
+        user = TaCLI.User.User("admin", "master")
+        self.di.create_account("admin", "pass", "master")
+        self.di.edit_office_hours("admin", ["mon1-2", "tue2-3", "wed4-5"])
+
+        self.assertEqual(self.di.get_public_info(user),
+                         "Username: admin\nRole: master\nOffice Hours: mon1-2 tue2-3 wed4-5 ")
