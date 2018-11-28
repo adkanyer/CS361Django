@@ -19,15 +19,8 @@
     <div class="container">
 
         <div class="row">
-            <div class="col-lg-3">
-                <div class="card card-outline-secondary my-4">
-                    <div class="card-header">Commands</div>
-                    <div class="card-body"><pre>{{ commands }}</pre></div>
-                </div>
-            </div>
-
-            <div class="col-lg-9">
-                <div class="card mt-4">
+            <div class="col-lg-6">
+                <div class="card mt-2">
                     <div class="card-body">
                         <h3 class="card-title">Input a Command</h3>
                         <form method="post" action="/" class="input-group">
@@ -39,14 +32,23 @@
                         </form>
                     </div>
                 </div>
+            </div>
 
-                <div class="card card-outline-secondary my-4">
+             <div class="col-lg-6">
+                <div class="card card-outline-secondary my-2">
                     <div class="card-header">Response</div>
                     <div class="card-body">
                         <pre>{{ response }}<br>{{ message }}</pre>
                     </div>
                 </div>
             </div>
+
+                 <div class="col">
+                     <div class="card card-outline-secondary my-4">
+                         <div class="card-header">Commands</div>
+                         <div class="card-body"><pre>{{ commands }}</pre></div>
+                     </div>
+                 </div>
         </div>
     </div>
 {% endblock content %}

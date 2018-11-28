@@ -33,4 +33,6 @@ class Home(View):
         response = self.ui.command(request.POST["command"])
         user = self.environ.database.get_logged_in()
 
+        command_list = ""
+
         return render(request, "main/index.html", {"user": user, "response": response, "message": self.environ.message, "commands": command_list})

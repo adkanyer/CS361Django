@@ -12,7 +12,7 @@ class CreateAccount(Command.Command):
     """
 
     def get_usage(self):
-        return ""
+        return "<USERNAME> <PASSWORD> <ROLE>"
 
     def action(self, args):
         if self.environment.user is None:
