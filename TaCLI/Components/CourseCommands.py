@@ -52,6 +52,7 @@ class AssignCourse(Command.Command):
             self.environment.debug("User is not an Instructor or TA.")
             return "ERROR"
 
+
 class CreateCourse(Command.Command):
     def __init__(self, environment):
         self.environment = environment

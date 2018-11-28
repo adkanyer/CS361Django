@@ -55,7 +55,7 @@ class DjangoModelInterface(DataInterface):
     def get_courses(self):
         courses = []
         for c in Course.objects.all():
-            instructor = "No Instructor Assigned"
+            instructor = None
             if c.instructor.first() is not None:
                 instructor = c.instructor.first().name
             tas = []

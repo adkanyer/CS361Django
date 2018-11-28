@@ -53,7 +53,6 @@ class DeleteAccount(Command.Command):
         return ""
 
     def action(self, args):
-
         if self.environment.user is None:
             self.environment.debug("You must be logged in to perform this action.")
             return "ERROR"
