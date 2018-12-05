@@ -22,18 +22,15 @@ class UI:
             "update_info": UpdateInfo.EditInfo(self.environment)
         }
 
-    def command(self, string):
+    def command(self, command, args):
         # parse input into a list, splitting by strings
-        if(string == ""):
-            return "Invalid Command"
-        args = self.parse_commands(string)
 
         # get valid inputs that map to commands
         valid_args = self.commands.keys()
 
         # if command is valid initiate its action
         if args[0] in valid_args:
-            return self.commands[args[0]].action(args)
+            return self.commands[command].action(args)
         else:
             return "Invalid Command"
 
