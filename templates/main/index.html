@@ -40,7 +40,7 @@
         </span>
     </form>
 
-    <form method="post" action="/" class="input-group">
+<form method="post" action="/" class="input-group">
     {% csrf_token %}
     <span class="input-group-btn">
         <button class="btn btn-secondary" name="form" value="logout" type="submit">Logout</button>
@@ -54,5 +54,6 @@
         <p>You are not logged in</p>
         <a href="">login</a>
     {% endif %}
+
 
 {% endblock content %}

@@ -31,3 +31,4 @@ class Home(View):
         user = self.environ.database.get_logged_in()
 
         return render(request, "main/index.html", {"user": user, "response": response, "message": self.environ.message})
+
