@@ -11,9 +11,6 @@ class CreateAccount(Command.Command):
             ["create_account", "username", "password", "role"]
     """
 
-    def get_usage(self):
-        return ""
-
     def action(self, args):
         if self.environment.user is None:
             self.environment.debug("You must be logged in to perform this action.")
@@ -48,9 +45,6 @@ class DeleteAccount(Command.Command):
         args is a list containing the following:
             ["delete_account", username]
     """
-
-    def get_usage(self):
-        return ""
 
     def action(self, args):
 
