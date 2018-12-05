@@ -40,13 +40,13 @@
                 <a class="navbar-brand" href="/">TA Assignment Application</a>
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Accounts</a>
+                        <a class="nav-link" href="{% url 'account' %}">Accounts</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Courses</a>
+                        <a class="nav-link" href="{% url 'course' %}">Courses</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Labs</a>
+                        <a class="nav-link" href="{% url 'lab' %}">Labs</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav ml-auto">
@@ -77,14 +77,6 @@
                 </div>
             </div>
         </div>
-
-
-
-
-
-
-
-
      {% endif %}
 
 {% endblock content %}

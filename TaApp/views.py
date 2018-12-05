@@ -32,3 +32,66 @@ class Home(View):
 
         return render(request, "main/index.html", {"user": user, "response": response, "message": str(self.environ.message)})
 
+
+class Accounts(View):
+    def __init__(self):
+        self.environ = Environment.Environment(DjangoModelInterface(), DEBUG=True)
+        self.ui = UI.UI(self.environ)
+
+        acct = Account.objects.filter(name=self.environ.database.get_logged_in()).first()
+        if acct is not None:
+            self.environ.user = TaCLI.User.User(acct.name, acct.role)
+
+    def get(self, request):
+        user = str(self.environ.database.get_logged_in())
+
+        return render(request, "main/account.html", {"user": user, "response": ""})
+
+    def post(self, request):
+        response = None
+        user = str(self.environ.database.get_logged_in())
+
+        return render(request, "main/account.html", {"user": user, "response": response, "message": str(self.environ.message)})
+
+
+class Courses(View):
+    def __init__(self):
+        self.environ = Environment.Environment(DjangoModelInterface(), DEBUG=True)
+        self.ui = UI.UI(self.environ)
+
+        acct = Account.objects.filter(name=self.environ.database.get_logged_in()).first()
+        if acct is not None:
+            self.environ.user = TaCLI.User.User(acct.name, acct.role)
+
+    def get(self, request):
+        user = str(self.environ.database.get_logged_in())
+
+        return render(request, "main/courses.html", {"user": user, "response": ""})
+
+    def post(self, request):
+        response = None
+        user = str(self.environ.database.get_logged_in())
+
+        return render(request, "main/courses.html", {"user": user, "response": response, "message": str(self.environ.message)})
+
+
+class Labs(View):
+    def __init__(self):
+        self.environ = Environment.Environment(DjangoModelInterface(), DEBUG=True)
+        self.ui = UI.UI(self.environ)
+
+        acct = Account.objects.filter(name=self.environ.database.get_logged_in()).first()
+        if acct is not None:
+            self.environ.user = TaCLI.User.User(acct.name, acct.role)
+
+    def get(self, request):
+        user = str(self.environ.database.get_logged_in())
+
+        return render(request, "main/labs.html", {"user": user, "response": ""})
+
+    def post(self, request):
+        response = None
+        user = str(self.environ.database.get_logged_in())
+
+        return render(request, "main/labs.html", {"user": user, "response": response, "message": str(self.environ.message)})
+
