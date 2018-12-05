@@ -22,8 +22,12 @@ class Home(View):
         return render(request, "main/index.html", {"user": user, "response": ""})
 
     def post(self, request):
-        print(request.POST)
-        response = '''self.ui.command(request.POST["command"])'''
+        response = None
+        if request.POST["form"] == "login":
+            self.ui.command("login", {"username": request.POST["username"], "password": request.POST["password"]})
+        if request.POST["form"] == "logout":
+            self.ui.command("logout", "")
+
         user = self.environ.database.get_logged_in()
 
         return render(request, "main/index.html", {"user": user, "response": response, "message": self.environ.message})

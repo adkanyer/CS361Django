@@ -29,7 +29,7 @@ class UI:
         valid_args = self.commands.keys()
 
         # if command is valid initiate its action
-        if args[0] in valid_args:
+        if command in valid_args:
             return self.commands[command].action(args)
         else:
             return "Invalid Command"

@@ -36,14 +36,14 @@
         <br>
         <p><input type="password" name="password" placeholder="Password" class="form-control"></p>
         <span class="input-group-btn">
-            <button class="btn btn-primary" type="submit">Login</button>
+            <button class="btn btn-primary" name="form" value="login" type="submit">Login</button>
         </span>
     </form>
 
     <form method="post" action="/" class="input-group">
     {% csrf_token %}
     <span class="input-group-btn">
-        <button class="btn btn-secondary" name="logout" type="submit">Logout</button>
+        <button class="btn btn-secondary" name="form" value="logout" type="submit">Logout</button>
     </span>
 </form>
 
