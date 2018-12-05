@@ -17,7 +17,7 @@ class Home(View):
             self.environ.user = TaCLI.User.User(acct.name, acct.role)
 
     def get(self, request):
-        user = self.environ.database.get_logged_in()
+        user = str(self.environ.database.get_logged_in())
 
         return render(request, "main/index.html", {"user": user, "response": ""})
 
@@ -28,7 +28,7 @@ class Home(View):
         if request.POST["form"] == "logout":
             self.ui.command("logout", "")
 
-        user = self.environ.database.get_logged_in()
+        user = str(self.environ.database.get_logged_in())
 
-        return render(request, "main/index.html", {"user": user, "response": response, "message": self.environ.message})
+        return render(request, "main/index.html", {"user": user, "response": response, "message": str(self.environ.message)})
 

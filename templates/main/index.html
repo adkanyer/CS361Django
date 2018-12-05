@@ -1,15 +1,27 @@
 {% extends "base.html" %}
 {% block content %}
 
-    <!-- Header -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    {% if user == "" %}
+        <form method="post" action="/" class="input-group">
+            {% csrf_token %}
+            <p><input type="text" name="username" placeholder="Username" class="form-control"></p>
+            <br>
+            <p><input type="password" name="password" placeholder="Password" class="form-control"></p>
+            <span class="input-group-btn">
+                <button class="btn btn-primary" name="form" value="login" type="submit">Login</button>
+            </span>
+        </form>
+         {% if message != "" and message is not None%}
+             <div class="alert alert-primary" role="alert">
+                 {{  message }}
+             </div>
+         {% endif %}
+    {% else %}
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container ">
-        <a class="navbar-brand" href="#">TA Assignment Application</a>
+        <a class="navbar-brand" href="/">TA Assignment Application</a>
+          {% if user != "" %}
           <ul class="navbar-nav ml-auto">
-            <li class="nav-item active">
-              <a class="nav-link" href="#">Home
-              </a>
-            </li>
             <li class="nav-item">
               <a class="nav-link" href="#">Accounts</a>
             </li>
@@ -20,40 +32,23 @@
               <a class="nav-link" href="#">Labs</a>
             </li>
           </ul>
-          <ul class="navbar-nav ml-auto">
-              <nav class="navbar navbar-dark">
-                  <span class="navbar-text navbar-dark">
-                      <b>Hello, </b>{{ user }}
-                  </span>
-              </nav>
-          </ul>
+              <ul class="navbar-nav ml-auto">
+                  <nav class="navbar navbar-dark">
+                      <span class="navbar-text navbar-dark">
+                          <b>Hello, </b>{{ user }}
+                      </span>
+                  </nav>
+              </ul>
+          {% endif %}
       </div>
     </nav>
 
-    <form method="post" action="/" class="input-group">
-        {% csrf_token %}
-        <p><input type="text" name="username" placeholder="Username" class="form-control"></p>
-        <br>
-        <p><input type="password" name="password" placeholder="Password" class="form-control"></p>
-        <span class="input-group-btn">
-            <button class="btn btn-primary" name="form" value="login" type="submit">Login</button>
-        </span>
-    </form>
-
-<form method="post" action="/" class="input-group">
-    {% csrf_token %}
-    <span class="input-group-btn">
-        <button class="btn btn-secondary" name="form" value="logout" type="submit">Logout</button>
-    </span>
-</form>
-
-    {% if user != None %}
-        Hi {{ user }}!
-        <p><a href="">logout</a></p>
-    {% else %}
-        <p>You are not logged in</p>
-        <a href="">login</a>
-    {% endif %}
-
+        <form method="post" action="/" class="input-group">
+            {% csrf_token %}
+            <span class="input-group-btn">
+                <button class="btn btn-secondary" name="form" value="logout" type="submit">Logout</button>
+            </span>
+        </form>
+     {% endif %}
 
 {% endblock content %}
