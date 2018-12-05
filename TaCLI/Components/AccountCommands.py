@@ -84,9 +84,6 @@ class ViewAccounts(Command.Command):
             Username Role
     """
 
-    def get_usage(self):
-        return ""
-
     def action(self, args):
         result = ""
 
@@ -124,9 +121,6 @@ class ViewInfo(Command.Command):
             if user is not administrator or supervisor, return public information:
                 Username, Role, Email, Office hours
     """
-
-    def get_usage(self):
-        return ""
 
     def action(self, args):
         if self.environment.user is None:

@@ -13,9 +13,6 @@ class Login(Command.Command):
             ["login", <username>, <password>]
     """
 
-    def get_usage(self):
-        return ""
-
     def action(self, args):
         SUCCESS_MESSAGE = "Logged in."
         FAILURE_MESSAGE = "Error logging in."
@@ -57,9 +54,6 @@ class Logout(Command.Command):
         args is a list containing the following:
            ["logout"]
     """
-
-    def get_usage(self):
-        return ""
 
     def action(self, args):
         SUCCESS_MESSAGE = "Logged out."
