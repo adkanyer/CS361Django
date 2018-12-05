@@ -12,9 +12,6 @@ class EditInfo(Command.Command):
             "name": EditName(self.environment),
         }
 
-    def get_usage(self):
-        return ""
-
     def action(self, args):
         FAILURE_MESSAGE = "Unable to edit Contact Info."
 

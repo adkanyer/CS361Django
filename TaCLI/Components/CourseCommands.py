@@ -9,9 +9,6 @@ class AssignCourse(Command.Command):
             ["assign_Course", course_number, account_name]
     """
 
-    def get_usage(self):
-        return ""
-
     def action(self, args):
         """
         Assigns a account to a specified course
@@ -62,9 +59,6 @@ class CreateCourse(Command.Command):
             ["create_course", course_number, course_name,]
     """
 
-    def get_usage(self):
-        return ""
-
     def action(self, args):
 
         if self.environment.user is None:
@@ -93,9 +87,6 @@ class CreateCourse(Command.Command):
 class ViewCourses(Command.Command):
     def __init__(self, environment):
         self.environment = environment
-
-    def get_usage(self):
-        return ""
 
     def action(self, args):
         result = ""

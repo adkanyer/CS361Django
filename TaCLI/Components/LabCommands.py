@@ -9,9 +9,6 @@ class CreateLab(Command.Command):
             ["create_lab", course_number, lab_number]
     """
 
-    def get_usage(self):
-        return ""
-
     def action(self, args):
         if self.environment.user is None:
             self.environment.debug("You must be logged in to perform this action.")
@@ -49,9 +46,6 @@ class AssignLab(Command.Command):
         args is a list containing the following:
             ["assign_lab", course_number, lab_number, account_name]
     """
-
-    def get_usage(self):
-        return ""
 
     def action(self, args):
         """
@@ -95,9 +89,6 @@ class AssignLab(Command.Command):
 class ViewLabs(Command.Command):
     def __init__(self, environment):
         self.environment = environment
-
-    def get_usage(self):
-        return ""
 
     def action(self, args):
         result = ""
