@@ -6,6 +6,21 @@
       <div class="container ">
         <a class="navbar-brand" href="#">TA Assignment Application</a>
           <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="#">Home
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Accounts</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Courses</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Labs</a>
+            </li>
+          </ul>
+          <ul class="navbar-nav ml-auto">
               <nav class="navbar navbar-dark">
                   <span class="navbar-text navbar-dark">
                       <b>Hello, </b>{{ user }}
@@ -15,40 +30,30 @@
       </div>
     </nav>
 
-     <!-- Page Content -->
-    <div class="container">
+    <form method="post" action="/" class="input-group">
+        {% csrf_token %}
+        <p><input type="text" name="username" placeholder="Username" class="form-control"></p>
+        <br>
+        <p><input type="password" name="password" placeholder="Password" class="form-control"></p>
+        <span class="input-group-btn">
+            <button class="btn btn-primary" name="form" value="login" type="submit">Login</button>
+        </span>
+    </form>
 
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="card mt-2">
-                    <div class="card-body">
-                        <h3 class="card-title">Input a Command</h3>
-                        <form method="post" action="/" class="input-group">
-                            {% csrf_token %}
-                            <input type="text" name="command" class="form-control">
-                            <span class="input-group-btn">
-                                <button class="btn btn-secondary" type="submit">Submit</button>
-                            </span>
-                        </form>
-                    </div>
-                </div>
-            </div>
+<form method="post" action="/" class="input-group">
+    {% csrf_token %}
+    <span class="input-group-btn">
+        <button class="btn btn-secondary" name="form" value="logout" type="submit">Logout</button>
+    </span>
+</form>
 
-             <div class="col-lg-6">
-                <div class="card card-outline-secondary my-2">
-                    <div class="card-header">Response</div>
-                    <div class="card-body">
-                        <pre>{{ response }}<br>{{ message }}</pre>
-                    </div>
-                </div>
-            </div>
+    {% if user != None %}
+        Hi {{ user }}!
+        <p><a href="">logout</a></p>
+    {% else %}
+        <p>You are not logged in</p>
+        <a href="">login</a>
+    {% endif %}
 
-                 <div class="col">
-                     <div class="card card-outline-secondary my-4">
-                         <div class="card-header">Commands</div>
-                         <div class="card-body"><pre>{{ commands }}</pre></div>
-                     </div>
-                 </div>
-        </div>
-    </div>
+
 {% endblock content %}

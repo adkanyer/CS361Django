@@ -13,9 +13,6 @@ class Login(Command.Command):
             ["login", <username>, <password>]
     """
 
-    def get_usage(self):
-        return ""
-
     def action(self, args):
         SUCCESS_MESSAGE = "Logged in."
         FAILURE_MESSAGE = "Error logging in."
@@ -24,18 +21,18 @@ class Login(Command.Command):
             self.environment.debug("Someone else is logged in.")
             return FAILURE_MESSAGE
 
-        if len(args) != 3:
+        if args["username"] is None or args["password"] is None:
             self.environment.debug("Username or Password is Incorrect")
             return FAILURE_MESSAGE
 
-        account = self.environment.database.get_user(args[1])
+        account = self.environment.database.get_user(args["username"])
 
         if account is None:
             self.environment.debug("Username or Password is Incorrect")
             return FAILURE_MESSAGE
 
         h = hashlib.new("md5")
-        entered_password = args[2].rstrip()
+        entered_password = args["password"].rstrip()
         h.update(f"{entered_password}".encode("ascii"))
         hashed_password = h.hexdigest()
 
@@ -58,16 +55,9 @@ class Logout(Command.Command):
            ["logout"]
     """
 
-    def get_usage(self):
-        return ""
-
     def action(self, args):
         SUCCESS_MESSAGE = "Logged out."
         FAILURE_MESSAGE = "Error logging out."
-
-        if len(args) != 1:
-            self.environment.debug("Invalid args.")
-            return FAILURE_MESSAGE
 
         if self.environment.user is None:
             self.environment.debug("No user is logged in.")
