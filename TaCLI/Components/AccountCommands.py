@@ -80,10 +80,6 @@ class ViewAccounts(Command.Command):
     def action(self, args):
         result = ""
 
-        if len(args) != 1:
-            self.environment.debug("Invalid arguments.")
-            return "ERROR"
-
         if self.environment.user is None:
             self.environment.debug("You must be logged in to perform this action.")
             return "ERROR"
@@ -120,15 +116,17 @@ class ViewInfo(Command.Command):
             self.environment.debug("You must be logged in to perform this action.")
             return "ERROR"
 
-        if len(args) == 1:
+        if args == "":
             user = self.environment.database.get_user(self.environment.database.get_logged_in())
             return self.environment.database.get_private_info(user)
         else:
-            user = self.environment.database.get_user(args[1])
+            user = self.environment.database.get_user(args["username"])
             if user is not None:
                 if self.environment.user.get_role() not in ["administrator", "supervisor"]:
+                    print("public")
                     return self.environment.database.get_public_info(user)
                 else:
+                    print("private")
                     return self.environment.database.get_private_info(user)
 
             else:

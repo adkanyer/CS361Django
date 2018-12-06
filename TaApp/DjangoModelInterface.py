@@ -137,35 +137,42 @@ class DjangoModelInterface(DataInterface):
     def get_private_info(self, user):
         info = ContactInfo.objects.filter(account__name=user.username).first()
         hours = OfficeHour.objects.filter(contact_info=info)
-        s = ""
-        s += "Username: " + user.username + "\n"
-        s += "Role: " + user.role + "\n"
+
+        s = {"username": "","name":"","lname":"","email":"","address":"","phone":"","hours":""}
+
+        s["username"] = user.username
+        s["role"] = user.role
         if info.first_name is not None and info.last_name is not None:
-            s += "Name: " + info.first_name + " " + info.last_name + "\n"
-        if info.address is not None:
-            s += "Address: " + info.address + "\n"
-        if info.phone is not None:
-            s += "Phone: " + info.phone + "\n"
+            s["name"] = info.first_name
+            s["lname"] = info.last_name
         if info.email is not None:
-            s += "Email: " + info.email + "\n"
-        s += "Office Hours: "
+            s["email"] = info.email
+        office_hours = ""
+        if info.address is not None:
+            s["address"] = info.address
         for hour in hours:
-            s += hour.time + " "
+            hours += hour.time + " "
+        s["hours"] = office_hours
+        if info.phone is not None:
+            s["phone"] = info.phone
         return s
 
     def get_public_info(self, user):
         info = ContactInfo.objects.filter(account__name=user.username).first()
         hours = OfficeHour.objects.filter(contact_info=info)
-        s = ""
-        s += "Username: " + user.username + "\n"
-        s += "Role: " + user.role + "\n"
+
+        s = {"username": "", "name": "", "lname": "", "email": "", "hours": ""}
+        s["username"] = user.username
+        s["role"] = user.role
         if info.first_name is not None and info.last_name is not None:
-            s += "Name: " + info.first_name + " " + info.last_name + "\n"
+            s["name"] = info.first_name
+            s["lname"] = info.last_name
         if info.email is not None:
-            s += "Email: " + info.email + "\n"
-        s += "Office Hours: "
+            s["email"] = info.email
+        office_hours = ""
         for hour in hours:
-            s += hour.time + " "
+            hours += hour.time + " "
+        s["hours"] = office_hours
         return s
 
     def edit_phone(self, account_name, phone_number):

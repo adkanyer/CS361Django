@@ -18,19 +18,26 @@ class Home(View):
 
     def get(self, request):
         user = str(self.environ.database.get_logged_in())
+        data = None
 
-        return render(request, "main/index.html", {"user": user, "response": ""})
+        if user != "":
+            data = self.ui.command("view_info", "")
+
+        return render(request, "main/index.html", {"user": user, "response": data})
 
     def post(self, request):
-        response = None
         if request.POST["form"] == "login":
             self.ui.command("login", {"username": request.POST["username"], "password": request.POST["password"]})
         if request.POST["form"] == "logout":
             self.ui.command("logout", "")
 
         user = str(self.environ.database.get_logged_in())
+        data = None
+        if user != "":
+            data = self.ui.command("view_info", "")
 
-        return render(request, "main/index.html", {"user": user, "response": response, "message": str(self.environ.message)})
+        user = str(self.environ.database.get_logged_in())
+        return render(request, "main/index.html", {"user": user, "response": data, "message": str(self.environ.message)})
 
 
 class Accounts(View):
@@ -44,14 +51,23 @@ class Accounts(View):
 
     def get(self, request):
         user = str(self.environ.database.get_logged_in())
+        role = self.environ.user.role
+        accounts = None
 
-        return render(request, "main/account.html", {"user": user, "response": ""})
+        if role == "administrator" or role == "supervisor":
+            accounts = self.ui.command("view_accounts", "")
+
+        return render(request, "main/account.html", {"user": user, "role": role, "accounts": accounts})
 
     def post(self, request):
         response = None
         user = str(self.environ.database.get_logged_in())
+        role = self.environ.user.role
 
-        return render(request, "main/account.html", {"user": user, "response": response, "message": str(self.environ.message)})
+        if request.POST["form"] == "view_info":
+            response = self.ui.command("view_info", {"username": request.POST["username"]})
+
+        return render(request, "main/account.html", {"user": user, "response": response, "message": str(self.environ.message), "role": role})
 
 
 class Courses(View):

@@ -60,8 +60,8 @@
 
         <br>
         <div class="row">
-            <div class="col-4"></div>
-            <div class="col-lg-4">
+            <div class="col-3"></div>
+            <div class="col-lg-2">
                 <div class="card">
                     <div class="card-body">
                         <div class="panel-body text-center">
@@ -73,6 +73,22 @@
                                 <button class="btn btn-secondary btn-block" name="form" value="logout" type="submit">Logout</button>
                             </form>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">Your Personal Info</div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Username: {{ response.username }}</li>
+                        <li class="list-group-item">Role: {{ response.role }}</li>
+                        <li class="list-group-item">Name: {{ response.name }} {{ response.lname }}</li>
+                        <li class="list-group-item">Email: {{ response.email }}</li>
+                        <li class="list-group-item">Address: {{ response.address }}</li>
+                        <li class="list-group-item">Office Hours: {{ response.hours }}</li>
+                    </ul>
+                    <div class="card-footer">
+                        <a href="#" class="btn btn-primary">Edit Information</a>
                     </div>
                 </div>
             </div>
