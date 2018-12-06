@@ -201,7 +201,6 @@ class DjangoModelInterface(DataInterface):
             oh_obj.contact_info.add(contact)
             oh_obj.save()
 
-
     def edit_name(self, account_name, first, last):
         contact = ContactInfo.objects.filter(account__name=account_name).first()
         if contact is not None:

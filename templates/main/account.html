@@ -49,11 +49,12 @@
                         {% if response is not None %}
                             <div class="card">
                                 <ul class="list-group list-group-flush">
+                                    <li class="list-group-item">Name: {{ response.name }} {{ response.lname }}</li>
                                     <li class="list-group-item">Username: {{ response.username }}</li>
                                     <li class="list-group-item">Email: {{ response.email }}</li>
                                     <li class="list-group-item">Office Hours: {{ response.hours }}</li>
                                     {% if role == "administrator" or role == "supervisor" %}
-                                        <li class="list-group-item">Phone: {{ response.Phone }}</li>
+                                        <li class="list-group-item">Phone: {{ response.phone }}</li>
                                         <li class="list-group-item">Address: {{ response.address }}</li>
                                     {% endif %}
                                 </ul>
@@ -67,7 +68,7 @@
             <br>
             <div class="row">
                 <div class="col-2"></div>
-                <div class="col-lg-4">
+                <div class="col-lg-8">
                     <div class="card">
                         <div class="card-header">Accounts</div>
                         <div class="card-body">
@@ -78,19 +79,144 @@
                                 </tr></thead>
                                 <tbody>
                                 {% for i in accounts %}
-                                     <tr>
-                                         <td style="text-transform: capitalize">{{ i.role }}</td>
-                                         <td>{{ i.username }}</td>
-                                     </tr>
+                                    <tr>
+                                        <td style="text-transform: capitalize">{{ i.role }}</td>
+                                        <td>{{ i.username }}</td>
+                                    </tr>
                                 {% endfor %}
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-2"></div>
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-header">Edit Account</div>
+                        <div class="card-body">
+                            {% if update_message != "" and update_message is not None%}
+                                <div class="alert alert-danger" role="alert">{{  update_message }}</div>
+                            {% endif %}
+                            {% if update_success != "" and update_success is not None %}
+                                <div class="alert alert-success" role="alert">{{  update_success }}</div>
+                            {% endif %}
+                            <form>
+                                <div class="row">
+                                    <div class="col-lg-2">
+                                        <h6>Select an Account</h6>
+                                        {% for i in accounts %}
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="exampleRadios" id="user" value={{ i.username }}>
+                                                <label class="form-check-label" for="exampleRadios1">{{ i.username }}</label>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="col-lg-10">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <label for="basic-url">Name</label>
+                                                <div class="input-group mb-1">
+                                                    <div class="input-group-prepend"><span class="input-group-text">First Name</span></div>
+                                                    <input type="text" class="form-control" name="first_name" placeholder="{{ old.name }}">
+                                                </div>
+                                                <div class="input-group mb-2">
+                                                    <div class="input-group-prepend"><span class="input-group-text">Last Name</span></div>
+                                                    <input type="text" class="form-control" name="last_name" placeholder={{ old.lname }}>
+                                                </div>
+                                                <div class="input-group mb-3">
+                                                    <button type="submit"  name="form" value="name" class="btn btn-primary">Update</button>
+                                                </div>
+                                            </div>
 
+                                            <div class="col-lg-6">
+                                                <label for="basic-url">Email</label>
+                                                <div class="input-group mb-3">
+                                                    <div class="input-group-prepend"><span class="input-group-text">Email</span></div>
+                                                    <input type="text" class="form-control" name="email" placeholder={{ old.email }}>
+                                                    <div class="input-group-append">
+                                                        <button class="btn btn-primary" type="submit" name="form" value="email">Update</button>
+                                                    </div>
+                                                </div>
+
+                                                <label for="basic-url">Phone</label>
+                                                <div class="input-group mb-3">
+                                                    <div class="input-group-prepend"><span class="input-group-text">Phone</span></div>
+                                                    <input type="text" class="form-control" name="phone" placeholder={{ old.phone }}>
+                                                    <div class="input-group-append">
+                                                        <button class="btn btn-primary" type="submit" name="form" value="phone">Update</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <label for="basic-url">Address</label>
+                                        <div class="input-group mb-1">
+                                            <div class="input-group-prepend"><span class="input-group-text">Address</span></div>
+                                            <input type="text" class="form-control" name="street">
+                                        </div>
+                                        <div class="input-group mb-2">
+                                            <div class="input-group-prepend"><span class="input-group-text">City</span></div>
+                                            <input type="text" class="form-control" name="city">
+                                        </div>
+                                        <div class="input-group mb-2">
+                                            <div class="input-group-prepend"><span class="input-group-text">State</span></div>
+                                            <input type="text" class="form-control" name="state">
+                                        </div>
+                                        <div class="input-group mb-2">
+                                            <div class="input-group-prepend"><span class="input-group-text">Zip Code</span></div>
+                                            <input type="text" class="form-control" name="zip">
+                                        </div>
+                                        <div class="input-group mb-3">
+                                            <button type="submit"  name="form" value="address" class="btn btn-primary">Update</button>
+                                        </div>
+
+                                        <label for="basic-url">Office Hours</label>
+                                        <div class="input-group mb-2">
+                                            <div class="input-group-prepend">
+                                                <label class="input-group-text">Day of Week</label>
+                                            </div>
+                                            <select class="custom-select" name="day_of_week">
+                                                <option selected>Day of Week</option>
+                                                <option value="sunday">Sunday</option>
+                                                <option value="monday">Monday</option>
+                                                <option value="tuesday">Tuesday</option>
+                                                <option value="wednesday">Wednesday</option>
+                                                <option value="thursday">Thursday</option>
+                                                <option value="friday">Friday</option>
+                                                <option value="saturday">Saturday</option>
+                                            </select>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="input-group mb-2">
+                                                    <div class="input-group-prepend"><span class="input-group-text">Start Time</span></div>
+                                                    <input type="text" class="form-control" name="start" placeholder="1:00PM">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="input-group mb-2">
+                                                    <div class="input-group-prepend"><span class="input-group-text">End Time</span></div>
+                                                    <input type="text" class="form-control" name="end" placeholder="3:00PM">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="input-group mb-3">
+                                            <button type="submit"  name="form" value="office" class="btn btn-primary">Add Time</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <br>
         {% endif %}
 
-     {% endif %}
+    {% endif %}
 
 {% endblock content %}
