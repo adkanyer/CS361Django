@@ -135,5 +135,8 @@ class Settings(View):
         if user != "":
             data = self.ui.command("view_info", "")
 
+        if request.POST["form"] == "name":
+            self.ui.command("edit_info", {"field": "name", "first": request.POST["first_name"], "last": request.POST["last_name"]})
+
         return render(request, "main/settings.html", {"user": user, "old": data, "message": str(self.environ.message)})
 

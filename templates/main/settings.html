@@ -41,68 +41,73 @@
                             </div>
                         {% endif %}
                         <form method="post" action="/settings/" class="input-group">
+                            {% csrf_token %}
                             <label for="basic-url">Name</label>
                             <div class="input-group mb-1">
                                  <div class="input-group-prepend"><span class="input-group-text">First Name</span></div>
-                                 <input type="text" class="form-control" id="first_name" placeholder="First">
+                                 <input type="text" class="form-control" name="first_name" placeholder="First">
                             </div>
                             <div class="input-group mb-2">
                                  <div class="input-group-prepend"><span class="input-group-text">Last Name</span></div>
-                                 <input type="text" class="form-control" id="last_name"placeholder="Last">
+                                 <input type="text" class="form-control" name="last_name" placeholder="Last">
                             </div>
                             <div class="input-group mb-3">
-                                <button type="submit"  name="form" value="name" class="btn btn-secondary">Update</button>
+                                <button type="submit"  name="form" value="name" class="btn btn-primary">Update</button>
                             </div>
                         </form>
                         <form method="post" action="/settings/" class="input-group">
+                            {% csrf_token %}
                             <label for="basic-url">Email</label>
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend"><span class="input-group-text">Email</span></div>
-                                <input type="text" class="form-control" id="email" placeholder="email@email.com">
+                                <input type="text" class="form-control" name="email" placeholder="email@email.com">
                                 <div class="input-group-append">
-                                    <button class="btn btn-secondary" type="submit" name="form" value="email">Update</button>
+                                    <button class="btn btn-primary" type="submit" name="form" value="email">Update</button>
                                 </div>
                             </div>
                         </form>
                         <form method="post" action="/settings/" class="input-group">
+                            {% csrf_token %}
                             <label for="basic-url">Phone</label>
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend"><span class="input-group-text">Phone</span></div>
-                                <input type="text" class="form-control" id="phone" placeholder="(414) 000-00000">
+                                <input type="text" class="form-control" name="phone" placeholder="(414) 000-00000">
                                 <div class="input-group-append">
-                                    <button class="btn btn-secondary" type="submit" name="form" value="phone">Update</button>
+                                    <button class="btn btn-primary" type="submit" name="form" value="phone">Update</button>
                                 </div>
                             </div>
                         </form>
                         <form method="post" action="/settings/" class="input-group">
+                            {% csrf_token %}
                             <label for="basic-url">Address</label>
                             <div class="input-group mb-1">
                                 <div class="input-group-prepend"><span class="input-group-text">Address</span></div>
-                                <input type="text" class="form-control" id="street" placeholder="1234 mySreet">
+                                <input type="text" class="form-control" name="street" placeholder="1234 mySreet">
                             </div>
                             <div class="input-group mb-2">
                                  <div class="input-group-prepend"><span class="input-group-text">City</span></div>
-                                 <input type="text" class="form-control" id="city" placeholder="Milwaukee">
+                                 <input type="text" class="form-control" name="city" placeholder="Milwaukee">
                             </div>
                             <div class="input-group mb-2">
                                  <div class="input-group-prepend"><span class="input-group-text">State</span></div>
-                                 <input type="text" class="form-control" id="state" placeholder="WI">
+                                 <input type="text" class="form-control" name="state" placeholder="WI">
                             </div>
                             <div class="input-group mb-2">
                                  <div class="input-group-prepend"><span class="input-group-text">Zip Code</span></div>
-                                 <input type="text" class="form-control" id="zip" placeholder="53211">
+                                 <input type="text" class="form-control" name="zip" placeholder="53211">
                             </div>
                             <div class="input-group mb-3">
-                                <button type="submit"  name="form" value="address" class="btn btn-secondary">Update</button>
+                                <button type="submit"  name="form" value="address" class="btn btn-primary">Update</button>
                             </div>
                         </form>
                         <form method="post" action="/settings/" class="input-group">
+                            {% csrf_token %}
                             <label for="basic-url">Office Hours</label>
                             <div class="input-group mb-2">
                                 <div class="input-group-prepend">
                                     <label class="input-group-text">Day of Week</label>
                                 </div>
-                                <select class="custom-select" id="day_of_week">
+                                <select class="custom-select" name="day_of_week">
                                     <option selected>Day of Week</option>
                                     <option value="sunday">Sunday</option>
                                     <option value="monday">Monday</option>
@@ -115,14 +120,14 @@
                             </div>
                             <div class="input-group mb-2">
                                 <div class="input-group-prepend"><span class="input-group-text">Start Time</span></div>
-                                <input type="text" class="form-control" id="start" placeholder="1:00PM">
+                                <input type="text" class="form-control" name="start" placeholder="1:00PM">
                             </div>
                             <div class="input-group mb-2">
                                 <div class="input-group-prepend"><span class="input-group-text">End Time</span></div>
-                                <input type="text" class="form-control" id="end" placeholder="3:00PM">
+                                <input type="text" class="form-control" name="end" placeholder="3:00PM">
                             </div>
                             <div class="input-group mb-3">
-                                <button type="submit"  name="form" value="name" class="btn btn-secondary">Add Time</button>
+                                <button type="submit"  name="form" value="office" class="btn btn-primary">Add Time</button>
                             </div>
                         </form>
                     </div>
