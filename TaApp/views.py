@@ -19,7 +19,6 @@ class Home(View):
     def get(self, request):
         user = str(self.environ.database.get_logged_in())
         data = None
-
         if user != "":
             data = self.ui.command("view_info", "")
 
@@ -124,12 +123,17 @@ class Settings(View):
 
     def get(self, request):
         user = str(self.environ.database.get_logged_in())
+        data = None
+        if user != "":
+            data = self.ui.command("view_info", "")
 
-        return render(request, "main/settings.html", {"user": user, "response": ""})
+        return render(request, "main/settings.html", {"user": user, "old": data})
 
     def post(self, request):
-        response = None
         user = str(self.environ.database.get_logged_in())
+        data = None
+        if user != "":
+            data = self.ui.command("view_info", "")
 
-        return render(request, "main/settings.html", {"user": user, "response": response, "message": str(self.environ.message)})
+        return render(request, "main/settings.html", {"user": user, "old": data, "message": str(self.environ.message)})
 
