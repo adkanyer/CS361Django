@@ -52,8 +52,8 @@ class Accounts(View):
     def get(self, request):
         user = str(self.environ.database.get_logged_in())
         role = self.environ.user.role
-        accounts = None
 
+        accounts = None
         if role == "administrator" or role == "supervisor":
             accounts = self.ui.command("view_accounts", "")
 
@@ -64,10 +64,14 @@ class Accounts(View):
         user = str(self.environ.database.get_logged_in())
         role = self.environ.user.role
 
+        accounts = None
+        if role == "administrator" or role == "supervisor":
+            accounts = self.ui.command("view_accounts", "")
+
         if request.POST["form"] == "view_info":
             response = self.ui.command("view_info", {"username": request.POST["username"]})
 
-        return render(request, "main/account.html", {"user": user, "response": response, "message": str(self.environ.message), "role": role})
+        return render(request, "main/account.html", {"user": user, "response": response, "message": str(self.environ.message), "role": role, "accounts": accounts})
 
 
 class Courses(View):
@@ -110,4 +114,22 @@ class Labs(View):
         user = str(self.environ.database.get_logged_in())
 
         return render(request, "main/labs.html", {"user": user, "response": response, "message": str(self.environ.message)})
+
+
+class Settings(View):
+    def __init__(self):
+        self.environ = Environment.Environment(DjangoModelInterface(), DEBUG=True)
+        self.ui = UI.UI(self.environ)
+
+
+    def get(self, request):
+        user = str(self.environ.database.get_logged_in())
+
+        return render(request, "main/settings.html", {"user": user, "response": ""})
+
+    def post(self, request):
+        response = None
+        user = str(self.environ.database.get_logged_in())
+
+        return render(request, "main/settings.html", {"user": user, "response": response, "message": str(self.environ.message)})
 

@@ -78,8 +78,6 @@ class ViewAccounts(Command.Command):
     """
 
     def action(self, args):
-        result = ""
-
         if self.environment.user is None:
             self.environment.debug("You must be logged in to perform this action.")
             return "ERROR"
@@ -89,9 +87,10 @@ class ViewAccounts(Command.Command):
             return "ERROR"
 
         accounts = self.environment.database.get_accounts()
+        list = []
         for account in accounts:
-            result += f"{account['name']} - {account['role']}\n"
-        return result
+            list.append({"username": account['name'], "role": account['role']})
+        return list
 
 
 class ViewInfo(Command.Command):

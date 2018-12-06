@@ -72,7 +72,20 @@
                     <div class="card">
                         <div class="card-header">Accounts</div>
                         <div class="card-body">
-                            {{ accounts }}
+                            <table class="table table-bordered table-striped">
+                                <thead><tr>
+                                    <th style="width: 150px;">Role</th>
+                                    <th>Username</th>
+                                </tr></thead>
+                                <tbody>
+                                {% for i in accounts %}
+                                     <tr>
+                                         <td style="text-transform: capitalize">{{ i.role }}</td>
+                                         <td>{{ i.username }}</td>
+                                     </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
