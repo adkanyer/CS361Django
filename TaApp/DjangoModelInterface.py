@@ -147,11 +147,11 @@ class DjangoModelInterface(DataInterface):
             s["lname"] = info.last_name
         if info.email is not None:
             s["email"] = info.email
-        office_hours = ""
         if info.address is not None:
             s["address"] = info.address
+        office_hours = ""
         for hour in hours:
-            hours += hour.time + " "
+            office_hours += hour.time + ", "
         s["hours"] = office_hours
         if info.phone is not None:
             s["phone"] = info.phone
@@ -171,7 +171,7 @@ class DjangoModelInterface(DataInterface):
             s["email"] = info.email
         office_hours = ""
         for hour in hours:
-            hours += hour.time + " "
+            office_hours += hour.time + " "
         s["hours"] = office_hours
         return s
 
@@ -195,13 +195,11 @@ class DjangoModelInterface(DataInterface):
 
     def edit_office_hours(self, account_name, office_hours):
         contact = ContactInfo.objects.filter(account__name=account_name).first()
-        print(contact)
         if contact is not None:
-            OfficeHour.objects.filter(contact_info=contact).delete()
-            for oh in office_hours:
-                oh_obj = OfficeHour.objects.create(time=oh)
-                oh_obj.contact_info.add(contact)
-                oh_obj.save()
+            '''OfficeHour.objects.filter(contact_info=contact).delete()'''
+            oh_obj = OfficeHour.objects.create(time=office_hours.upper())
+            oh_obj.contact_info.add(contact)
+            oh_obj.save()
 
 
     def edit_name(self, account_name, first, last):

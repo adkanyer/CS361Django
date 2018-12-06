@@ -84,8 +84,9 @@
                         <li class="list-group-item">Role: {{ response.role }}</li>
                         <li class="list-group-item">Name: {{ response.name }} {{ response.lname }}</li>
                         <li class="list-group-item">Email: {{ response.email }}</li>
+                        <li class="list-group-item">Phone: {{ response.phone }}</li>
                         <li class="list-group-item">Address: {{ response.address }}</li>
-                        <li class="list-group-item">Office Hours: {{ response.hours }}</li>
+                        <li class="list-group-item" style="text-transform: capitalize">Office Hours: {{ response.hours }}</li>
                     </ul>
                     <div class="card-footer">
                         <a href="{% url 'settings' %}" class="btn btn-primary">Edit Information</a>

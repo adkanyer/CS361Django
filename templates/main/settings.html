@@ -40,16 +40,21 @@
                                 {{  message }}
                             </div>
                         {% endif %}
+                        {% if success != "" and success is not None %}
+                            <div class="alert alert-success" role="alert">
+                                {{  success }}
+                            </div>
+                        {% endif %}
                         <form method="post" action="/settings/" class="input-group">
                             {% csrf_token %}
                             <label for="basic-url">Name</label>
                             <div class="input-group mb-1">
                                  <div class="input-group-prepend"><span class="input-group-text">First Name</span></div>
-                                 <input type="text" class="form-control" name="first_name" placeholder="First">
+                                 <input type="text" class="form-control" name="first_name" placeholder="{{ old.name }}">
                             </div>
                             <div class="input-group mb-2">
                                  <div class="input-group-prepend"><span class="input-group-text">Last Name</span></div>
-                                 <input type="text" class="form-control" name="last_name" placeholder="Last">
+                                 <input type="text" class="form-control" name="last_name" placeholder={{ old.lname }}>
                             </div>
                             <div class="input-group mb-3">
                                 <button type="submit"  name="form" value="name" class="btn btn-primary">Update</button>
@@ -60,7 +65,7 @@
                             <label for="basic-url">Email</label>
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend"><span class="input-group-text">Email</span></div>
-                                <input type="text" class="form-control" name="email" placeholder="email@email.com">
+                                <input type="text" class="form-control" name="email" placeholder={{ old.email }}>
                                 <div class="input-group-append">
                                     <button class="btn btn-primary" type="submit" name="form" value="email">Update</button>
                                 </div>
@@ -71,7 +76,7 @@
                             <label for="basic-url">Phone</label>
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend"><span class="input-group-text">Phone</span></div>
-                                <input type="text" class="form-control" name="phone" placeholder="(414) 000-00000">
+                                <input type="text" class="form-control" name="phone" placeholder={{ old.phone }}>
                                 <div class="input-group-append">
                                     <button class="btn btn-primary" type="submit" name="form" value="phone">Update</button>
                                 </div>
@@ -82,19 +87,19 @@
                             <label for="basic-url">Address</label>
                             <div class="input-group mb-1">
                                 <div class="input-group-prepend"><span class="input-group-text">Address</span></div>
-                                <input type="text" class="form-control" name="street" placeholder="1234 mySreet">
+                                <input type="text" class="form-control" name="street">
                             </div>
                             <div class="input-group mb-2">
                                  <div class="input-group-prepend"><span class="input-group-text">City</span></div>
-                                 <input type="text" class="form-control" name="city" placeholder="Milwaukee">
+                                 <input type="text" class="form-control" name="city">
                             </div>
                             <div class="input-group mb-2">
                                  <div class="input-group-prepend"><span class="input-group-text">State</span></div>
-                                 <input type="text" class="form-control" name="state" placeholder="WI">
+                                 <input type="text" class="form-control" name="state">
                             </div>
                             <div class="input-group mb-2">
                                  <div class="input-group-prepend"><span class="input-group-text">Zip Code</span></div>
-                                 <input type="text" class="form-control" name="zip" placeholder="53211">
+                                 <input type="text" class="form-control" name="zip">
                             </div>
                             <div class="input-group mb-3">
                                 <button type="submit"  name="form" value="address" class="btn btn-primary">Update</button>

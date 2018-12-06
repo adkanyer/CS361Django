@@ -32,9 +32,7 @@ class EditPhone(Command.Command):
         self.environment = environment
 
     def action(self, args):
-        full_argument = " ".join(args[2:])
-
-        self.environment.database.edit_phone(self.environment.user.username, full_argument)
+        self.environment.database.edit_phone(self.environment.user.username, args["phone"])
         return "Phone Number has been updated successfully"
 
 
@@ -43,9 +41,7 @@ class EditAddress(Command.Command):
         self.environment = environment
 
     def action(self, args):
-        full_argument = " ".join(args[2:])
-
-        self.environment.database.edit_address(self.environment.user.username, full_argument)
+        self.environment.database.edit_address(self.environment.user.username, args["address"])
         return "Address has been updated successfully."
 
 
@@ -54,9 +50,7 @@ class EditEmail(Command.Command):
         self.environment = environment
 
     def action(self, args):
-        full_argument = "".join(args[2:])
-
-        self.environment.database.edit_email(self.environment.user.username, full_argument)
+        self.environment.database.edit_email(self.environment.user.username, args["email"])
         return "Email has been updated successfully."
 
 
@@ -65,8 +59,7 @@ class EditOfficeHours(Command.Command):
         self.environment = environment
 
     def action(self, args):
-        hours = args[2:]
-        self.environment.database.edit_office_hours(self.environment.user.username, hours)
+        self.environment.database.edit_office_hours(self.environment.user.username, args["time"])
         return "Office Hours have been updated successfully."
 
 
