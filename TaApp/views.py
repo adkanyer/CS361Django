@@ -58,37 +58,40 @@ class Accounts(View):
         return render(request, "main/account.html", {"user": user, "role": role, "accounts": accounts})
 
     def post(self, request):
-        response = None
         user = str(self.environ.database.get_logged_in())
         role = self.environ.user.role
+
+        responses = {
+            "create_account": "",
+            "view_info": "",
+            "update_info": "",
+        }
 
         accounts = None
         if role == "administrator" or role == "supervisor":
             accounts = self.ui.command("view_accounts", "")
 
         if request.POST["form"] == "create_account":
-            response = self.ui.command("create_account", request.POST["new_username"]+" "+request.POST["new_password"]+" "+request.POST["new_role"])
+            responses["create_account"] = self.ui.command("create_account", request.POST["new_username"]+" "+request.POST["new_password"]+" "+request.POST["new_role"])
 
         if request.POST["form"] == "view_info":
-            response = self.ui.command("view_info", {"username": request.POST["username"]})
+            responses["view_info"] = self.ui.command("view_info", {"username": request.POST["username"]})
 
         # update_account
-        update_success = ""
         if request.POST["form"] == "name":
-            update_success = self.ui.command("update_info", {"field": "name", "first": request.POST["first_name"], "last": request.POST["last_name"]})
+            responses["update_info"] = self.ui.command("update_info", {"field": "name", "user": request.POST["user"], "first": request.POST["first_name"], "last": request.POST["last_name"]})
         if request.POST["form"] == "email":
-            update_success = self.ui.command("update_info", {"field": "email", "email": request.POST["email"]})
+            responses["update_info"] = self.ui.command("update_info", {"field": "email", "user": request.POST["user"], "email": request.POST["email"]})
         if request.POST["form"] == "phone":
-            update_success = self.ui.command("update_info", {"field": "phone", "phone": request.POST["phone"]})
+            responses["update_info"] = self.ui.command("update_info", {"field": "phone", "user": request.POST["user"], "phone": request.POST["phone"]})
         if request.POST["form"] == "address":
-            address = request.POST["street"] + ", " + request.POST["city"] + " " + request.POST["state"] + " " + \
-                      request.POST["zip"]
-            update_success = self.ui.command("update_info", {"field": "address", "address": address})
+            address = request.POST["street"] + ", " + request.POST["city"] + " " + request.POST["state"] + " " + request.POST["zip"]
+            responses["update_info"] = self.ui.command("update_info", {"field": "address", "user": request.POST["user"], "address": address})
         if request.POST["form"] == "office":
             time = request.POST["day_of_week"] + ": " + request.POST["start"] + "-" + request.POST["end"]
-            update_success = self.ui.command("update_info", {"field": "office_hours", "time": time})
+            responses["update_info"] = self.ui.command("update_info", {"field": "office_hours", "user": request.POST["user"], "time": time})
 
-        return render(request, "main/account.html", {"user": user, "response": response, "message": str(self.environ.message), "role": role, "accounts": accounts, "update_success": update_success})
+        return render(request, "main/account.html", {"user": user, "responses": responses, "message": str(self.environ.message), "role": role, "accounts": accounts})
 
 
 class Courses(View):
@@ -168,7 +171,6 @@ class Settings(View):
             success = self.ui.command("edit_info", {"field": "address", "address": address})
         if request.POST["form"] == "office":
             time = request.POST["day_of_week"] + ": " + request.POST["start"] + "-" + request.POST["end"]
-            print(time)
             success = self.ui.command("edit_info", {"field": "office_hours", "time": time})
 
         return render(request, "main/settings.html", {"user": user, "old": data, "message": str(self.environ.message), "success":success})

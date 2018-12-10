@@ -45,16 +45,16 @@
                                 <p><button class="btn btn-primary btn-lg btn-block" name="form" value="view_info" type="submit">Search</button></p>
                             </div>
                         </form>
-                        {% if response is not None %}
+                        {% if responses.view_info is not None and responses.view_info != "" %}
                             <div class="card">
                                 <ul class="list-group list-group-flush">
-                                    <li class="list-group-item">Name: {{ response.name }} {{ response.lname }}</li>
-                                    <li class="list-group-item">Username: {{ response.username }}</li>
-                                    <li class="list-group-item">Email: {{ response.email }}</li>
-                                    <li class="list-group-item">Office Hours: {{ response.hours }}</li>
+                                    <li class="list-group-item">Name: {{ responses.view_info.name }} {{ responses.view_info.lname }}</li>
+                                    <li class="list-group-item">Username: {{ responses.view_info.username }}</li>
+                                    <li class="list-group-item">Email: {{ responses.view_info.email }}</li>
+                                    <li class="list-group-item">Office Hours: {{ responses.view_info.hours }}</li>
                                     {% if role == "administrator" or role == "supervisor" %}
-                                        <li class="list-group-item">Phone: {{ response.phone }}</li>
-                                        <li class="list-group-item">Address: {{ response.address }}</li>
+                                        <li class="list-group-item">Phone: {{ responses.view_info.phone }}</li>
+                                        <li class="list-group-item">Address: {{ responses.view_info.address }}</li>
                                     {% endif %}
                                 </ul>
                             </div>
@@ -126,20 +126,23 @@
                     <div class="card">
                         <div class="card-header">Edit Account</div>
                         <div class="card-body">
-                            {% if update_message != "" and update_message is not None%}
-                                <div class="alert alert-danger" role="alert">{{  update_message }}</div>
+                            {% if responses.update_info != "" and responses.update_info is not None%}
+                                <div class="alert alert-danger" role="alert">{{  responses.update_info }}</div>
                             {% endif %}
-                            {% if update_success != "" and update_success is not None %}
-                                <div class="alert alert-success" role="alert">{{  update_success }}</div>
-                            {% endif %}
-                            <form>
+                            <form method="post" action="/account/" class="input-group">
+                                {% csrf_token %}
                                 <div class="row">
                                     <div class="col-lg-2">
                                         <h6>Select an Account</h6>
                                         {% for i in accounts %}
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="exampleRadios" id="user" value={{ i.username }}>
-                                                <label class="form-check-label" for="exampleRadios1">{{ i.username }}</label>
+                                                {%  if accounts.0 == i %}
+                                                    <br>
+                                                    <input class="form-check-input" type="radio" name="user" checked="checked" value={{ i.username }} >
+                                                {% else %}
+                                                    <input class="form-check-input" type="radio" name="user" value={{ i.username }}>
+                                                {% endif %}
+                                                <label class="form-check-label" for="user">{{ i.username }}</label>
                                             </div>
                                         {% endfor %}
                                     </div>

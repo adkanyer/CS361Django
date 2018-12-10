@@ -23,18 +23,14 @@ class EditInfo(Command.Command):
             self.environment.debug("Permission denied.")
             return "ERROR"
 
-        if self.environment.database.get_user(args[1]) is None:
+        if self.environment.database.get_user(args["user"]) is None:
             self.environment.debug("User to edit doesn't exist.")
-            return "ERROR"
-
-        if len(args) < 3:
-            self.environment.debug("Invalid arguments.\nCorrect Parameters: update_info <USERNAME> <FIELD> <NEW VALUE>")
             return "ERROR"
 
         valid_info = self.fields.keys()
 
-        if args[2] in valid_info:
-            return self.fields[args[2]].action(args)
+        if args["field"] in valid_info:
+            return self.fields[args["field"]].action(args)
 
         return FAILURE_MESSAGE
 
@@ -91,10 +87,10 @@ class EditName(Command.Command):
         self.environment = environment
 
     def action(self, args):
-        first_name = args[3]
-        last_name = "".join(args[4:])
+        first_name = args["first"]
+        last_name = "".join(args["last"])
 
-        user = self.environment.database.get_user(args[1]).username
+        user = self.environment.database.get_user(args["user"]).username
         self.environment.database.edit_name(user, first_name, last_name)
 
         return "Name has been updated successfully."
