@@ -66,7 +66,10 @@ class Accounts(View):
         if role == "administrator" or role == "supervisor":
             accounts = self.ui.command("view_accounts", "")
 
+        print("testing")
+
         if request.POST["form"] == "create_account":
+            print("test")
             response = self.ui.command("create_account ", request.POST["new_username"]+" "+request.POST["new_password"]+" "+request.POST["new_role"])
 
         if request.POST["form"] == "view_info":
