@@ -105,8 +105,7 @@ class Courses(View):
             self.environ.user = TaCLI.User.User(acct.name, acct.role)
 
     def get(self, request):
-        self.init_logged_in(request)
-        user = self.environ.user.username
+        user = str(self.environ.database.get_logged_in())
         role = self.environ.user.role
 
         if role == "administrator" or role == "supervisor" or role == "instructor":
@@ -116,8 +115,7 @@ class Courses(View):
         return render(request, "main/courses.html", {"user": user, "role": role, "courses": courses})
 
     def post(self, request):
-        self.init_logged_in(request)
-        user = self.environ.user.username
+        user = str(self.environ.database.get_logged_in())
         role = self.environ.user.role
         response = None
         courses = None
