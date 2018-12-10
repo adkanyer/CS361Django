@@ -104,9 +104,21 @@ class ViewCourses(Command.Command):
             return "ERROR"
 
         courses = self.environment.database.get_courses()
+
+        list = []
         for course in courses:
-            result += f"{course['course_number']} {course['course_name']}\n\tInstructor: {course['instructor']}\n\tTAs: "
+            result = ""
             for ta in course['tas']:
                 result += f"{ta}, "
-            result += "\n"
-        return result
+
+            list.append({"number": course['course_number'], "name": course['course_name'],
+                         "instructor": course['instructor'], "tas": result})
+
+        return list
+
+        # for course in courses:
+        #     result += f"{course['course_number']} {course['course_name']}\n\tInstructor: {course['instructor']}\n\tTAs: "
+        #     for ta in course['tas']:
+        #         result += f"{ta}, "
+        #     result += "\n"
+        # return result
