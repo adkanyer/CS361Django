@@ -91,14 +91,6 @@ class ViewCourses(Command.Command):
     def action(self, args):
         result = ""
 
-        if len(args) != 1:
-            self.environment.debug("Invalid arguments.\nCorrect Parameters: view_courses")
-            return "ERROR"
-
-        if self.environment.user is None:
-            self.environment.debug("You must be logged in to perform this action.")
-            return "ERROR"
-
         if self.environment.user.get_role() not in ["instructor", "administrator", "supervisor"]:
             self.environment.debug("Permission denied.")
             return "ERROR"
