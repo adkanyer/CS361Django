@@ -256,7 +256,7 @@ class DjangoModelInterfaceTests(TestCase):
         self.di.create_account("admin", "pass", "master")
 
         self.assertEqual(self.di.get_private_info(user),
-                         "Username: admin\nRole: master\nAddress: \nOffice Hours: ")
+                         {'username': 'admin', 'name': '', 'lname': '', 'email': '', 'address': '', 'phone': '', 'hours': '', 'role': 'master'})
 
 
     def test_edit_phone_get_private_info(self):
@@ -265,7 +265,7 @@ class DjangoModelInterfaceTests(TestCase):
         self.di.edit_phone("admin", "1414")
 
         self.assertEqual(self.di.get_private_info(user),
-                         "Username: admin\nRole: master\nAddress: \nPhone: 1414\nOffice Hours: ")
+                         {'username': 'admin', 'name': '', 'lname': '', 'email': '', 'address': '', 'phone': '1414', 'hours': '', 'role': 'master'})
 
     def test_edit_name_get_private_info(self):
         user = TaCLI.User.User("admin", "master")
@@ -273,7 +273,7 @@ class DjangoModelInterfaceTests(TestCase):
         self.di.edit_name("admin", "first", "second")
 
         self.assertEqual(self.di.get_private_info(user),
-                         "Username: admin\nRole: master\nName: first second\nAddress: \nOffice Hours: ")
+                         {'username': 'admin', 'name': 'first', 'lname': 'second', 'email': '', 'address': '', 'phone': '', 'hours': '', 'role': 'master'})
 
     def test_edit_address_get_private_info(self):
         user = TaCLI.User.User("admin", "master")
@@ -281,7 +281,7 @@ class DjangoModelInterfaceTests(TestCase):
         self.di.edit_address("admin", "somewhere")
 
         self.assertEqual(self.di.get_private_info(user),
-                         "Username: admin\nRole: master\nAddress: somewhere\nOffice Hours: ")
+                         {'username': 'admin', 'name': '', 'lname': '', 'email': '', 'address': 'somewhere', 'phone': '', 'hours': '', 'role': 'master'})
 
     def test_edit_email_get_private_info(self):
         user = TaCLI.User.User("admin", "master")
@@ -289,22 +289,21 @@ class DjangoModelInterfaceTests(TestCase):
         self.di.edit_email("admin", "@uwm.edu")
 
         self.assertEqual(self.di.get_private_info(user),
-                         "Username: admin\nRole: master\nAddress: \nEmail: @uwm.edu\nOffice Hours: ")
+                         {'username': 'admin', 'name': '', 'lname': '', 'email': '@uwm.edu', 'address': '', 'phone': '', 'hours': '', 'role': 'master'})
 
     def test_edit_office_hours_get_private_info(self):
         user = TaCLI.User.User("admin", "master")
         self.di.create_account("admin", "pass", "master")
-        self.di.edit_office_hours("admin", ["mon1-2", "tue2-3", "wed4-5"])
+        self.di.edit_office_hours("admin", "Monday: 1:00PM-2:00PM")
 
-        self.assertEqual(self.di.get_private_info(user),
-                         "Username: admin\nRole: master\nAddress: \nOffice Hours: mon1-2 tue2-3 wed4-5 ")
+        self.assertEqual(self.di.get_private_info(user),{'username': 'admin', 'name': '', 'lname': '', 'email': '', 'address': '', 'phone': '', 'hours': 'MONDAY: 1:00PM-2:00PM, ', 'role': 'master'})
 
     def test_basic_get_public_info(self):
         user = TaCLI.User.User("admin", "master")
         self.di.create_account("admin", "pass", "master")
 
         self.assertEqual(self.di.get_public_info(user),
-                         "Username: admin\nRole: master\nOffice Hours: ")
+                         {'username': 'admin', 'name': '', 'lname': '', 'email': '', 'hours': '', 'role': 'master'})
 
     def test_edit_name_get_public_info(self):
         user = TaCLI.User.User("admin", "master")
@@ -312,7 +311,8 @@ class DjangoModelInterfaceTests(TestCase):
         self.di.edit_name("admin", "first", "second")
 
         self.assertEqual(self.di.get_public_info(user),
-                         "Username: admin\nRole: master\nName: first second\nOffice Hours: ")
+                         {'username': 'admin', 'name': 'first', 'lname': 'second', 'email': '', 'hours': '',
+                          'role': 'master'})
 
     def test_edit_email_get_public_info(self):
         user = TaCLI.User.User("admin", "master")
@@ -320,15 +320,17 @@ class DjangoModelInterfaceTests(TestCase):
         self.di.edit_email("admin", "@uwm.edu")
 
         self.assertEqual(self.di.get_public_info(user),
-                         "Username: admin\nRole: master\nEmail: @uwm.edu\nOffice Hours: ")
+                         {'username': 'admin', 'name': '', 'lname': '', 'email': '@uwm.edu', 'hours': '',
+                          'role': 'master'})
 
     def test_edit_office_hours_get_public_info(self):
         user = TaCLI.User.User("admin", "master")
         self.di.create_account("admin", "pass", "master")
-        self.di.edit_office_hours("admin", ["mon1-2", "tue2-3", "wed4-5"])
+        self.di.edit_office_hours("admin", "Monday: 1:00PM-2:00PM")
 
         self.assertEqual(self.di.get_public_info(user),
-                         "Username: admin\nRole: master\nOffice Hours: mon1-2 tue2-3 wed4-5 ")
+                         {'username': 'admin', 'name': '', 'lname': '', 'email': '', 'hours': 'MONDAY: 1:00PM-2:00PM ',
+                          'role': 'master'})
 
 # endregion
 # end of tests
