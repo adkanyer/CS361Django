@@ -107,6 +107,7 @@ class Courses(View):
     def get(self, request):
         user = str(self.environ.database.get_logged_in())
         role = self.environ.user.role
+        courses = None
 
         if role == "administrator" or role == "supervisor" or role == "instructor":
             courses = self.ui.command("view_courses", "")
