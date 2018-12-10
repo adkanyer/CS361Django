@@ -66,16 +66,29 @@ class Accounts(View):
         if role == "administrator" or role == "supervisor":
             accounts = self.ui.command("view_accounts", "")
 
-        print("testing")
-
         if request.POST["form"] == "create_account":
-            print("test")
-            response = self.ui.command("create_account ", request.POST["new_username"]+" "+request.POST["new_password"]+" "+request.POST["new_role"])
+            response = self.ui.command("create_account", request.POST["new_username"]+" "+request.POST["new_password"]+" "+request.POST["new_role"])
 
         if request.POST["form"] == "view_info":
             response = self.ui.command("view_info", {"username": request.POST["username"]})
 
-        return render(request, "main/account.html", {"user": user, "response": response, "message": str(self.environ.message), "role": role, "accounts": accounts})
+        # update_account
+        update_success = ""
+        if request.POST["form"] == "name":
+            update_success = self.ui.command("update_info", {"field": "name", "first": request.POST["first_name"], "last": request.POST["last_name"]})
+        if request.POST["form"] == "email":
+            update_success = self.ui.command("update_info", {"field": "email", "email": request.POST["email"]})
+        if request.POST["form"] == "phone":
+            update_success = self.ui.command("update_info", {"field": "phone", "phone": request.POST["phone"]})
+        if request.POST["form"] == "address":
+            address = request.POST["street"] + ", " + request.POST["city"] + " " + request.POST["state"] + " " + \
+                      request.POST["zip"]
+            update_success = self.ui.command("update_info", {"field": "address", "address": address})
+        if request.POST["form"] == "office":
+            time = request.POST["day_of_week"] + ": " + request.POST["start"] + "-" + request.POST["end"]
+            update_success = self.ui.command("update_info", {"field": "office_hours", "time": time})
+
+        return render(request, "main/account.html", {"user": user, "response": response, "message": str(self.environ.message), "role": role, "accounts": accounts, "update_success": update_success})
 
 
 class Courses(View):
