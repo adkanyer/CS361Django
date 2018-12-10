@@ -7,9 +7,9 @@
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container ">
                 <a class="navbar-brand" href="/">TA Assignment Application</a>
-                <ul class="navbar-nav ml-auto">
+                <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'account' %}">Accounts</a>
+                        <a class="nav-link active" href="{% url 'account' %}">Accounts</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'course' %}">Courses</a>
@@ -104,8 +104,8 @@
                                     <br>
                                     <select class="custom-select" name="new_role">
                                         <option selected>Role</option>
-                                        <option value="administrator">Administrator</option>
                                         <option value="supervisor">Supervisor</option>
+                                        <option value="administrator">Administrator</option>
                                         <option value="instructor">Instructor</option>
                                         <option value="ta">TA</option>
                                     </select>
