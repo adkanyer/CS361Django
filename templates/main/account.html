@@ -26,7 +26,6 @@
             </div>
         </nav>
         <br>
-
         <div class="row">
             <div class="col-3"></div>
             <div class="col-lg-6">
@@ -89,6 +88,29 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <br>
+            <div class="row">
+            <div class="col-4"></div>
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">Create Account</div>
+                    <div class="card-body">
+                            <form method="post" action="/account/" class="input-group">
+                            <div class="form-group col-lg-12">
+                                {% csrf_token %}
+                                <input type="text" name="new_username" placeholder="Insert Username" id="new_username" class="form-control">
+                                <br>
+                                <input type="text" name="new_password" placeholder="Insert Password" id="new_password" class="form-control">
+                                <br>
+                                <input type="text" name="new_role" placeholder="Insert Role" id="new_role" class="form-control">
+                                <br>
+                            </div>
+                            </form>
+                        <p><button type="submit" class="btn btn-primary btn-lg btn-block" name="form" value="create_account">Create Account</button></p>
+                    </div>
+                </div>
+            </div>
             </div>
             <br>
             <div class="row">
