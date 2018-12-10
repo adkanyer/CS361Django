@@ -98,16 +98,15 @@ class Accounts(BaseView):
         if role == "administrator" or role == "supervisor":
             accounts = self.ui.command("view_accounts", "")
 
-        print("testing")
-
         if request.POST["form"] == "create_account":
-            print("test")
-            response = self.ui.command("create_account ", request.POST["new_username"]+" "+request.POST["new_password"]+" "+request.POST["new_role"])
+            response = self.ui.command("create_account", ["create_account", request.POST["new_username"],
+                                                          request.POST["new_password"], request.POST["new_role"]])
 
         if request.POST["form"] == "view_info":
             response = self.ui.command("view_info", {"username": request.POST["username"]})
 
-        return render(request, "main/account.html", {"user": user, "response": response, "message": str(self.environ.message), "role": role, "accounts": accounts})
+        return render(request, "main/account.html", {"user": user, "response": response,
+                                                     "message": str(self.environ.message), "role": role, "accounts": accounts})
 
 
 class Courses(BaseView):
@@ -121,6 +120,10 @@ class Courses(BaseView):
         response = None
         self.init_logged_in(request)
         user = self.environ.user.username
+
+        if request.POST["form"] == "create_course":
+            response = self.ui.command("create_course", ["create_course", request.POST["course_number"],
+                                                          request.POST["course_name"]])
 
         return render(request, "main/courses.html", {"user": user, "response": response, "message": str(self.environ.message)})
 
