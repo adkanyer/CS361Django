@@ -113,19 +113,29 @@ class Courses(BaseView):
     def get(self, request):
         self.init_logged_in(request)
         user = self.environ.user.username
+        role = self.environ.user.role
 
-        return render(request, "main/courses.html", {"user": user, "response": ""})
+        if role == "administrator" or role == "supervisor" or role == "instructor":
+            courses = self.ui.command("view_courses", "")
+
+        return render(request, "main/courses.html", {"user": user, "role": role, "courses": courses})
 
     def post(self, request):
-        response = None
         self.init_logged_in(request)
         user = self.environ.user.username
+        role = self.environ.user.role
+        response = None
+        courses = None
+
+        if role == "administrator" or role == "supervisor" or role == "instructor":
+            courses = self.ui.command("view_courses", "")
 
         if request.POST["form"] == "create_course":
             response = self.ui.command("create_course", ["create_course", request.POST["course_number"],
-                                                          request.POST["course_name"]])
+                                                         request.POST["course_name"]])
 
-        return render(request, "main/courses.html", {"user": user, "response": response, "message": str(self.environ.message)})
+        return render(request, "main/courses.html", {"user": user, "role": role, "courses": courses,
+                                                     "response": response, "message": str(self.environ.message)})
 
 
 class Labs(BaseView):
