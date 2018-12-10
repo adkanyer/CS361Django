@@ -45,7 +45,7 @@
                                 <p><button class="btn btn-primary btn-lg btn-block" name="form" value="view_info" type="submit">Search</button></p>
                             </div>
                         </form>
-                        {% if responses.view_info is not None and responses.view_info != "" %}
+                        {% if responses.view_info is not None and responses.view_info != "" and responses.view_info != "ERROR" %}
                             <div class="card">
                                 <ul class="list-group list-group-flush">
                                     <li class="list-group-item">Name: {{ responses.view_info.name }} {{ responses.view_info.lname }}</li>
