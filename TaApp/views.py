@@ -67,12 +67,8 @@ class Accounts(View):
             "update_info": ""
         }
 
-        accounts = None
-        if role == "administrator" or role == "supervisor":
-            accounts = self.ui.command("view_accounts", "")
-
         if request.POST["form"] == "create_account":
-            responses["create_account"] = self.ui.command("create_account ", request.POST["new_username"]+" "+request.POST["new_password"]+" "+request.POST["new_role"])
+            responses["create_account"] = self.ui.command("create_account", ["create_account", request.POST["new_username"], request.POST["new_password"], request.POST["new_role"]])
 
         if request.POST["form"] == "view_info":
             responses["view_info"] = self.ui.command("view_info", {"username": request.POST["username"]})
@@ -89,6 +85,12 @@ class Accounts(View):
         if request.POST["form"] == "office":
             time = request.POST["day_of_week"] + ": " + request.POST["start"] + "-" + request.POST["end"]
             responses["update_info"] = self.ui.command("update_info", {"field": "office_hours", "user": request.POST["user"], "time": time})
+        if request.POST["form"] == "delete":
+            responses["update_info"] = self.ui.command("delete_account", {"user": request.POST["user"]})
+
+        accounts = None
+        if role == "administrator" or role == "supervisor":
+            accounts = self.ui.command("view_accounts", "")
 
         return render(request, "main/account.html", {"user": user, "responses": responses, "message": str(self.environ.message), "role": role, "accounts": accounts})
 

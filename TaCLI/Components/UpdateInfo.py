@@ -40,10 +40,8 @@ class EditPhone(Command.Command):
         self.environment = environment
 
     def action(self, args):
-        full_argument = " ".join(args[3:])
-
-        user = self.environment.database.get_user(args[1]).username
-        self.environment.database.edit_phone(user, full_argument)
+        user = self.environment.database.get_user(args["user"]).username
+        self.environment.database.edit_phone(user, args["phone"])
         return "Phone Number has been updated successfully"
 
 
@@ -52,10 +50,8 @@ class EditAddress(Command.Command):
         self.environment = environment
 
     def action(self, args):
-        full_argument = " ".join(args[3:])
-
-        user = self.environment.database.get_user(args[1]).username
-        self.environment.database.edit_address(user, full_argument)
+        user = self.environment.database.get_user(args["user"]).username
+        self.environment.database.edit_address(user, args["address"])
         return "Address has been updated successfully."
 
 
@@ -64,10 +60,8 @@ class EditEmail(Command.Command):
         self.environment = environment
 
     def action(self, args):
-        full_argument = "".join(args[3:])
-
-        user = self.environment.database.get_user(args[1]).username
-        self.environment.database.edit_email(user, full_argument)
+        user = self.environment.database.get_user(args["user"]).username
+        self.environment.database.edit_email(user, args["email"])
         return "Email has been updated successfully."
 
 
@@ -76,9 +70,8 @@ class EditOfficeHours(Command.Command):
         self.environment = environment
 
     def action(self, args):
-        hours = args[3:]
-        user = self.environment.database.get_user(args[1]).username
-        self.environment.database.edit_office_hours(user, hours)
+        user = self.environment.database.get_user(args["user"]).username
+        self.environment.database.edit_office_hours(user, args["time"])
         return "Office Hours have been updated successfully."
 
 
@@ -87,10 +80,6 @@ class EditName(Command.Command):
         self.environment = environment
 
     def action(self, args):
-        first_name = args["first"]
-        last_name = "".join(args["last"])
-
         user = self.environment.database.get_user(args["user"]).username
-        self.environment.database.edit_name(user, first_name, last_name)
-
+        self.environment.database.edit_name(user, args["first"], args["last"])
         return "Name has been updated successfully."

@@ -55,15 +55,11 @@ class DeleteAccount(Command.Command):
             self.environment.debug("Permission denied.")
             return "ERROR"
 
-        if len(args) != 2:
-            self.environment.debug("Invalid arguments.\nCorrect Parameters: delete_account <USERNAME>")
-            return "ERROR"
-
-        if self.environment.database.get_user(args[1]) is None:
+        if self.environment.database.get_user(args["user"]) is None:
             self.environment.debug("User to delete doesn't exist.")
             return "ERROR"
 
-        self.environment.database.delete_account(args[1])
+        self.environment.database.delete_account(args["user"])
         return "Account deleted."
 
 

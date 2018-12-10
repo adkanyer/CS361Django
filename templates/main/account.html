@@ -67,7 +67,7 @@
             <br>
             <div class="row">
                 <div class="col-2"></div>
-                <div class="col-lg-8">
+                <div class="col-lg-4">
                     <div class="card">
                         <div class="card-header">Accounts</div>
                         <div class="card-body">
@@ -88,36 +88,35 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <br>
-            <div class="row">
-            <div class="col-4"></div>
-            <div class="col-lg-4">
-                <div class="card">
-                    <div class="card-header">Create Account</div>
-                    <div class="card-body">
-                        <form method="post" action="/account/" class="input-group">
-                            <div class="form-group col-lg-12">
-                                {% csrf_token %}
-                                <input type="text" name="new_username" placeholder="Insert Username" id="new_username" class="form-control">
-                                <br>
-                                <input type="text" name="new_password" placeholder="Insert Password" id="new_password" class="form-control">
-                                <br>
-                                <select class="custom-select" name="new_role">
-                                    <option selected>Role</option>
-                                    <option value="administrator">Administrator</option>
-                                    <option value="supervisor">Supervisor</option>
-                                    <option value="instructor">Instructor</option>
-                                    <option value="ta">TA</option>
-                                </select>
-                                <br>
-                                <br>
-                                <p><button class="btn btn-primary btn-lg btn-block" name="form" value="create_account" type="submit">Create Account</button></p>
-                            </div>
-                        </form>
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-header">Create Account</div>
+                        <div class="card-body">
+                            {% if responses.create_account != "" and responses.create_account is not None%}
+                                <div class="alert alert-success" role="alert">{{  responses.create_account }}</div>
+                            {% endif %}
+                            <form method="post" action="/account/" class="input-group">
+                                <div class="form-group col-lg-12">
+                                    {% csrf_token %}
+                                    <input type="text" name="new_username" placeholder="Insert Username" id="new_username" class="form-control">
+                                    <br>
+                                    <input type="text" name="new_password" placeholder="Insert Password" id="new_password" class="form-control">
+                                    <br>
+                                    <select class="custom-select" name="new_role">
+                                        <option selected>Role</option>
+                                        <option value="administrator">Administrator</option>
+                                        <option value="supervisor">Supervisor</option>
+                                        <option value="instructor">Instructor</option>
+                                        <option value="ta">TA</option>
+                                    </select>
+                                    <br>
+                                    <br>
+                                    <p><button class="btn btn-primary btn-lg btn-block" name="form" value="create_account" type="submit">Create Account</button></p>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
             </div>
             <br>
             <div class="row">
@@ -127,17 +126,16 @@
                         <div class="card-header">Edit Account</div>
                         <div class="card-body">
                             {% if responses.update_info != "" and responses.update_info is not None%}
-                                <div class="alert alert-danger" role="alert">{{  responses.update_info }}</div>
+                                <div class="alert alert-success" role="alert">{{  responses.update_info }}</div>
                             {% endif %}
                             <form method="post" action="/account/" class="input-group">
                                 {% csrf_token %}
                                 <div class="row">
-                                    <div class="col-lg-2">
+                                    <div class="col-lg-3">
                                         <h6>Select an Account</h6>
                                         {% for i in accounts %}
                                             <div class="form-check">
                                                 {%  if accounts.0 == i %}
-                                                    <br>
                                                     <input class="form-check-input" type="radio" name="user" checked="checked" value={{ i.username }} >
                                                 {% else %}
                                                     <input class="form-check-input" type="radio" name="user" value={{ i.username }}>
@@ -146,7 +144,7 @@
                                             </div>
                                         {% endfor %}
                                     </div>
-                                    <div class="col-lg-10">
+                                    <div class="col-lg-9">
                                         <div class="row">
                                             <div class="col-lg-6">
                                                 <label for="basic-url">Name</label>
