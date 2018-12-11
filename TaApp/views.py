@@ -6,6 +6,7 @@ from TaCLI import UI, Environment
 import TaCLI.User
 from TaApp.DjangoModelInterface import DjangoModelInterface
 
+
 class Home(View):
     def __init__(self):
         self.environ = Environment.Environment(DjangoModelInterface(), DEBUG=True)
@@ -17,11 +18,13 @@ class Home(View):
 
     def get(self, request):
         user = str(self.environ.database.get_logged_in())
+        role = None
         data = None
         if user != "":
             data = self.ui.command("view_info", "")
+            role = self.environ.user.role
 
-        return render(request, "main/index.html", {"user": user, "response": data})
+        return render(request, "main/index.html", {"user": user, "response": data, "role": role,})
 
     def post(self, request):
         if request.POST["form"] == "login":
@@ -30,12 +33,14 @@ class Home(View):
             self.ui.command("logout", "")
 
         user = str(self.environ.database.get_logged_in())
+        role = None
         data = None
         if user != "":
             data = self.ui.command("view_info", "")
+            role = self.environ.user.role
 
         user = str(self.environ.database.get_logged_in())
-        return render(request, "main/index.html", {"user": user, "response": data, "message": str(self.environ.message)})
+        return render(request, "main/index.html", {"user": user, "response": data, "message": str(self.environ.message), "role": role,})
 
 
 class Accounts(View):
@@ -49,7 +54,9 @@ class Accounts(View):
 
     def get(self, request):
         user = str(self.environ.database.get_logged_in())
-        role = self.environ.user.role
+        role = None
+        if user != "":
+            role = self.environ.user.role
 
         accounts = None
         if role == "administrator" or role == "supervisor":
@@ -59,7 +66,9 @@ class Accounts(View):
 
     def post(self, request):
         user = str(self.environ.database.get_logged_in())
-        role = self.environ.user.role
+        role = None
+        if user != "":
+            role = self.environ.user.role
 
         responses = {
             "create_account": "",
@@ -106,7 +115,9 @@ class Courses(View):
 
     def get(self, request):
         user = str(self.environ.database.get_logged_in())
-        role = self.environ.user.role
+        role = None
+        if user != "":
+            role = self.environ.user.role
         courses = None
 
         if role == "administrator" or role == "supervisor" or role == "instructor":
@@ -117,7 +128,9 @@ class Courses(View):
 
     def post(self, request):
         user = str(self.environ.database.get_logged_in())
-        role = self.environ.user.role
+        role = None
+        if user != "":
+            role = self.environ.user.role
         response = None
         courses = None
 
@@ -133,6 +146,7 @@ class Courses(View):
         return render(request, "main/courses.html", {"user": user, "role": role, "courses": courses,
                                                      "response": response, "message": str(self.environ.message)})
 
+
 class Labs(View):
     def __init__(self):
         self.environ = Environment.Environment(DjangoModelInterface(), DEBUG=True)
@@ -144,14 +158,20 @@ class Labs(View):
 
     def get(self, request):
         user = str(self.environ.database.get_logged_in())
+        role = None
+        if user != "":
+            role = self.environ.user.role
 
-        return render(request, "main/labs.html", {"user": user, "response": ""})
+        return render(request, "main/labs.html", {"user": user, "role": role, "response": ""})
 
     def post(self, request):
         response = None
         user = str(self.environ.database.get_logged_in())
+        role = None
+        if user != "":
+            role = self.environ.user.role
 
-        return render(request, "main/labs.html", {"user": user, "response": response, "message": str(self.environ.message)})
+        return render(request, "main/labs.html", {"user": user, "role": role, "response": response, "message": str(self.environ.message)})
 
 
 class Settings(View):
@@ -165,17 +185,21 @@ class Settings(View):
 
     def get(self, request):
         user = str(self.environ.database.get_logged_in())
+        role = None
         data = None
         if user != "":
             data = self.ui.command("view_info", "")
+            role = self.environ.user.role
 
-        return render(request, "main/settings.html", {"user": user, "old": data})
+        return render(request, "main/settings.html", {"user": user, "role": role, "old": data})
 
     def post(self, request):
         user = str(self.environ.database.get_logged_in())
+        role = None
         data = None
         if user != "":
             data = self.ui.command("view_info", "")
+            role = self.environ.user.role
 
         success = ""
         if request.POST["form"] == "name":
@@ -191,5 +215,5 @@ class Settings(View):
             time = request.POST["day_of_week"] + ": " + request.POST["start"] + "-" + request.POST["end"]
             success = self.ui.command("edit_info", {"field": "office_hours", "time": time})
 
-        return render(request, "main/settings.html", {"user": user, "old": data, "message": str(self.environ.message), "success":success})
+        return render(request, "main/settings.html", {"user": user, "role": role, "old": data, "message": str(self.environ.message), "success":success})
 
