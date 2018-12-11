@@ -25,8 +25,34 @@
                 </ul>
             </div>
         </nav>
+        <br>
+        <div class="row">
+        <div class="col-3"></div>
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">Create Course</div>
+                    <div class="card-body">
+                        {% if message != "" and message is not None%}
+                            <div class="alert alert-danger" role="alert">
+                                {{  message }}
+                            </div>
+                        {% endif %}
+                        <form method="post" action="/course/" class="input-group">
+                            <div class="form-group col-lg-12">
+                                {% csrf_token %}
+                                <input type="text" name="course_number" placeholder="Insert Course Number" id="course_number" class="form-control">
+                                <br>
+                                <input type="text" name="course_name" placeholder="Insert Course Name" id="course_name" class="form-control">
+                                <br>
+                                <p><button class="btn btn-primary btn-lg btn-block" name="form" value="create_course" type="submit">Create Course</button></p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
         {% if role == "administrator" or role == "supervisor" or role == "instructor"%}
-            <br>
             <div class="row">
                 <div class="col-2"></div>
                 <div class="col-lg-8">
@@ -56,32 +82,6 @@
                 </div>
             </div>
         {% endif %}
-        <br>
-        <div class="row">
-        <div class="col-3"></div>
-        <div class="col-lg-6">
-            <div class="card">
-            <div class="card-header">Search</div>
-            <div class="card-body">
-                {% if message != "" and message is not None%}
-                    <div class="alert alert-danger" role="alert">
-                        {{  message }}
-                    </div>
-                {% endif %}
-                <form method="post" action="/course/" class="input-group">
-                    <div class="form-group col-lg-12">
-                        {% csrf_token %}
-                        <input type="text" name="course_number" placeholder="Insert Course Number" id="course_number" class="form-control">
-                        <br>
-                        <input type="text" name="course_name" placeholder="Insert Course Name" id="course_name" class="form-control">
-                        <br>
-                        <p><button class="btn btn-primary btn-lg btn-block" name="form" value="create_course" type="submit">Create Course</button></p>
-                    </div>
-                </form>
-            </div>
-            </div>
-        </div>
-        </div>
     {% endif %}
 
 {% endblock content %}
