@@ -1,3 +1,2 @@
-InstructorUser:5f4dcc3b5aa765d61d8327deb882cf99:instructor
-AdministratorUser:5f4dcc3b5aa765d61d8327deb882cf99:administrator
-SupervisorUser:5f4dcc3b5aa765d61d8327deb882cf99:supervisor
+root:63a9f0ea7bb98050796b649e85481845:supervisor
+jayson:5f4dcc3b5aa765d61d8327deb882cf99:instructor
