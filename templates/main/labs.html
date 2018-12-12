@@ -36,8 +36,8 @@
         <br>
         {% if role == "administrator" or role == "supervisor" or role == "instructor" or role == "TA"%}
             <div class="row">
-                <div class="col-1"></div>
-                <div class="col-lg-10">
+                <div class="col-2"></div>
+                <div class="col-lg-8">
                     <div class="card">
                         <div class="card-header">Labs</div>
                         <div class="card-body">
@@ -65,8 +65,8 @@
         <br>
         {% if role == "administrator" or role == "supervisor" or role == "instructor"%}
             <div class="row">
-            <div class="col-1"></div>
-            <div class="col-lg-5">
+            <div class="col-2"></div>
+            <div class="col-lg-4">
                 <div class="card">
                     <div class="card-header">Create Lab</div>
                     <div class="card-body">
@@ -84,7 +84,7 @@
                 </div>
             </div>
             {% if role == "instructor" %}
-                <div class="col-lg-5">
+                <div class="col-lg-4">
                 <div class="card">
                     <div class="card-header">Assign Lab</div>
                     <div class="card-body">
