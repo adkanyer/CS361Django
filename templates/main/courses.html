@@ -28,52 +28,6 @@
             </div>
         </nav>
         <br>
-        {% if message != "" and message is not None%}
-            <div class="alert alert-danger" role="alert">
-                {{  message }}
-            </div>
-        {% endif %}
-        {% if role == "administrator" or role == "supervisor" %}
-            <div class="row">
-                <div class="col-1"></div>
-                <div class="col-lg-5">
-                    <div class="card">
-                        <div class="card-header">Create Course</div>
-                        <div class="card-body">
-                            <form method="post" action="/course/" class="input-group">
-                                <div class="form-group col-lg-12">
-                                    {% csrf_token %}
-                                    <input type="text" name="course_number" placeholder="Insert Course Number" id="course_number" class="form-control">
-                                    <br>
-                                    <input type="text" name="course_name" placeholder="Insert Course Name" id="course_name" class="form-control">
-                                    <br>
-                                    <p><button class="btn btn-primary btn-lg btn-block" name="form" value="create_course" type="submit">Create Course</button></p>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                {% if role == "supervisor" %}
-                    <div class="col-lg-5">
-                        <div class="card">
-                            <div class="card-header">Assign Course</div>
-                            <div class="card-body"></div>
-                            <form method="post" action="/course/" class="input-group">
-                                <div class="form-group col-lg-12">
-                                    {% csrf_token %}
-                                    <input type="text" name="course_number" placeholder="Insert Course Number" id="course_number" class="form-control">
-                                    <br>
-                                    <input type="text" name="username" placeholder="Insert Instructor or TA" id="username" class="form-control">
-                                    <br>
-                                    <p><button class="btn btn-primary btn-lg btn-block" name="form" value="assign_course" type="submit">Assign Course</button></p>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                {% endif %}
-            </div>
-        {% endif %}
-        <br>
         {% if role == "administrator" or role == "supervisor" or role == "instructor"%}
             <div class="row">
                 <div class="col-1"></div>
@@ -81,6 +35,11 @@
                     <div class="card">
                         <div class="card-header">Search</div>
                         <div class="card-body">
+                            {% if message != "" and message is not None%}
+                                <div class="alert alert-danger" role="alert">
+                                    {{  message }}
+                                </div>
+                            {% endif %}
                             <form method="post" action="/course/" class="input-group">
                                 <div class="form-group col-lg-12">
                                     {% csrf_token %}
@@ -89,7 +48,7 @@
                                     <p><button class="btn btn-primary btn-lg btn-block" name="form" value="view_course" type="submit">Search</button></p>
                                 </div>
                             </form>
-                            {% if response.view_course is not None and responsee.view_info != "" and response.view_info != "ERROR"%}
+                            {% if response.view_course is not None and response.view_course != "" and response.view_course != "ERROR"%}
                                 <div class="card">
                                     <ul class="list-group list-group-flush">
                                         <li class="list-group-item">Number: {{ response.view_course.number }} </li>
@@ -133,5 +92,53 @@
                 </div>
             </div>
         {% endif %}
+        <br>
+        {% if role == "administrator" or role == "supervisor" %}
+            <div class="row">
+                <div class="col-1"></div>
+                <div class="col-lg-5">
+                    <div class="card">
+                        <div class="card-header">Create Course</div>
+                        <div class="card-body">
+                            <form method="post" action="/course/" class="input-group">
+                                <div class="form-group col-lg-12">
+                                    {% csrf_token %}
+                                    <input type="text" name="course_number" placeholder="Insert Course Number" id="course_number" class="form-control">
+                                    <br>
+                                    <input type="text" name="course_name" placeholder="Insert Course Name" id="course_name" class="form-control">
+                                    <br>
+                                    <p><button class="btn btn-primary btn-lg btn-block" name="form" value="create_course" type="submit">Create Course</button></p>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% if role == "supervisor" %}
+                    <div class="col-lg-5">
+                        <div class="card">
+                            <div class="card-header">Assign Course</div>
+                            <div class="card-body">
+                                <form method="post" action="/course/" class="input-group">
+                                    <div class="form-group col-lg-12">
+                                        {% csrf_token %}
+                                        <input type="text" name="course_number" placeholder="Insert Course Number" id="course_number" class="form-control">
+                                        <br>
+                                        <select class="custom-select" name="username">
+                                            <option selected>Insert Instructor or TA</option>
+                                            {% for i in accounts %}
+                                                <option value={{ i.name }}>{{ i.name }} ({{ i.role }})</option>
+                                            {% endfor %}
+                                        </select>
+                                        <br><br>
+                                        <p><button class="btn btn-primary btn-lg btn-block" name="form" value="assign_course" type="submit">Assign Course</button></p>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
+        <br>
     {% endif %}
 {% endblock content %}
