@@ -4,7 +4,7 @@ from TaCLI.Components.AccountCommands import CreateAccount, DeleteAccount, ViewA
 from TaCLI.Components.EditInfo import EditInfo
 from TaCLI.Environment import Environment
 from TaCLI.User import User
-from TaApp.DjangoModelInterface import DjangoModelInterface
+from TaApp import DjangoModelInterface
 
 
 class CreateAccountUnitTests(unittest.TestCase):
@@ -96,7 +96,7 @@ class DeleteAccountUnitTests(unittest.TestCase):
         self.environment.database.create_account(user_name, "password", "TA")
 
         delete_command = DeleteAccount(self.environment)
-        response = delete_command.action(["delete_account", user_name])
+        response = delete_command.action({"user": user_name})
 
         self.assertEqual(response, "Account deleted.")
         self.assertIsNone(self.environment.database.get_user(user_name))
@@ -106,7 +106,7 @@ class DeleteAccountUnitTests(unittest.TestCase):
         user_name = "nonexisting_account"
 
         delete_command = DeleteAccount(self.environment)
-        response = delete_command.action(["delete_account", user_name])
+        response = delete_command.action({"user": user_name})
 
         self.assertEqual(response, "ERROR")
 
@@ -117,7 +117,7 @@ class DeleteAccountUnitTests(unittest.TestCase):
         self.environment.database.create_account(user_name, "password", "TA")
 
         delete_command = DeleteAccount(self.environment)
-        response = delete_command.action(["delete_account", user_name])
+        response = delete_command.action({"user": user_name})
 
         self.assertEqual(response, "ERROR")
         self.assertIsNotNone(self.environment.database.get_user(user_name))
@@ -127,7 +127,7 @@ class DeleteAccountUnitTests(unittest.TestCase):
         self.environment.database.create_account(user_name, "password", "TA")
 
         delete_command = DeleteAccount(self.environment)
-        response = delete_command.action(["delete_account", user_name])
+        response = delete_command.action({"user": user_name})
 
         self.assertEqual(response, "ERROR")
         self.assertIsNotNone(self.environment.database.get_user(user_name))
@@ -138,7 +138,7 @@ class DeleteAccountUnitTests(unittest.TestCase):
         self.environment.database.create_account(user_name, "password", "TA")
 
         delete_command = DeleteAccount(self.environment)
-        response = delete_command.action(["delete_account"])
+        response = delete_command.action({"user": None})
 
         self.assertEqual(response, "ERROR")
         self.assertIsNotNone(self.environment.database.get_user(user_name))
@@ -153,7 +153,7 @@ class ViewAccountsUnitTests(unittest.TestCase):
     def test_view_accounts_none_in_database(self):
         self.environment.user = User("root", "administrator")
         view_command = ViewAccounts(self.environment)
-        response = view_command.action(["view_accounts"])
+        response = view_command.action({})
 
         self.assertEqual(response, "")
 
@@ -166,9 +166,9 @@ class ViewAccountsUnitTests(unittest.TestCase):
         view_command = ViewAccounts(self.environment)
         response = view_command.action(["view_accounts"])
 
-        self.assertEqual(response,  "InstructorUser - instructor\n" +
-                                    "AdministratorUser - administrator\n" +
-                                    "SupervisorUser - supervisor\n")
+        self.assertEqual(response,  [{"role": "instructor", "username": "InstructorUser"},
+                                     {"role": "administrator", "username": "AdministratorUser"},
+                                     {"role": "supervisor", "username": "SupervisorUser"}])
 
     def test_view_accounts_not_logged_in(self):
         self.environment.database.create_account("InstructorUser", "password", "instructor")
