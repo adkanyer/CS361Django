@@ -49,7 +49,7 @@
                             <form method="post" action="/course/" class="input-group">
                                 <div class="form-group col-lg-12">
                                     {% csrf_token %}
-                                    <input type="text" name="course_number" placeholder="Insert Course Number to Search" id="course_number" class="form-control">
+                                    <input type="number" name="course_number" placeholder="Insert Course Number to Search" id="course_number" class="form-control">
                                     <br>
                                     <p><button class="btn btn-primary btn-lg btn-block" name="form" value="view_course" type="submit">Search</button></p>
                                 </div>
@@ -109,7 +109,7 @@
                             <form method="post" action="/course/" class="input-group">
                                 <div class="form-group col-lg-12">
                                     {% csrf_token %}
-                                    <input type="text" name="course_number" placeholder="Insert Course Number" id="course_number" class="form-control">
+                                    <input type="number" name="course_number" placeholder="Insert Course Number" id="course_number" class="form-control">
                                     <br>
                                     <input type="text" name="course_name" placeholder="Insert Course Name" id="course_name" class="form-control">
                                     <br>
@@ -127,7 +127,7 @@
                                 <form method="post" action="/course/" class="input-group">
                                     <div class="form-group col-lg-12">
                                         {% csrf_token %}
-                                        <input type="text" name="course_number" placeholder="Insert Course Number" id="course_number" class="form-control">
+                                        <input type="number" name="course_number" placeholder="Insert Course Number" id="course_number" class="form-control">
                                         <br>
                                         <select class="custom-select" name="username">
                                             <option selected>Insert Instructor or TA</option>
