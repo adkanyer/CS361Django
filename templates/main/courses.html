@@ -24,14 +24,20 @@
                     <span class="navbar-text navbar-dark">
                         <b>Hello, </b>{{ user }}
                     </span>
+                    <span class="logout">
+                        <form method="post" action="/" class="input-group">
+                            {% csrf_token %}
+                            <button class="btn btn-secondary btn-block btn-sm" name="form" value="logout" type="submit">Logout</button>
+                        </form>
+                    </span>
                 </ul>
             </div>
         </nav>
         <br>
         {% if role == "administrator" or role == "supervisor" or role == "instructor"%}
             <div class="row">
-                <div class="col-1"></div>
-                <div class="col-lg-10">
+                <div class="col-3"></div>
+                <div class="col-lg-6">
                     <div class="card">
                         <div class="card-header">Search</div>
                         <div class="card-body">
@@ -64,8 +70,8 @@
             </div>
             <br>
             <div class="row">
-                <div class="col-1"></div>
-                <div class="col-lg-10">
+                <div class="col-2"></div>
+                <div class="col-lg-8">
                     <div class="card">
                         <div class="card-header">Courses</div>
                         <div class="card-body">
@@ -95,8 +101,8 @@
         <br>
         {% if role == "administrator" or role == "supervisor" %}
             <div class="row">
-                <div class="col-1"></div>
-                <div class="col-lg-5">
+                <div class="col-2"></div>
+                <div class="col-lg-4">
                     <div class="card">
                         <div class="card-header">Create Course</div>
                         <div class="card-body">
@@ -114,7 +120,7 @@
                     </div>
                 </div>
                 {% if role == "supervisor" %}
-                    <div class="col-lg-5">
+                    <div class="col-lg-4">
                         <div class="card">
                             <div class="card-header">Assign Course</div>
                             <div class="card-body">

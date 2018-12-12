@@ -24,6 +24,12 @@
                     <span class="navbar-text navbar-dark">
                         <b>Hello, </b>{{ user }}
                     </span>
+                    <span class="logout">
+                        <form method="post" action="/" class="input-group">
+                            {% csrf_token %}
+                            <button class="btn btn-secondary btn-block btn-sm" name="form" value="logout" type="submit">Logout</button>
+                        </form>
+                    </span>
                 </ul>
             </div>
         </nav>
@@ -45,12 +51,12 @@
                             {% csrf_token %}
                             <label for="basic-url">Name</label>
                             <div class="input-group mb-1">
-                                 <div class="input-group-prepend"><span class="input-group-text">First Name</span></div>
-                                 <input type="text" class="form-control" name="first_name" placeholder="{{ old.name }}">
+                                <div class="input-group-prepend"><span class="input-group-text">First Name</span></div>
+                                <input type="text" class="form-control" name="first_name" placeholder="{{ old.name }}">
                             </div>
                             <div class="input-group mb-2">
-                                 <div class="input-group-prepend"><span class="input-group-text">Last Name</span></div>
-                                 <input type="text" class="form-control" name="last_name" placeholder={{ old.lname }}>
+                                <div class="input-group-prepend"><span class="input-group-text">Last Name</span></div>
+                                <input type="text" class="form-control" name="last_name" placeholder={{ old.lname }}>
                             </div>
                             <div class="input-group mb-3">
                                 <button type="submit"  name="form" value="name" class="btn btn-primary">Update</button>
@@ -142,6 +148,6 @@
             </div>
         </div>
 
-     {% endif %}
+    {% endif %}
 
 {% endblock content %}
