@@ -113,6 +113,10 @@ class DjangoModelInterface(DataInterface):
             return None
         return TaCLI.User.User(userobj.name, userobj.role, userobj.password)
 
+    def get_course(self, course_number):
+        course = Course.objects.filter(number=course_number).first()
+        return course
+
     def course_exists(self, course_number):
         course = Course.objects.filter(number=course_number).first()
         return course is not None
@@ -121,6 +125,12 @@ class DjangoModelInterface(DataInterface):
         course = Course.objects.filter(number=course_number).first()
         if course is not None and course.instructor.first() is not None:
             return course.instructor.first().name is not None
+        return False
+
+    def is_course_assigned_to_ta(self, course_number):
+        course = Course.objects.filter(number=course_number).first()
+        if course is not None and course.tas.first() is not None:
+            return course.tas.first().name is not None
         return False
 
     def lab_exists(self, course_number, lab_number):

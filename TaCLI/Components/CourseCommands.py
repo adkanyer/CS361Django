@@ -43,6 +43,9 @@ class AssignCourse(Command.Command):
             self.environment.database.set_course_instructor(args[1], args[2])
             return "Course assigned successfully."
         elif account.get_role() == "TA":
+            if self.environment.database.is_course_assigned_to_ta(course_num):
+                self.environment.debug("Course already assigned to instructor.")
+                return "ERROR"
             self.environment.database.add_course_ta(args[1], args[2])
             return "Course assigned successfully."
         else:
@@ -91,20 +94,39 @@ class ViewCourses(Command.Command):
     def action(self, args):
         result = ""
 
+        if self.environment.user is None:
+            self.environment.debug("You must be logged in to perform this action.")
+            return "ERROR"
+
         if self.environment.user.get_role() not in ["instructor", "administrator", "supervisor"]:
             self.environment.debug("Permission denied.")
             return "ERROR"
 
-        courses = self.environment.database.get_courses()
-
         list = []
-        for course in courses:
-            result = ""
-            for ta in course['tas']:
-                result += f"{ta}, "
+        if args == "":
+            courses = self.environment.database.get_courses()
 
-            list.append({"number": course['course_number'], "name": course['course_name'],
-                         "instructor": course['instructor'], "tas": result})
+            for course in courses:
+                result = ""
+                for ta in course['tas']:
+                    result += f"{ta}, "
+
+                list.append({"number": course['course_number'], "name": course['course_name'],
+                            "instructor": course['instructor'], "tas": result})
+        else:
+
+            course = self.environment.database.get_course(args["course_number"])
+
+            if course is not None:
+                result = ""
+                for temp in course.tas.all():
+                    result += f"{temp.name}, "
+
+                return {"number": course.number, "name": course.name,
+                        "instructor": course.instructor.name, "tas": result}
+            else:
+                self.environment.debug("That course does not exist.")
+                return "ERROR"
 
         return list
 

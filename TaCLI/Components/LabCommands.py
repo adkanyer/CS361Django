@@ -105,8 +105,14 @@ class ViewLabs(Command.Command):
             self.environment.debug("Invalid Arguments.\nCorrect Parameters: view_labs")
             return "ERROR"
 
+        list = []
+
         labs = self.environment.database.get_labs()
+
         for lab in labs:
-            result += f"{lab['course_number']} {lab['lab_number']} {lab['ta_name']}"
-            result += "\n"
-        return result
+            list.append({"course_number": lab['course_number'], "lab_number": lab['lab_number'], "ta": lab['ta_name']})
+
+        return list
+        # for lab in labs:
+        #     result += f"{lab['course_number']} {lab['lab_number']} {lab['ta_name']}"
+        #     result += "\n"
