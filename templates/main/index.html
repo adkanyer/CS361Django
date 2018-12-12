@@ -55,6 +55,12 @@
                     <span class="navbar-text navbar-dark">
                         <b>Hello, </b>{{ user }}
                     </span>
+                    <span class="logout">
+                        <form method="post" action="/" class="input-group">
+                            {% csrf_token %}
+                            <button class="btn btn-secondary btn-block btn-sm" name="form" value="logout" type="submit">Logout</button>
+                        </form>
+                    </span>
                 </ul>
             </div>
         </nav>
