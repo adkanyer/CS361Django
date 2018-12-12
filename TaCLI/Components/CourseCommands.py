@@ -8,6 +8,7 @@ class AssignCourse(Command.Command):
         args is a list containing the following:
             ["assign_Course", course_number, account_name]
     """
+
     def action(self, args):
         """
         Assigns a account to a specified course
@@ -42,11 +43,15 @@ class AssignCourse(Command.Command):
             self.environment.database.set_course_instructor(args[1], args[2])
             return "Course assigned successfully."
         elif account.get_role() == "TA":
+            if self.environment.database.is_course_assigned_to_ta(course_num):
+                self.environment.debug("Course already assigned to instructor.")
+                return "ERROR"
             self.environment.database.add_course_ta(args[1], args[2])
             return "Course assigned successfully."
         else:
             self.environment.debug("User is not an Instructor or TA.")
             return "ERROR"
+
 
 class CreateCourse(Command.Command):
     def __init__(self, environment):
@@ -56,6 +61,7 @@ class CreateCourse(Command.Command):
         args is a list containing the following:
             ["create_course", course_number, course_name,]
     """
+
     def action(self, args):
 
         if self.environment.user is None:
@@ -88,10 +94,6 @@ class ViewCourses(Command.Command):
     def action(self, args):
         result = ""
 
-        if len(args) != 1:
-            self.environment.debug("Invalid arguments.\nCorrect Parameters: view_courses")
-            return "ERROR"
-
         if self.environment.user is None:
             self.environment.debug("You must be logged in to perform this action.")
             return "ERROR"
@@ -100,10 +102,37 @@ class ViewCourses(Command.Command):
             self.environment.debug("Permission denied.")
             return "ERROR"
 
-        courses = self.environment.database.get_courses()
-        for course in courses:
-            result += f"{course['course_number']} {course['course_name']} Instructor: {course['instructor']} TAs:"
-            for ta in course['tas']:
-                result += f"{ta} "
-            result += "\n"
-        return result
+        list = []
+        if args == "":
+            courses = self.environment.database.get_courses()
+
+            for course in courses:
+                result = ""
+                for ta in course['tas']:
+                    result += f"{ta}, "
+
+                list.append({"number": course['course_number'], "name": course['course_name'],
+                            "instructor": course['instructor'], "tas": result})
+        else:
+
+            course = self.environment.database.get_course(args["course_number"])
+
+            if course is not None:
+                result = ""
+                for temp in course.tas.all():
+                    result += f"{temp.name}, "
+
+                return {"number": course.number, "name": course.name,
+                        "instructor": course.instructor.name, "tas": result}
+            else:
+                self.environment.debug("That course does not exist.")
+                return "ERROR"
+
+        return list
+
+        # for course in courses:
+        #     result += f"{course['course_number']} {course['course_name']}\n\tInstructor: {course['instructor']}\n\tTAs: "
+        #     for ta in course['tas']:
+        #         result += f"{ta}, "
+        #     result += "\n"
+        # return result

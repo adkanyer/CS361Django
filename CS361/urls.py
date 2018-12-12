@@ -17,9 +17,13 @@ from django.conf.urls import url
 from django.urls import include, path
 from django.contrib import admin
 
-from TaApp.views import Home
+from TaApp.views import Home, Accounts, Courses, Labs, Settings
 
 urlpatterns = [
   url(r'^admin/', admin.site.urls),
-  path('', Home.as_view())
+  path('', Home.as_view()),
+  path('account/', Accounts.as_view(), name='account'),
+  path('course/', Courses.as_view(), name='course'),
+  path('lab/', Labs.as_view(), name='lab'),
+  path('settings/', Settings.as_view(), name='settings')
 ]

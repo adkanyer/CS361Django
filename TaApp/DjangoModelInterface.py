@@ -55,7 +55,7 @@ class DjangoModelInterface(DataInterface):
     def get_courses(self):
         courses = []
         for c in Course.objects.all():
-            instructor = "No Instructor Assigned"
+            instructor = None
             if c.instructor.first() is not None:
                 instructor = c.instructor.first().name
             tas = []
@@ -113,6 +113,10 @@ class DjangoModelInterface(DataInterface):
             return None
         return TaCLI.User.User(userobj.name, userobj.role, userobj.password)
 
+    def get_course(self, course_number):
+        course = Course.objects.filter(number=course_number).first()
+        return course
+
     def course_exists(self, course_number):
         course = Course.objects.filter(number=course_number).first()
         return course is not None
@@ -121,6 +125,12 @@ class DjangoModelInterface(DataInterface):
         course = Course.objects.filter(number=course_number).first()
         if course is not None and course.instructor.first() is not None:
             return course.instructor.first().name is not None
+        return False
+
+    def is_course_assigned_to_ta(self, course_number):
+        course = Course.objects.filter(number=course_number).first()
+        if course is not None and course.tas.first() is not None:
+            return course.tas.first().name is not None
         return False
 
     def lab_exists(self, course_number, lab_number):
@@ -137,35 +147,42 @@ class DjangoModelInterface(DataInterface):
     def get_private_info(self, user):
         info = ContactInfo.objects.filter(account__name=user.username).first()
         hours = OfficeHour.objects.filter(contact_info=info)
-        s = ""
-        s += "Username: " + user.username + "\n"
-        s += "Role: " + user.role + "\n"
+
+        s = {"username": "","name":"","lname":"","email":"","address":"","phone":"","hours":""}
+
+        s["username"] = user.username
+        s["role"] = user.role
         if info.first_name is not None and info.last_name is not None:
-            s += "Name: " + info.first_name + " " + info.last_name + "\n"
-        if info.address is not None:
-            s += "Address: " + info.address + "\n"
-        if info.phone is not None:
-            s += "Phone: " + info.phone + "\n"
+            s["name"] = info.first_name
+            s["lname"] = info.last_name
         if info.email is not None:
-            s += "Email: " + info.email + "\n"
-        s += "Office Hours: "
+            s["email"] = info.email
+        if info.address is not None:
+            s["address"] = info.address
+        office_hours = ""
         for hour in hours:
-            s += hour.time + " "
+            office_hours += hour.time + ", "
+        s["hours"] = office_hours
+        if info.phone is not None:
+            s["phone"] = info.phone
         return s
 
     def get_public_info(self, user):
         info = ContactInfo.objects.filter(account__name=user.username).first()
         hours = OfficeHour.objects.filter(contact_info=info)
-        s = ""
-        s += "Username: " + user.username + "\n"
-        s += "Role: " + user.role + "\n"
+
+        s = {"username": "", "name": "", "lname": "", "email": "", "hours": ""}
+        s["username"] = user.username
+        s["role"] = user.role
         if info.first_name is not None and info.last_name is not None:
-            s += "Name: " + info.first_name + " " + info.last_name + "\n"
+            s["name"] = info.first_name
+            s["lname"] = info.last_name
         if info.email is not None:
-            s += "Email: " + info.email + "\n"
-        s += "Office Hours: "
+            s["email"] = info.email
+        office_hours = ""
         for hour in hours:
-            s += hour.time + " "
+            office_hours += hour.time + " "
+        s["hours"] = office_hours
         return s
 
     def edit_phone(self, account_name, phone_number):
@@ -188,14 +205,11 @@ class DjangoModelInterface(DataInterface):
 
     def edit_office_hours(self, account_name, office_hours):
         contact = ContactInfo.objects.filter(account__name=account_name).first()
-        print(contact)
         if contact is not None:
-            OfficeHour.objects.filter(contact_info=contact).delete()
-            for oh in office_hours:
-                oh_obj = OfficeHour.objects.create(time=oh)
-                oh_obj.contact_info.add(contact)
-                oh_obj.save()
-
+            '''OfficeHour.objects.filter(contact_info=contact).delete()'''
+            oh_obj = OfficeHour.objects.create(time=office_hours.upper())
+            oh_obj.contact_info.add(contact)
+            oh_obj.save()
 
     def edit_name(self, account_name, first, last):
         contact = ContactInfo.objects.filter(account__name=account_name).first()

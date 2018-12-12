@@ -19,14 +19,10 @@ class EditInfo(Command.Command):
             self.environment.debug("You must be logged in to perform this action.")
             return "ERROR"
 
-        if len(args) < 2:
-            self.environment.debug("Invalid arguments.\nCorrect Parameters: edit_info <FIELD> <NEW VALUE>")
-            return "ERROR"
-
         valid_info = self.fields.keys()
 
-        if args[1] in valid_info:
-            return self.fields[args[1]].action(args)
+        if args["field"] in valid_info:
+            return self.fields[args["field"]].action(args)
 
         return FAILURE_MESSAGE
 
@@ -36,9 +32,7 @@ class EditPhone(Command.Command):
         self.environment = environment
 
     def action(self, args):
-        full_argument = " ".join(args[2:])
-
-        self.environment.database.edit_phone(self.environment.user.username, full_argument)
+        self.environment.database.edit_phone(self.environment.user.username, args["phone"])
         return "Phone Number has been updated successfully"
 
 
@@ -47,9 +41,7 @@ class EditAddress(Command.Command):
         self.environment = environment
 
     def action(self, args):
-        full_argument = " ".join(args[2:])
-
-        self.environment.database.edit_address(self.environment.user.username, full_argument)
+        self.environment.database.edit_address(self.environment.user.username, args["address"])
         return "Address has been updated successfully."
 
 
@@ -58,9 +50,7 @@ class EditEmail(Command.Command):
         self.environment = environment
 
     def action(self, args):
-        full_argument = "".join(args[2:])
-
-        self.environment.database.edit_email(self.environment.user.username, full_argument)
+        self.environment.database.edit_email(self.environment.user.username, args["email"])
         return "Email has been updated successfully."
 
 
@@ -69,8 +59,7 @@ class EditOfficeHours(Command.Command):
         self.environment = environment
 
     def action(self, args):
-        hours = args[2:]
-        self.environment.database.edit_office_hours(self.environment.user.username, hours)
+        self.environment.database.edit_office_hours(self.environment.user.username, args["time"])
         return "Office Hours have been updated successfully."
 
 
@@ -79,9 +68,5 @@ class EditName(Command.Command):
         self.environment = environment
 
     def action(self, args):
-        first_name = args[2]
-        last_name = "".join(args[3:])
-
-        self.environment.database.edit_name(self.environment.user.username, first_name, last_name)
-
+        self.environment.database.edit_name(self.environment.user.username, args["first"], args["last"])
         return "Name has been updated successfully."

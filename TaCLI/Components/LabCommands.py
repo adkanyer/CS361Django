@@ -8,6 +8,7 @@ class CreateLab(Command.Command):
         args is a list containing the following:
             ["create_lab", course_number, lab_number]
     """
+
     def action(self, args):
         if self.environment.user is None:
             self.environment.debug("You must be logged in to perform this action.")
@@ -45,6 +46,7 @@ class AssignLab(Command.Command):
         args is a list containing the following:
             ["assign_lab", course_number, lab_number, account_name]
     """
+
     def action(self, args):
         """
         Assigns a TA to a specified lab section
@@ -103,8 +105,14 @@ class ViewLabs(Command.Command):
             self.environment.debug("Invalid Arguments.\nCorrect Parameters: view_labs")
             return "ERROR"
 
+        list = []
+
         labs = self.environment.database.get_labs()
+
         for lab in labs:
-            result += f"{lab['course_number']} {lab['lab_number']} {lab['ta_name']}"
-            result += "\n"
-        return result
+            list.append({"course_number": lab['course_number'], "lab_number": lab['lab_number'], "ta": lab['ta_name']})
+
+        return list
+        # for lab in labs:
+        #     result += f"{lab['course_number']} {lab['lab_number']} {lab['ta_name']}"
+        #     result += "\n"
