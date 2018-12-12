@@ -176,10 +176,12 @@ class Labs(View):
             role = self.environ.user.role
         labs = None
 
+        accounts = Account.objects.filter(role="TA")
+
         if role == "administrator" or role == "supervisor" or role == "instructor" or role == "TA":
             labs = self.ui.command("view_labs", ["view_labs"])
 
-        return render(request, "main/labs.html", {"user": user, "role": role, "labs": labs})
+        return render(request, "main/labs.html", {"user": user, "role": role, "labs": labs, "accounts": accounts})
 
     def post(self, request):
         user = str(self.environ.database.get_logged_in())
@@ -192,8 +194,7 @@ class Labs(View):
         }
         labs = None
 
-        if role == "administrator" or role == "supervisor" or role == "instructor" or role == "TA":
-            labs = self.ui.command("view_labs", ["view_labs"])
+        accounts = Account.objects.filter(role="TA")
 
         if request.POST["form"] == "create_lab":
             responses["create_lab"] = self.ui.command("create_lab", ["create_lab", request.POST["course_number"],
@@ -202,7 +203,10 @@ class Labs(View):
             responses["assign_lab"] = self.ui.command("assign_lab", ["assign_lab", request.POST["course_number"],
                                                                      request.POST["lab_number"], request.POST["username"]])
 
-        return render(request, "main/labs.html", {"user": user, "role": role, "labs": labs, "response": responses, "message": str(self.environ.message)})
+        if role == "administrator" or role == "supervisor" or role == "instructor" or role == "TA":
+            labs = self.ui.command("view_labs", ["view_labs"])
+
+        return render(request, "main/labs.html", {"user": user, "role": role, "labs": labs, "accounts": accounts, "response": responses, "message": str(self.environ.message)})
 
 
 class Settings(View):
