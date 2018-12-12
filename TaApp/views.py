@@ -120,12 +120,14 @@ class Courses(View):
             role = self.environ.user.role
         courses = None
 
+        accounts = Account.objects.filter(role="TA") | Account.objects.filter(role="instructor")
+
         if role == "administrator" or role == "supervisor" or role == "instructor":
             courses = self.ui.command("view_courses", "")
 
         user = str(self.environ.database.get_logged_in())
 
-        return render(request, "main/courses.html", {"user": user, "role": role, "courses": courses})
+        return render(request, "main/courses.html", {"user": user, "role": role, "courses": courses, "accounts": accounts})
 
     def post(self, request):
         user = str(self.environ.database.get_logged_in())
@@ -138,6 +140,8 @@ class Courses(View):
             "view_course": None
         }
         courses = None
+
+        accounts = Account.objects.filter(role="TA") | Account.objects.filter(role="instructor")
 
         if role == "administrator" or role == "supervisor" or role == "instructor":
             courses = self.ui.command("view_courses", "")
@@ -153,7 +157,7 @@ class Courses(View):
             responses["view_course"] = self.ui.command("view_courses", {"course_number": request.POST["course_number"]})
 
         return render(request, "main/courses.html", {"user": user, "role": role, "courses": courses,
-                                                     "response": responses, "message": str(self.environ.message)})
+                                                     "response": responses, "message": str(self.environ.message), "accounts": accounts})
 
 
 class Labs(View):

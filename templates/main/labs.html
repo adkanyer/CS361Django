@@ -28,11 +28,6 @@
             </div>
         </nav>
         <br>
-        {% if message != "" and message is not None%}
-            <div class="alert alert-danger" role="alert">
-                {{  message }}
-            </div>
-        {% endif %}
         {% if role == "administrator" or role == "supervisor" or role == "instructor"%}
             <div class="row">
                 <div class="col-1"></div>
