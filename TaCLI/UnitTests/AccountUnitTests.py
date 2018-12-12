@@ -4,7 +4,6 @@ from TaCLI.Components.AccountCommands import CreateAccount, DeleteAccount, ViewA
 from TaCLI.Components.EditInfo import EditInfo
 from TaCLI.Environment import Environment
 from TaCLI.User import User
-from TaApp.DjangoModelInterface import DjangoModelInterface
 
 
 class CreateAccountUnitTests(unittest.TestCase):
@@ -96,7 +95,7 @@ class DeleteAccountUnitTests(unittest.TestCase):
         self.environment.database.create_account(user_name, "password", "TA")
 
         delete_command = DeleteAccount(self.environment)
-        response = delete_command.action(["delete_account", user_name])
+        response = delete_command.action({"user": user_name})
 
         self.assertEqual(response, "Account deleted.")
         self.assertIsNone(self.environment.database.get_user(user_name))
@@ -106,7 +105,7 @@ class DeleteAccountUnitTests(unittest.TestCase):
         user_name = "nonexisting_account"
 
         delete_command = DeleteAccount(self.environment)
-        response = delete_command.action(["delete_account", user_name])
+        response = delete_command.action({"user": user_name})
 
         self.assertEqual(response, "ERROR")
 
@@ -117,7 +116,7 @@ class DeleteAccountUnitTests(unittest.TestCase):
         self.environment.database.create_account(user_name, "password", "TA")
 
         delete_command = DeleteAccount(self.environment)
-        response = delete_command.action(["delete_account", user_name])
+        response = delete_command.action({"user": user_name})
 
         self.assertEqual(response, "ERROR")
         self.assertIsNotNone(self.environment.database.get_user(user_name))
@@ -127,7 +126,7 @@ class DeleteAccountUnitTests(unittest.TestCase):
         self.environment.database.create_account(user_name, "password", "TA")
 
         delete_command = DeleteAccount(self.environment)
-        response = delete_command.action(["delete_account", user_name])
+        response = delete_command.action({"user": user_name})
 
         self.assertEqual(response, "ERROR")
         self.assertIsNotNone(self.environment.database.get_user(user_name))
@@ -138,7 +137,7 @@ class DeleteAccountUnitTests(unittest.TestCase):
         self.environment.database.create_account(user_name, "password", "TA")
 
         delete_command = DeleteAccount(self.environment)
-        response = delete_command.action(["delete_account"])
+        response = delete_command.action({"user": None})
 
         self.assertEqual(response, "ERROR")
         self.assertIsNotNone(self.environment.database.get_user(user_name))
@@ -153,9 +152,9 @@ class ViewAccountsUnitTests(unittest.TestCase):
     def test_view_accounts_none_in_database(self):
         self.environment.user = User("root", "administrator")
         view_command = ViewAccounts(self.environment)
-        response = view_command.action(["view_accounts"])
+        response = view_command.action({})
 
-        self.assertEqual(response, "")
+        self.assertEqual(response, [])
 
     def test_view_accounts_3_valid_in_database(self):
         self.environment.user = User("root", "administrator")
@@ -166,9 +165,9 @@ class ViewAccountsUnitTests(unittest.TestCase):
         view_command = ViewAccounts(self.environment)
         response = view_command.action(["view_accounts"])
 
-        self.assertEqual(response,  "InstructorUser - instructor\n" +
-                                    "AdministratorUser - administrator\n" +
-                                    "SupervisorUser - supervisor\n")
+        self.assertEqual(response,  [{"role": "instructor", "username": "InstructorUser"},
+                                     {"role": "administrator", "username": "AdministratorUser"},
+                                     {"role": "supervisor", "username": "SupervisorUser"}])
 
     def test_view_accounts_not_logged_in(self):
         self.environment.database.create_account("InstructorUser", "password", "instructor")
@@ -179,47 +178,3 @@ class ViewAccountsUnitTests(unittest.TestCase):
         response = view_command.action(["view_accounts"])
         self.assertEqual(response, "ERROR")
 
-
-class EditInfoUnitTests(unittest.TestCase):
-
-    def setUp(self):
-        di = DjangoModelInterface()
-        self.environment = Environment(di)
-        self.environment.database.clear_database()
-        self.environment.user = User("root", "administrator")
-
-    def test_edit_info_wrong_args(self):
-        edit_info_command = EditInfo(self.environment)
-        response = edit_info_command.action(["edit_info"])
-        self.assertEqual(response, "ERROR")
-
-    def test_edit_info_phone_correct_args(self):
-        edit_info_command = EditInfo(self.environment)
-        response = edit_info_command.action(["edit_info", "phone", "1234567"])
-        self.assertEqual(response, "Phone Number has been updated successfully")
-
-    def test_edit_info_address_correct_args(self):
-        edit_info_command = EditInfo(self.environment)
-        response = edit_info_command.action(["edit_info", "address", "1234 Street City, State 53202"])
-        self.assertEqual(response, "Address has been updated successfully.")
-
-    def test_edit_info_email_correct_args(self):
-        edit_info_command = EditInfo(self.environment)
-        response = edit_info_command.action(["edit_info", "email", "john3885@uwm.edu"])
-        self.assertEqual(response, "Email has been updated successfully.")
-
-    def test_edit_info_office_hours_correct_args(self):
-        edit_info_command = EditInfo(self.environment)
-        response = edit_info_command.action(["edit_info", "office_hours", "MW", "10-12"])
-        self.assertEqual(response, "Office Hours have been updated successfully.")
-
-    def test_edit_info_name_correct_args(self):
-        edit_info_command = EditInfo(self.environment)
-        response = edit_info_command.action(["edit_info", "name", "MW", "10-12"])
-        self.assertEqual(response, "Name has been updated successfully.")
-
-    def test_edit_account_not_logged_in(self):
-        self.environment.user = None
-        edit_info_command = EditInfo(self.environment)
-        response = edit_info_command.action(["edit_info", "name", "MW", "10-12"])
-        self.assertEqual(response, "ERROR")

@@ -1,0 +1,3 @@
+InstructorUser:5f4dcc3b5aa765d61d8327deb882cf99:instructor
+AdministratorUser:5f4dcc3b5aa765d61d8327deb882cf99:administrator
+SupervisorUser:5f4dcc3b5aa765d61d8327deb882cf99:supervisor

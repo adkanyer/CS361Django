@@ -216,11 +216,3 @@ class ViewLabsUnitTests(unittest.TestCase):
 
         self.assertEqual(response, "ERROR")
 
-    def test_view_labs_correct(self):
-        self.environment.user = User("root", "administrator")
-        view_command = ViewLabs(self.environment)
-        response = view_command.action(["view_labs"])
-
-        self.assertEqual(response,  "361 801\n" +
-                                    "361 802 apoorv\n" +
-                                    "361 803\n")
