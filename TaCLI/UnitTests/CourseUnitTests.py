@@ -213,30 +213,30 @@ class ViewCoursesUnitTests(unittest.TestCase):
 
         self.assertEqual(response, "ERROR")
 
-    def test_view_labs_wrong_num_args(self):
+    def test_view_courses_wrong_num_args(self):
         self.environment.user = User("root", "supervisor")
         view_command = ViewCourses(self.environment)
-        response = view_command.action(["view_courses", "extraBogusArg"])
+        response = view_command.action({"course_number": None, "extraarg": "extraBogusArg"})
 
         self.assertEqual(response, "ERROR")
 
     # really dumb test - any role can view labs
-    def test_view_labs_no_permissions(self):
+    def test_view_courses_no_permissions(self):
         self.environment.user = User("bogusUser", "bogusRole")
         view_command = ViewCourses(self.environment)
-        response = view_command.action(["view_courses"])
+        response = view_command.action({})
 
         self.assertEqual(response, "ERROR")
 
         self.environment.user = User("apoorv", "TA")
         view_command = ViewCourses(self.environment)
-        response = view_command.action(["view_courses"])
+        response = view_command.action({})
 
         self.assertEqual(response, "ERROR")
 
     def test_view_courses_correct(self):
         self.environment.user = User("root", "supervisor")
         view_command = ViewCourses(self.environment)
-        response = view_command.action(["view_courses"])
+        response = view_command.action('')
 
-        self.assertEqual(response,  "361 SoftwareEngineering jayson\n")
+        self.assertEqual(response,  [{'number': '361', 'name': 'SoftwareEngineering', 'instructor': None,  'tas':''}])
