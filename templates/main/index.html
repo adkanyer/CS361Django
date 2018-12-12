@@ -13,13 +13,13 @@
                                 <p>Please enter your username and password</p>
                             </div>
                             {% if message != "" and message is not None%}
-                                 <div class="alert alert-primary" role="alert">
-                                     {{  message }}
-                                 </div>
-                             {% endif %}
+                                <div class="alert alert-primary" role="alert">
+                                    {{  message }}
+                                </div>
+                            {% endif %}
                             <form method="post" action="/" class="input-group">
                                 <div class="form-group col-lg-12">
-                                {% csrf_token %}
+                                    {% csrf_token %}
                                     <label for="username">Username:</label>
                                     <input type="text" name="username" placeholder="Username" id="username" class="form-control">
                                     <br>
@@ -102,6 +102,6 @@
                 </div>
             </div>
         </div>
-     {% endif %}
+    {% endif %}
 
 {% endblock content %}
