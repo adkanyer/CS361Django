@@ -84,6 +84,7 @@ class AssignCourseUnitTests(TestCase):
     def test_assign_course_correct_args_and_permissions(self):
         self.environment.user = User("root", "supervisor")
         self.environment.database.create_account("jayson", "password", "instructor")
+        self.environment.database.create_course("361", "Introduction to Software Engineering")
 
         course_number = "361"
         assign_command = AssignCourse(self.environment)
@@ -150,7 +151,10 @@ class AssignCourseUnitTests(TestCase):
         course_number = "361"
 
         assign_command = AssignCourse(self.environment)
-        self.environment.database.set_course_assignment(course_number, "jayson")
+        self.environment.database.create_course("361", "Introduction to Software Engineering")
+        self.environment.database.create_account("Jayson", "password", "instructor")
+
+        assign_command.action(["assign_course", course_number, "Jayson"])
         self.assertTrue(self.environment.database.is_course_assigned(course_number))
 
         response = assign_command.action(["assign_course", course_number, "newUser"])
