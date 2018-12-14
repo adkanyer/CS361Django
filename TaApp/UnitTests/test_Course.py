@@ -1,16 +1,16 @@
-import unittest
-from TaCLI.TextFileInterface import TextFileInterface
-from TaCLI.Components.CourseCommands import CreateCourse, AssignCourse, ViewCourses
+from django.test import TestCase
+
+from TaApp.DjangoModelInterface import DjangoModelInterface
+from TaCLI.Components.CourseCommands import *
 from TaCLI.Environment import Environment
 from TaCLI.User import User
 
 
-class CreateCourseUnitTests(unittest.TestCase):
+class CreateCourseUnitTests(TestCase):
 
     def setUp(self):
-        tfi = TextFileInterface(relative_directory="TestDB/")
-        self.environment = Environment(tfi)
-        self.environment.database.clear_database()
+        di = DjangoModelInterface()
+        self.environment = Environment(di, DEBUG=True)
 
     def test_create_course_correct_args(self):
         self.environment.user = User("root", "supervisor")
@@ -76,17 +76,15 @@ class CreateCourseUnitTests(unittest.TestCase):
         self.assertFalse(self.environment.database.course_exists(course_id))
 
 
-class AssignCourseUnitTests(unittest.TestCase):
+class AssignCourseUnitTests(TestCase):
     def setUp(self):
-        tfi = TextFileInterface(relative_directory="TestDB/")
-        self.environment = Environment(tfi, DEBUG=True)
-        self.environment.database.clear_database()
-        self.environment.database.create_account("root", "root", "supervisor")
-        self.environment.database.create_course("361", "SoftwareEngineering")
+        di = DjangoModelInterface()
+        self.environment = Environment(di, DEBUG=True)
 
     def test_assign_course_correct_args_and_permissions(self):
         self.environment.user = User("root", "supervisor")
         self.environment.database.create_account("jayson", "password", "instructor")
+        self.environment.database.create_course("361", "Introduction to Software Engineering")
 
         course_number = "361"
         assign_command = AssignCourse(self.environment)
@@ -153,7 +151,10 @@ class AssignCourseUnitTests(unittest.TestCase):
         course_number = "361"
 
         assign_command = AssignCourse(self.environment)
-        self.environment.database.set_course_assignment(course_number, "jayson")
+        self.environment.database.create_course("361", "Introduction to Software Engineering")
+        self.environment.database.create_account("Jayson", "password", "instructor")
+
+        assign_command.action(["assign_course", course_number, "Jayson"])
         self.assertTrue(self.environment.database.is_course_assigned(course_number))
 
         response = assign_command.action(["assign_course", course_number, "newUser"])
@@ -194,11 +195,10 @@ class AssignCourseUnitTests(unittest.TestCase):
         self.assertEqual(response, "ERROR")
 
 
-class ViewCoursesUnitTests(unittest.TestCase):
+class ViewCoursesUnitTests(TestCase):
     def setUp(self):
-        tfi = TextFileInterface(relative_directory="TestDB/")
-        self.environment = Environment(tfi, DEBUG=True)
-        self.environment.database.clear_database()
+        di = DjangoModelInterface()
+        self.environment = Environment(di, DEBUG=True)
         self.environment.database.create_account("root", "root", "supervisor")
 
         self.environment.database.create_course("361", "SoftwareEngineering")

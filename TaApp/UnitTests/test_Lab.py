@@ -1,16 +1,16 @@
-import unittest
-from TaCLI.TextFileInterface import TextFileInterface
-from TaCLI.Components.LabCommands import CreateLab, AssignLab, ViewLabs
+from django.test import TestCase
+
+from TaApp.DjangoModelInterface import DjangoModelInterface
+from TaCLI.Components.LabCommands import *
 from TaCLI.Environment import Environment
 from TaCLI.User import User
 
 
-class CreateLabUnitTests(unittest.TestCase):
+class CreateLabUnitTests(TestCase):
 
     def setUp(self):
-        tfi = TextFileInterface(relative_directory="TestDB/")
-        self.environment = Environment(tfi, DEBUG=True)
-        self.environment.database.clear_database()
+        di = DjangoModelInterface()
+        self.environment = Environment(di, DEBUG=True)
         self.environment.database.create_account("root", "root", "administrator")
         self.environment.database.create_course("361", "SoftwareEngineering")
 
@@ -78,11 +78,10 @@ class CreateLabUnitTests(unittest.TestCase):
         self.assertEqual(response, "ERROR")
 
 
-class AssignLabUnitTests(unittest.TestCase):
+class AssignLabUnitTests(TestCase):
     def setUp(self):
-        tfi = TextFileInterface(relative_directory="TestDB/")
-        self.environment = Environment(tfi, DEBUG=True)
-        self.environment.database.clear_database()
+        di = DjangoModelInterface()
+        self.environment = Environment(di, DEBUG=True)
         self.environment.database.create_account("root", "root", "administrator")
         self.environment.database.create_course("361", "SoftwareEngineering")
         self.environment.database.create_lab("361", "801")
@@ -179,11 +178,10 @@ class AssignLabUnitTests(unittest.TestCase):
         self.assertEqual(response, "ERROR")
 
 
-class ViewLabsUnitTests(unittest.TestCase):
+class ViewLabsUnitTests(TestCase):
     def setUp(self):
-        tfi = TextFileInterface(relative_directory="TestDB/")
-        self.environment = Environment(tfi, DEBUG=True)
-        self.environment.database.clear_database()
+        di = DjangoModelInterface()
+        self.environment = Environment(di, DEBUG=True)
         self.environment.database.create_account("root", "root", "administrator")
 
         self.environment.database.create_course("361", "SoftwareEngineering")

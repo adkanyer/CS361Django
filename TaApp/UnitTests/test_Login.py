@@ -1,15 +1,15 @@
-from unittest import TestCase
-from TaCLI.Components.Login import Login, Logout
-from TaCLI.TextFileInterface import TextFileInterface
+from django.test import TestCase
+
+from TaApp.DjangoModelInterface import DjangoModelInterface
+from TaCLI.Components.Login import *
 from TaCLI.Environment import Environment
 from TaCLI.User import User
 
 
 class LoginUnitTests(TestCase):
     def setUp(self):
-        tfi = TextFileInterface(relative_directory="TestDB/")
-        self.environment = Environment(tfi)
-        self.environment.database.clear_database()
+        di = DjangoModelInterface()
+        self.environment = Environment(di, DEBUG=True)
         self.environment.database.create_account("root", "root", "administrator")
 
     def test_not_enough_args(self):
@@ -71,9 +71,8 @@ class LoginUnitTests(TestCase):
 
 class LogoutUnitTests(TestCase):
     def setUp(self):
-        tfi = TextFileInterface(relative_directory="TestDB/")
-        self.environment = Environment(tfi)
-        self.environment.database.clear_database()
+        di = DjangoModelInterface()
+        self.environment = Environment(di, DEBUG=True)
         self.environment.database.create_account("root", "root", "administrator")
 
     def test_successful_logout(self):

@@ -13,7 +13,7 @@ class EditInfo(Command.Command):
         }
 
     def action(self, args):
-        FAILURE_MESSAGE = "Unable to edit Contact Info."
+        FAILURE_MESSAGE = "ERROR"
 
         if self.environment.user is None:
             self.environment.debug("You must be logged in to perform this action.")

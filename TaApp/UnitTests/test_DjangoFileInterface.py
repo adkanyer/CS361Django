@@ -332,5 +332,6 @@ class DjangoModelInterfaceTests(TestCase):
                          {'username': 'admin', 'name': '', 'lname': '', 'email': '', 'hours': 'MONDAY: 1:00PM-2:00PM ',
                           'role': 'master'})
 
+
 # endregion
 # end of tests

@@ -1,15 +1,16 @@
-from unittest import TestCase
-from TaCLI.UI import UI
-from TaCLI.TextFileInterface import TextFileInterface
+from django.test import TestCase
+
+from TaApp.DjangoModelInterface import DjangoModelInterface
+from TaCLI.UI import *
 from TaCLI.Environment import Environment
+from TaCLI.User import User
 
 
 class CommandTests(TestCase):
     def setUp(self):
-        tfi = TextFileInterface(relative_directory="TestDB/")
-        self.environment = Environment(tfi)
+        di = DjangoModelInterface()
+        self.environment = Environment(di, DEBUG=True)
         self.ui = UI(self.environment)
-        self.environment.database.clear_database()
 
     def test_parse_commands(self):
         self.assertTrue(self.ui.parse_commands("command1 command2 command3"),

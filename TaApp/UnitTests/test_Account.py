@@ -1,18 +1,16 @@
-import unittest
-from TaCLI.TextFileInterface import TextFileInterface
-from TaCLI.Components.AccountCommands import CreateAccount, DeleteAccount, ViewAccounts
-from TaCLI.Components.EditInfo import EditInfo
+from django.test import TestCase
+
+from TaApp.DjangoModelInterface import DjangoModelInterface
+from TaCLI.Components.AccountCommands import *
 from TaCLI.Environment import Environment
 from TaCLI.User import User
 
 
-class CreateAccountUnitTests(unittest.TestCase):
+class CreateAccountUnitTests(TestCase):
 
     def setUp(self):
-        tfi = TextFileInterface(relative_directory="TestDB/")
-        self.environment = Environment(tfi)
-        self.environment.database.clear_database()
-        self.environment.database.create_account("root", "root", "administrator")
+        di = DjangoModelInterface()
+        self.environment = Environment(di, DEBUG=True)
 
     def test_create_account_correct_args(self):
         self.environment.user = User("root", "administrator")
@@ -80,14 +78,11 @@ class CreateAccountUnitTests(unittest.TestCase):
         self.assertEqual(response, "ERROR")
         self.assertIsNone(self.environment.database.get_user(user_name))
 
-
-class DeleteAccountUnitTests(unittest.TestCase):
+class DeleteAccountUnitTests(TestCase):
 
     def setUp(self):
-        tfi = TextFileInterface(relative_directory="TestDB/")
-        self.environment = Environment(tfi)
-        self.environment.database.clear_database()
-        self.environment.database.create_account("root", "root", "administrator")
+        di = DjangoModelInterface()
+        self.environment = Environment(di, DEBUG=True)
 
     def test_delete_account_correct_args(self):
         self.environment.user = User("root", "administrator")
@@ -143,11 +138,10 @@ class DeleteAccountUnitTests(unittest.TestCase):
         self.assertIsNotNone(self.environment.database.get_user(user_name))
 
 
-class ViewAccountsUnitTests(unittest.TestCase):
+class ViewAccountsUnitTests(TestCase):
     def setUp(self):
-        tfi = TextFileInterface(relative_directory="TestDB/")
-        self.environment = Environment(tfi)
-        self.environment.database.clear_database()
+        di = DjangoModelInterface()
+        self.environment = Environment(di, DEBUG=True)
 
     def test_view_accounts_none_in_database(self):
         self.environment.user = User("root", "administrator")

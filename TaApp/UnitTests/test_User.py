@@ -1,8 +1,9 @@
-import unittest
-from TaCLI.User import User
+from django.test import TestCase
+from TaCLI.User import *
 
 
-class UserUnitTests(unittest.TestCase):
+class UserUnitTests(TestCase):
+
     def setUp(self):
         self.user = User("testUser", "TA", "pass")
 
