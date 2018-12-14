@@ -24,62 +24,20 @@
                     <span class="navbar-text navbar-dark">
                         <b>Hello, </b>{{ user }}
                     </span>
+                    <span class="logout">
+                        <form method="post" action="/" class="input-group">
+                            {% csrf_token %}
+                            <button class="btn btn-secondary btn-block btn-sm" name="form" value="logout" type="submit">Logout</button>
+                        </form>
+                    </span>
                 </ul>
             </div>
         </nav>
         <br>
-        {% if message != "" and message is not None%}
-            <div class="alert alert-danger" role="alert">
-                {{  message }}
-            </div>
-        {% endif %}
-        {% if role == "administrator" or role == "supervisor" or role == "instructor"%}
-            <div class="row">
-                <div class="col-1"></div>
-                <div class="col-lg-5">
-                    <div class="card">
-                        <div class="card-header">Create Course</div>
-                        <div class="card-body">
-                            <form method="post" action="/lab/" class="input-group">
-                                <div class="form-group col-lg-12">
-                                    {% csrf_token %}
-                                    <input type="text" name="course_number" placeholder="Insert Course Number" id="course_number" class="form-control">
-                                    <br>
-                                    <input type="text" name="lab_number" placeholder="Insert Lab Number" id="lab_number" class="form-control">
-                                    <br>
-                                    <p><button class="btn btn-primary btn-lg btn-block" name="form" value="create_lab" type="submit">Create Lab</button></p>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                {% if role == "instructor" %}
-                    <div class="col-lg-5">
-                        <div class="card">
-                            <div class="card-header">Assign Lab</div>
-                            <div class="card-body"></div>
-                            <form method="post" action="/lab/" class="input-group">
-                                <div class="form-group col-lg-12">
-                                    {% csrf_token %}
-                                    <input type="text" name="course_number" placeholder="Insert Course Number" id="course_number" class="form-control">
-                                    <br>
-                                    <input type="text" name="lab_number" placeholder="Insert Lab Number" id="lab_number" class="form-control">
-                                    <br>
-                                    <input type="text" name="username" placeholder="Insert TA" id="username" class="form-control">
-                                    <br>
-                                    <p><button class="btn btn-primary btn-lg btn-block" name="form" value="assign_lab" type="submit">Assign Lab</button></p>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                {% endif %}
-            </div>
-        {% endif %}
-        <br>
         {% if role == "administrator" or role == "supervisor" or role == "instructor" or role == "TA"%}
             <div class="row">
-                <div class="col-1"></div>
-                <div class="col-lg-10">
+                <div class="col-2"></div>
+                <div class="col-lg-8">
                     <div class="card">
                         <div class="card-header">Labs</div>
                         <div class="card-body">
@@ -104,6 +62,54 @@
                 </div>
             </div>
         {% endif %}
-     {% endif %}
+        <br>
+        {% if role == "administrator" or role == "supervisor" or role == "instructor"%}
+            <div class="row">
+            <div class="col-2"></div>
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">Create Lab</div>
+                    <div class="card-body">
+                        <form method="post" action="/lab/" class="input-group">
+                            <div class="form-group col-lg-12">
+                                {% csrf_token %}
+                                <input type="number" name="course_number" placeholder="Insert Course Number" id="course_number" class="form-control">
+                                <br>
+                                <input type="text" name="lab_number" placeholder="Insert Lab Number" id="lab_number" class="form-control">
+                                <br>
+                                <p><button class="btn btn-primary btn-lg btn-block" name="form" value="create_lab" type="submit">Create Lab</button></p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% if role == "instructor" %}
+                <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">Assign Lab</div>
+                    <div class="card-body">
+                        <form method="post" action="/lab/" class="input-group">
+                            <div class="form-group col-lg-12">
+                                {% csrf_token %}
+                                <input type="number" name="course_number" placeholder="Insert Course Number" id="course_number" class="form-control">
+                                <br>
+                                <input type="text" name="lab_number" placeholder="Insert Lab Number" id="lab_number" class="form-control">
+                                <br>
+                                <select class="custom-select" name="username">
+                                    <option selected>Insert TA</option>
+                                    {% for i in accounts %}
+                                        <option value={{ i.name }}>{{ i.name }}</option>
+                                    {% endfor %}
+                                </select>
+                                <br><br>
+                                <p><button class="btn btn-primary btn-lg btn-block" name="form" value="assign_lab" type="submit">Assign Lab</button></p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        {% endif %}
+    {% endif %}
 
 {% endblock content %}

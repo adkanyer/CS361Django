@@ -120,12 +120,14 @@ class Courses(View):
             role = self.environ.user.role
         courses = None
 
+        accounts = Account.objects.filter(role="TA") | Account.objects.filter(role="instructor")
+
         if role == "administrator" or role == "supervisor" or role == "instructor":
             courses = self.ui.command("view_courses", "")
 
         user = str(self.environ.database.get_logged_in())
 
-        return render(request, "main/courses.html", {"user": user, "role": role, "courses": courses})
+        return render(request, "main/courses.html", {"user": user, "role": role, "courses": courses, "accounts": accounts})
 
     def post(self, request):
         user = str(self.environ.database.get_logged_in())
@@ -139,21 +141,23 @@ class Courses(View):
         }
         courses = None
 
+        accounts = Account.objects.filter(role="TA") | Account.objects.filter(role="instructor")
+
         if role == "administrator" or role == "supervisor" or role == "instructor":
             courses = self.ui.command("view_courses", "")
 
         if request.POST["form"] == "create_course":
             responses["create_course"] = self.ui.command("create_course", ["create_course", request.POST["course_number"],
-                                                         request.POST["course_name"]])
+                                                                           request.POST["course_name"]])
         if request.POST["form"] == "assign_course":
             responses["assign_course"] = self.ui.command("assign_course", ["assign_course", request.POST["course_number"],
-                                                         request.POST["username"]])
+                                                                           request.POST["username"]])
 
         if request.POST["form"] == "view_course":
             responses["view_course"] = self.ui.command("view_courses", {"course_number": request.POST["course_number"]})
 
         return render(request, "main/courses.html", {"user": user, "role": role, "courses": courses,
-                                                     "response": responses, "message": str(self.environ.message)})
+                                                     "response": responses, "message": str(self.environ.message), "accounts": accounts})
 
 
 class Labs(View):
@@ -172,10 +176,12 @@ class Labs(View):
             role = self.environ.user.role
         labs = None
 
+        accounts = Account.objects.filter(role="TA")
+
         if role == "administrator" or role == "supervisor" or role == "instructor" or role == "TA":
             labs = self.ui.command("view_labs", ["view_labs"])
 
-        return render(request, "main/labs.html", {"user": user, "role": role, "labs": labs})
+        return render(request, "main/labs.html", {"user": user, "role": role, "labs": labs, "accounts": accounts})
 
     def post(self, request):
         user = str(self.environ.database.get_logged_in())
@@ -188,17 +194,19 @@ class Labs(View):
         }
         labs = None
 
+        accounts = Account.objects.filter(role="TA")
+
         if role == "administrator" or role == "supervisor" or role == "instructor" or role == "TA":
             labs = self.ui.command("view_labs", ["view_labs"])
 
         if request.POST["form"] == "create_lab":
             responses["create_lab"] = self.ui.command("create_lab", ["create_lab", request.POST["course_number"],
-                                                         request.POST["lab_number"]])
+                                                                     request.POST["lab_number"]])
         if request.POST["form"] == "assign_lab":
             responses["assign_lab"] = self.ui.command("assign_lab", ["assign_lab", request.POST["course_number"],
                                                                      request.POST["lab_number"], request.POST["username"]])
 
-        return render(request, "main/labs.html", {"user": user, "role": role, "labs": labs, "response": responses, "message": str(self.environ.message)})
+        return render(request, "main/labs.html", {"user": user, "role": role, "labs": labs, "accounts": accounts, "response": responses, "message": str(self.environ.message)})
 
 
 class Settings(View):
