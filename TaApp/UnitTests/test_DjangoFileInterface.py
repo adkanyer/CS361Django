@@ -225,7 +225,7 @@ class DjangoModelInterfaceTests(TestCase):
         self.di.set_lab_assignment(course_number, lab_number, ta_name)
         lab = Course.objects.get(number=course_number).labs.get(number=lab_number)
 
-        self.assertEqual(lab.ta.name, ta_name)
+        self.assertEqual(lab.ta.first().name, ta_name)
 
     def test_get_lab_exists(self):
         self.di.create_course("123", "test_course")

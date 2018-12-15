@@ -3,59 +3,83 @@ from django.views import View
 
 from TaApp.models import Account
 from TaCLI import UI, Environment
-import TaCLI.User
 from TaApp.DjangoModelInterface import DjangoModelInterface
+import hashlib
 
 
-class Home(View):
+class BaseView(View):
     def __init__(self):
         self.environ = Environment.Environment(DjangoModelInterface(), DEBUG=True)
         self.ui = UI.UI(self.environ)
 
-        acct = Account.objects.filter(name=self.environ.database.get_logged_in()).first()
-        if acct is not None:
-            self.environ.user = TaCLI.User.User(acct.name, acct.role)
+    def init_logged_in(self, request):
+        if "user" in request.session and request.session["user"] != "":
+            print("Setting logged in to " + request.session["user"])
+            self.environ.user = self.environ.database.get_user(request.session["user"])
+        else:
+            self.environ.user = None
 
+    def check_password(self, username, password):
+        account = self.environ.database.get_user(username)
+        if account is None or password is None:
+            self.environ.debug("Username or Password is Incorrect")
+            return False
+
+        h = hashlib.new("md5")
+        entered_password = password.rstrip()
+        h.update(f"{entered_password}".encode("ascii"))
+        hashed_password = h.hexdigest()
+
+        if account.password != hashed_password:
+            self.environ.debug("User name or Password is Incorrect")
+            return False
+        self.environ.user = account
+        self.environ.debug("Logged in successfully")
+        return True
+
+
+class Home(BaseView):
     def get(self, request):
-        user = str(self.environ.database.get_logged_in())
+        self.init_logged_in(request)
+        user = ""
         role = None
         data = None
-        if user != "":
-            data = self.ui.command("view_info", "")
+        if self.environ.user is not None:
+            user = self.environ.user.username
             role = self.environ.user.role
-
+            data = self.ui.command("view_info", "")
         return render(request, "main/index.html", {"user": user, "response": data, "role": role})
 
     def post(self, request):
+        self.init_logged_in(request)
         if request.POST["form"] == "login":
-            self.ui.command("login", {"username": request.POST["username"], "password": request.POST["password"]})
+            if self.environ.user is None and self.check_password(request.POST["username"], request.POST["password"]):
+                request.session["user"] = request.POST["username"]
+            else:
+                print("Error password doesn't match")
         if request.POST["form"] == "logout":
-            self.ui.command("logout", "")
+            request.session["user"] = ""
+            self.environ.user = None
 
-        user = str(self.environ.database.get_logged_in())
+        user = ""
         role = None
         data = None
-        if user != "":
-            data = self.ui.command("view_info", "")
+        if self.environ.user is not None:
+            user = self.environ.user.username
             role = self.environ.user.role
+            data = self.ui.command("view_info", "")
 
-        user = str(self.environ.database.get_logged_in())
         return render(request, "main/index.html", {"user": user, "response": data, "message": str(self.environ.message), "role": role,})
 
 
-class Accounts(View):
-    def __init__(self):
-        self.environ = Environment.Environment(DjangoModelInterface(), DEBUG=True)
-        self.ui = UI.UI(self.environ)
-
-        acct = Account.objects.filter(name=self.environ.database.get_logged_in()).first()
-        if acct is not None:
-            self.environ.user = TaCLI.User.User(acct.name, acct.role)
-
+class Accounts(BaseView):
     def get(self, request):
-        user = str(self.environ.database.get_logged_in())
+        self.init_logged_in(request)
+
+        user = ""
         role = None
-        if user != "":
+        if self.environ.user is not None:
+            user = self.environ.user.username
             role = self.environ.user.role
 
         accounts = None
@@ -65,9 +89,12 @@ class Accounts(View):
         return render(request, "main/account.html", {"user": user, "role": role, "accounts": accounts})
 
     def post(self, request):
-        user = str(self.environ.database.get_logged_in())
+        self.init_logged_in(request)
+
+        user = ""
         role = None
-        if user != "":
+        if self.environ.user is not None:
+            user = self.environ.user.username
             role = self.environ.user.role
 
         responses = {
@@ -104,20 +131,16 @@ class Accounts(View):
         return render(request, "main/account.html", {"user": user, "responses": responses, "message": str(self.environ.message), "role": role, "accounts": accounts})
 
 
-class Courses(View):
-    def __init__(self):
-        self.environ = Environment.Environment(DjangoModelInterface(), DEBUG=True)
-        self.ui = UI.UI(self.environ)
-
-        acct = Account.objects.filter(name=self.environ.database.get_logged_in()).first()
-        if acct is not None:
-            self.environ.user = TaCLI.User.User(acct.name, acct.role)
-
+class Courses(BaseView):
     def get(self, request):
-        user = str(self.environ.database.get_logged_in())
+        self.init_logged_in(request)
+
+        user = ""
         role = None
-        if user != "":
+        if self.environ.user is not None:
+            user = self.environ.user.username
             role = self.environ.user.role
+
         courses = None
 
         accounts = Account.objects.filter(role="TA") | Account.objects.filter(role="instructor")
@@ -130,10 +153,14 @@ class Courses(View):
         return render(request, "main/courses.html", {"user": user, "role": role, "courses": courses, "accounts": accounts})
 
     def post(self, request):
-        user = str(self.environ.database.get_logged_in())
+        self.init_logged_in(request)
+
+        user = ""
         role = None
-        if user != "":
+        if self.environ.user is not None:
+            user = self.environ.user.username
             role = self.environ.user.role
+
         responses = {
             "create_course": None,
             "assign_course": None,
@@ -160,20 +187,16 @@ class Courses(View):
                                                      "responses": responses, "message": str(self.environ.message), "accounts": accounts})
 
 
-class Labs(View):
-    def __init__(self):
-        self.environ = Environment.Environment(DjangoModelInterface(), DEBUG=True)
-        self.ui = UI.UI(self.environ)
-
-        acct = Account.objects.filter(name=self.environ.database.get_logged_in()).first()
-        if acct is not None:
-            self.environ.user = TaCLI.User.User(acct.name, acct.role)
-
+class Labs(BaseView):
     def get(self, request):
-        user = str(self.environ.database.get_logged_in())
+        self.init_logged_in(request)
+
+        user = ""
         role = None
-        if user != "":
+        if self.environ.user is not None:
+            user = self.environ.user.username
             role = self.environ.user.role
+
         labs = None
 
         accounts = Account.objects.filter(role="TA")
@@ -184,10 +207,14 @@ class Labs(View):
         return render(request, "main/labs.html", {"user": user, "role": role, "labs": labs, "accounts": accounts})
 
     def post(self, request):
-        user = str(self.environ.database.get_logged_in())
+        self.init_logged_in(request)
+
+        user = ""
         role = None
-        if user != "":
+        if self.environ.user is not None:
+            user = self.environ.user.username
             role = self.environ.user.role
+
         responses = {
             "create_lab": None,
             "assign_lab": None,
@@ -209,30 +236,26 @@ class Labs(View):
         return render(request, "main/labs.html", {"user": user, "role": role, "labs": labs, "accounts": accounts, "responses": responses, "message": str(self.environ.message)})
 
 
-class Settings(View):
-    def __init__(self):
-        self.environ = Environment.Environment(DjangoModelInterface(), DEBUG=True)
-        self.ui = UI.UI(self.environ)
-
-        acct = Account.objects.filter(name=self.environ.database.get_logged_in()).first()
-        if acct is not None:
-            self.environ.user = TaCLI.User.User(acct.name, acct.role)
-
+class Settings(BaseView):
     def get(self, request):
-        user = str(self.environ.database.get_logged_in())
+        self.init_logged_in(request)
+
+        user = ""
         role = None
         data = None
-        if user != "":
-            data = self.ui.command("view_info", "")
+        if self.environ.user is not None:
+            user = self.environ.user.username
             role = self.environ.user.role
+            data = self.ui.command("view_info", "")
 
         return render(request, "main/settings.html", {"user": user, "role": role, "old": data})
 
     def post(self, request):
-        user = str(self.environ.database.get_logged_in())
-        role = None
+        self.init_logged_in(request)
+        user = ""
         data = None
-        if user != "":
+        if self.environ.user is not None:
+            user = self.environ.user.username
             data = self.ui.command("view_info", "")
             role = self.environ.user.role
 
