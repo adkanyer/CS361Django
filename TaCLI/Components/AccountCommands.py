@@ -120,7 +120,7 @@ class ViewInfo(Command.Command):
             return "ERROR"
 
         if args == "":
-            user = self.environment.database.get_user(self.environment.database.get_logged_in())
+            user = self.environment.user
             data = self.environment.database.get_private_info(user)
             return data
         else:

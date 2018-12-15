@@ -148,8 +148,6 @@ class Courses(BaseView):
         if role == "administrator" or role == "supervisor" or role == "instructor":
             courses = self.ui.command("view_courses", "")
 
-        user = str(self.environ.database.get_logged_in())
-
         return render(request, "main/courses.html", {"user": user, "role": role, "courses": courses, "accounts": accounts})
 
     def post(self, request):
