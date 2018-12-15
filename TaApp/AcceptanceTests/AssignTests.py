@@ -135,22 +135,22 @@ class AssignTests(TestCase):
         Fail if the logged in user does not have permission:
             "Error viewing course assignments."
     """
-    def view_instructor_assignments_by_supervisor(self):
+    def test_view_instructor_assignments_by_supervisor(self):
         self.ui.command("login", {"username": "Supervisor", "password": "SupervisorPassword"})
         self.assertEquals(self.ui.command("view_course_assignments"),
                           "361 SystemsProgramming Instructor")
 
-    def view_instructor_assignments_by_administrator(self):
+    def test_view_instructor_assignments_by_administrator(self):
         self.ui.command("login", {"username": "Administrator", "password": "AdministratorPassword"})
         self.assertEquals(self.ui.command("view_course_assignments"),
                           "361 SystemsProgramming Instructor")
 
-    def view_instructor_assignments_by_instructor(self):
+    def test_view_instructor_assignments_by_instructor(self):
         self.ui.command("login", {"username": "Instructor", "password": "InstructorPassword"})
         self.assertEquals(self.ui.command("view_course_assignments"),
                           "Error viewing course assignments.")
 
-    def view_instructor_assignments_by_ta(self):
+    def test_view_instructor_assignments_by_ta(self):
         self.ui.command("login", {"username": "TA", "password": "TAPassword"})
         self.assertEquals(self.ui.command("view_course_assignments"),
                           "Error viewing course assignments.")
@@ -162,22 +162,22 @@ class AssignTests(TestCase):
         Fail if logged in user does not have permissions:
             "Error viewing ta assignments."
     """
-    def view_ta_assignments_by_supervisor(self):
+    def test_view_ta_assignments_by_supervisor(self):
         self.ui.command("login", {"username": "Supervisor", "password": "SupervisorPassword"})
         self.assertEquals(self.ui.command("view_lab_assignments"),
                           "361 SystemsProgramming lab 801 TA")
 
-    def view_ta_assignments_by_administrator(self):
+    def test_view_ta_assignments_by_administrator(self):
         self.ui.command("login", {"username": "Administrator", "password": "AdministratorPassword"})
         self.assertEquals(self.ui.command("view_lab_assignments"),
                           "361 SystemsProgramming lab 801 TA")
 
-    def view_ta_assignments_by_instructor(self):
+    def test_view_ta_assignments_by_instructor(self):
         self.ui.command("login", {"username": "Instructor", "password": "InstructorPassword"})
         self.assertEquals(self.ui.command("view_lab_assignments"),
                           "361 SystemsProgramming lab 801 TA")
 
-    def view_ta_assignments_by_ta(self):
+    def test_view_ta_assignments_by_ta(self):
         self.ui.command("login", {"username": "TA", "password": "TAPassword"})
         self.assertEquals(self.ui.command("view_lab_assignments"),
                           "361 SystemsProgramming lab 801 TA")
