@@ -133,27 +133,30 @@ class AssignTests(TestCase):
         The response is a string with a line for each course in format
             "{Course Number} {Course Name} {Instructor Name}"
         Fail if the logged in user does not have permission:
-            "Error viewing course assignments."
+            "ERROR"
     """
     def test_view_instructor_assignments_by_supervisor(self):
+        self.environment.database.set_course_instructor(361, "Instructor")
         self.ui.command("login", {"username": "Supervisor", "password": "SupervisorPassword"})
-        self.assertEquals(self.ui.command("view_course_assignments"),
-                          "361 SystemsProgramming Instructor")
+        self.assertEquals(self.ui.command("view_courses", "")[0]["instructor"], "Instructor")
 
     def test_view_instructor_assignments_by_administrator(self):
+        self.environment.database.set_course_instructor(361, "Instructor")
         self.ui.command("login", {"username": "Administrator", "password": "AdministratorPassword"})
-        self.assertEquals(self.ui.command("view_course_assignments"),
-                          "361 SystemsProgramming Instructor")
+        self.assertEquals(self.ui.command("view_courses", "")[0]["instructor"],
+                          "Instructor")
 
     def test_view_instructor_assignments_by_instructor(self):
+        self.environment.database.set_course_instructor(361, "Instructor")
         self.ui.command("login", {"username": "Instructor", "password": "InstructorPassword"})
-        self.assertEquals(self.ui.command("view_course_assignments"),
-                          "Error viewing course assignments.")
+        self.assertEquals(self.ui.command("view_courses", "")[0]["instructor"],
+                          "Instructor")
 
     def test_view_instructor_assignments_by_ta(self):
+        self.environment.database.set_course_instructor(361, "Instructor")
         self.ui.command("login", {"username": "TA", "password": "TAPassword"})
-        self.assertEquals(self.ui.command("view_course_assignments"),
-                          "Error viewing course assignments.")
+        self.assertEquals(self.ui.command("view_courses", ""),
+                          "ERROR")
 
     """
         When view_lab_assignments command is entered, it takes no arguments
@@ -163,21 +166,21 @@ class AssignTests(TestCase):
             "Error viewing ta assignments."
     """
     def test_view_ta_assignments_by_supervisor(self):
+        self.environment.database.set_lab_assignment(361, 801, "TA")
         self.ui.command("login", {"username": "Supervisor", "password": "SupervisorPassword"})
-        self.assertEquals(self.ui.command("view_lab_assignments"),
-                          "361 SystemsProgramming lab 801 TA")
+        self.assertEqual(self.ui.command("view_labs", ["view_labs"])[0]["ta"], "TA")
 
     def test_view_ta_assignments_by_administrator(self):
+        self.environment.database.set_lab_assignment(361, 801, "TA")
         self.ui.command("login", {"username": "Administrator", "password": "AdministratorPassword"})
-        self.assertEquals(self.ui.command("view_lab_assignments"),
-                          "361 SystemsProgramming lab 801 TA")
+        self.assertEquals(self.ui.command("view_labs", ["view_lab_assignments"])[0]["ta"], "TA")
 
     def test_view_ta_assignments_by_instructor(self):
+        self.environment.database.set_lab_assignment(361, 801, "TA")
         self.ui.command("login", {"username": "Instructor", "password": "InstructorPassword"})
-        self.assertEquals(self.ui.command("view_lab_assignments"),
-                          "361 SystemsProgramming lab 801 TA")
+        self.assertEquals(self.ui.command("view_labs", ["view_lab_assignments"])[0]["ta"], "TA")
 
     def test_view_ta_assignments_by_ta(self):
+        self.environment.database.set_lab_assignment(361, 801, "TA")
         self.ui.command("login", {"username": "TA", "password": "TAPassword"})
-        self.assertEquals(self.ui.command("view_lab_assignments"),
-                          "361 SystemsProgramming lab 801 TA")
+        self.assertEquals(self.ui.command("view_labs", ["view_lab_assignments"])[0]["ta"], "TA")
