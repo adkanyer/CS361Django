@@ -101,7 +101,7 @@ class DjangoModelInterface(DataInterface):
     def set_lab_assignment(self, course_number, lab_number, ta_name):
         lab = Lab.objects.filter(number=lab_number, course__number=course_number).first()
         ta = Account.objects.filter(name=ta_name).first()
-        lab.ta = ta
+        lab.ta.add(ta)
         lab.save()
 
     def get_lab_assignments(self):
