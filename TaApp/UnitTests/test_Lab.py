@@ -14,7 +14,7 @@ class CreateLabUnitTests(TestCase):
         self.environment.database.create_account("root", "root", "administrator")
         self.environment.database.create_course("361", "SoftwareEngineering")
 
-    def test_create_lab_correct_args(self):
+    def test_create_lab_correct_args_administrator(self):
         self.environment.user = User("root", "administrator")
 
         create_command = CreateLab(self.environment)
@@ -24,6 +24,37 @@ class CreateLabUnitTests(TestCase):
 
         self.assertTrue(self.environment.database.lab_exists(course_number, lab_number))
         self.assertEqual(response, "Lab created.")
+
+    def test_create_lab_correct_args_supervisor(self):
+        self.environment.user = User("root", "supervisor")
+
+        create_command = CreateLab(self.environment)
+        course_number = "361"
+        lab_number = "801"
+        response = create_command.action(["create_lab", course_number, lab_number])
+
+        self.assertTrue(self.environment.database.lab_exists(course_number, lab_number))
+        self.assertEqual(response, "Lab created.")
+
+    def test_create_lab_correct_args_instructor(self):
+        self.environment.user = User("root", "instructor")
+
+        create_command = CreateLab(self.environment)
+        course_number = "361"
+        lab_number = "801"
+        response = create_command.action(["create_lab", course_number, lab_number])
+
+        self.assertEqual(response, "Lab created.")
+
+    def test_create_lab_correct_args_TA(self):
+        self.environment.user = User("root", "TA")
+
+        create_command = CreateLab(self.environment)
+        course_number = "361"
+        lab_number = "801"
+        response = create_command.action(["create_lab", course_number, lab_number])
+
+        self.assertEqual(response, "ERROR")
 
     def test_create_lab_wrong_num_args(self):
         self.environment.user = User("root", "administrator")
@@ -87,7 +118,7 @@ class AssignLabUnitTests(TestCase):
         self.environment.database.create_lab("361", "801")
         self.environment.database.create_account("apoorv", "password", "TA")
 
-    def test_assign_lab_correct_args_and_permissions(self):
+    def test_assign_lab_correct_args_and_permissions_instructor(self):
         self.environment.user = User("jayson", "instructor")
 
         course_number = "361"
@@ -97,6 +128,36 @@ class AssignLabUnitTests(TestCase):
 
         self.assertTrue(self.environment.database.is_lab_assigned(course_number, lab_number))
         self.assertEqual(response, "Assigned to lab.")
+
+    def test_assign_lab_correct_args_and_permissions_supervisor(self):
+        self.environment.user = User("jayson", "supervisor")
+
+        course_number = "361"
+        lab_number = "801"
+        assign_command = AssignLab(self.environment)
+        response = assign_command.action(["assign_lab", course_number, lab_number, "apoorv"])
+
+        self.assertEqual(response, "Assigned to lab.")
+
+    def test_assign_lab_correct_args_and_permissions_administrator(self):
+        self.environment.user = User("jayson", "administrator")
+
+        course_number = "361"
+        lab_number = "801"
+        assign_command = AssignLab(self.environment)
+        response = assign_command.action(["assign_lab", course_number, lab_number, "apoorv"])
+
+        self.assertEqual(response, "ERROR")
+
+    def test_assign_lab_correct_args_and_permissions_TA(self):
+        self.environment.user = User("jayson", "TA")
+
+        course_number = "361"
+        lab_number = "801"
+        assign_command = AssignLab(self.environment)
+        response = assign_command.action(["assign_lab", course_number, lab_number, "apoorv"])
+
+        self.assertEqual(response, "ERROR")
 
     def test_assign_lab_no_permissions(self):
         self.environment.user = User("apoorv", "TA")
