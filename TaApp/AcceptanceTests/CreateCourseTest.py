@@ -61,6 +61,5 @@ class CreateCourseTests(TestCase):
 
 
     def test_command_create_course_duplicate(self):
-        self.ui.command("create_account userSupervisor userPassword supervisor")
-        self.ui.command("login userSupervisor userPassword")
-        self.assertEqual(self.ui.command("create_course 361 SystemsProgramming"), "Error creating course.")
+        self.ui.command("login", {"username": "Supervisor", "password": "SupervisorPassword"})
+        self.assertEqual(self.ui.command("create_course", ["create_course", "361", "SystemsProgramming"]), "ERROR")

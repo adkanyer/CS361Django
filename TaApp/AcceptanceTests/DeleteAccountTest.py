@@ -1,9 +1,8 @@
-import unittest
-import UI, Environment
-import TextFileInterface
+from django.test import TestCase
+from TaCLI import UI, Environment
+from TaApp.DjangoModelInterface import DjangoModelInterface
 
-
-class DeleteAccountTest(unittest.TestCase):
+class DeleteAccountTest(TestCase):
     def setUp(self):
         """
             create dummy account for each of the types of users:
@@ -11,19 +10,18 @@ class DeleteAccountTest(unittest.TestCase):
             log them in for their respected tests
             Each test is implemented by first creating and then deleting an account
         """
-        tfi = TextFileInterface.TextFileInterface(relative_directory="../UnitTests/TestDB/")
-        tfi.clear_database()
+        self.di = DjangoModelInterface()
 
-        tfi.create_account("userSupervisor", "password", "supervisor")
-        tfi.create_account("userAdministrator", "password", "administrator")
-        tfi.create_account("userInstructor", "password", "instructor")
-        tfi.create_account("userTA", "password", "TA")
+        self.di.create_account("Supervisor", "SupervisorPassword", "supervisor")
+        self.di.create_account("Administrator", "AdministratorPassword", "administrator")
+        self.di.create_account("Instructor", "InstructorPassword", "instructor")
+        self.di.create_account("TA", "TAPassword", "TA")
 
-        tfi.create_course("361", "CompSci361")
-        tfi.create_lab("361", "801")
+        self.di.create_course("361", "CompSci361")
+        self.di.create_lab("361", "801")
 
-        environment = Environment.Environment(tfi, DEBUG=True)
-        self.ui = UI.UI(environment)
+        self.environment = Environment.Environment(self.di, DEBUG=True)
+        self.ui = UI.UI(self.environment)
 
         """
             The supervisor and administrator are able to delete accounts
@@ -37,45 +35,45 @@ class DeleteAccountTest(unittest.TestCase):
     def test_command_delete_account_supervisor(self):
 
         # login as supervisor
-        self.ui.command("login userSupervisor password")
-        self.ui.command("create_account john password TA")
-        self.assertEqual(self.ui.command("delete_account john"), "Account deleted.")
+        self.ui.command("login", {"username": "Supervisor", "password": "SupervisorPassword"})
+        self.ui.command("create_account", ["create_account", "john", "password", "TA"])
+        self.assertEqual(self.ui.command("delete_account", {"user": "john"}), "Account deleted.")
 
     def test_command_delete_account_administrator(self):
 
         # login as administrator
-        self.ui.command("login userAdministrator password")
-        self.ui.command("create_account adam password supervisor")
-        self.assertEqual(self.ui.command("delete_account adam"), "Account deleted.")
+        self.ui.command("login", {"username": "Administrator", "password": "AdministratorPassword"})
+        self.ui.command("create_account", ["create_account", "adam", "password", "supervisor"])
+        self.assertEqual(self.ui.command("delete_account", {"user": "adam"}), "Account deleted.")
 
     def test_command_delete_account_instructor(self):
 
-        self.ui.command("login userAdministrator password")
-        self.ui.command("create_account aaron password supervisor")
-        self.ui.command("logout")
+        self.ui.command("login", {"username": "Administrator", "password": "AdministratorPassword"})
+        self.ui.command("create_account", ["create_account", "aaron", "password", "supervisor"])
+        self.ui.command("logout", "")
 
         # login as instructor
-        self.ui.command("login userInstructor password")
+        self.ui.command("login", {"username": "Instructor", "password": "InstructorPassword"})
         # instructor cannot delete accounts
-        self.assertEqual(self.ui.command("delete_account aaron"), "Error deleting account.")
+        self.assertEqual(self.ui.command("delete_account", {"user": "aaron"}), "ERROR")
 
     def test_command_delete_account_TA(self):
-        self.ui.command("login userSupervisor password")
-        self.ui.command("create_account tim password TA")
-        self.ui.command("logout")
+        self.ui.command("login", {"username": "Supervisor", "password": "SupervisorPassword"})
+        self.ui.command("create_account", ["create_account", "tim", "password", "TA"])
+        self.ui.command("logout", "")
 
         # login as TA
-        self.ui.command("login userTA password")
+        self.ui.command("login", {"username": "TA", "password": "TAPassword"})
         # TA cannot delete accounts
-        self.assertEqual(self.ui.command("delete_account tim"), "Error deleting account.")
+        self.assertEqual(self.ui.command("delete_account", {"user": "tim"}), "ERROR")
 
     def test_command_delete_account_format(self):
         # login as administrator
-        self.ui.command("login userAdministrator password")
+        self.ui.command("login", {"username": "Administrator", "password": "AdministratorPassword"})
         # not enough arguments
-        self.assertEqual(self.ui.command("delete_account"), "Error deleting account.")
+        self.assertEqual(self.ui.command("delete_account", {}), "ERROR")
 
     def test_command_delete_account_nonexisting(self):
         # login as supervisor
-        self.ui.command("login userSupervisor password")
-        self.assertEqual(self.ui.command("delete_account noUser"), "Error deleting account.")
+        self.ui.command("login", {"username": "Supervisor", "password": "SupervisorPassword"})
+        self.assertEqual(self.ui.command("delete_account", {"user": ""}), "ERROR")

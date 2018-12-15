@@ -1,17 +1,22 @@
-import unittest
-import UI, Environment
-import TextFileInterface
+from django.test import TestCase
+from TaCLI import UI, Environment
+from TaApp.DjangoModelInterface import DjangoModelInterface
 
 
-class LoginTests(unittest.TestCase):
+class LoginTests(TestCase):
     def setUp(self):
-        tfi = TextFileInterface.TextFileInterface(relative_directory="../UnitTests/TestDB/")
-        tfi.clear_database()
+        self.di = DjangoModelInterface()
 
-        tfi.create_account("Instructor", "InstructorPassword", "instructor")
+        self.di.create_account("Supervisor", "SupervisorPassword", "supervisor")
+        self.di.create_account("Administrator", "AdministratorPassword", "administrator")
+        self.di.create_account("Instructor", "InstructorPassword", "instructor")
+        self.di.create_account("TA", "TAPassword", "TA")
 
-        environment = Environment.Environment(tfi, DEBUG=True)
-        self.ui = UI.UI(environment)
+        self.di.create_course("361", "CompSci361")
+        self.di.create_lab("361", "801")
+
+        self.environment = Environment.Environment(self.di, DEBUG=True)
+        self.ui = UI.UI(self.environment)
 
     """
         When the login command is entered, it takes two arguments:
@@ -22,18 +27,35 @@ class LoginTests(unittest.TestCase):
         If they do not match or are omitted, failure:
         - "Error logging in."
     """
-    def test_command_login_correct(self):
-        self.assertEqual(self.ui.command("login Instructor InstructorPassword"), "Logged in.")
+    def test_command_login_correct_super(self):
+        self.assertEqual(self.ui.command("login", {"username": "Supervisor", "password": "SupervisorPassword"}),
+                         "Logged in.")
+
+    def test_command_login_correct_admin(self):
+        self.assertEqual(self.ui.command("login", {"username": "Administrator", "password": "AdministratorPassword"}),
+                         "Logged in.")
+
+    def test_command_login_correct_instructor(self):
+        self.assertEqual(self.ui.command("login", {"username": "Instructor", "password": "InstructorPassword"}),
+                         "Logged in.")
 
     def test_command_login_no_pass(self):
-        self.assertEqual(self.ui.command("login Instructor"), "Error logging in.")
+        self.assertEqual(self.ui.command("login", {"username": "Instructor"}),
+                         "Error logging in.")
 
     def test_command_login_no_args(self):
-        self.assertEqual(self.ui.command("login"), "Error logging in.")
+        self.assertEqual(self.ui.command("login", {}), "Error logging in.")
+
+    def test_command_login_no_args_username(self):
+        self.assertEqual(self.ui.command("login", {"username":"", "password": "InstructorPassword"}), "Error logging in.")
+
+    def test_command_login_no_args_password(self):
+        self.assertEqual(self.ui.command("login", {"username":"Instructor", "password": ""}), "Error logging in.")
 
     def test_command_login_already_logged_in(self):
-        self.ui.command("login Instructor InstructorPassword")
-        self.assertEqual(self.ui.command("login Instructor InstructorPassword"), "Error logging in.")
+        self.ui.command("login", {"username": "Instructor", "password": "InstructorPassword"})
+        self.assertEqual(self.ui.command("login", {"username": "Instructor", "password": "InstructorPassword"}),
+                         "Error logging in.")
 
     """ 
         When logout command is entered, it takes no arguments.
@@ -42,8 +64,8 @@ class LoginTests(unittest.TestCase):
         - Failure: "Error logging out."
     """
     def test_command_logout_correct(self):
-        self.ui.command("login Instructor InstructorPassword")
-        self.assertEqual(self.ui.command("logout"), "Logged out.")
+        self.ui.command("login", {"username": "Instructor", "password": "InstructorPassword"})
+        self.assertEqual(self.ui.command("logout", ""), "Logged out.")
 
     def test_command_logout_not_logged_in(self):
-        self.assertEqual(self.ui.command("logout"), "Error logging out.")
+        self.assertEqual(self.ui.command("logout", ""), "Error logging out.")

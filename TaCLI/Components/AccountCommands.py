@@ -51,6 +51,10 @@ class DeleteAccount(Command.Command):
     """
 
     def action(self, args):
+        if args is None or args == {}:
+            self.environment.debug("There are no arguments")
+            return "ERROR"
+
         if self.environment.user is None:
             self.environment.debug("You must be logged in to perform this action.")
             return "ERROR"
