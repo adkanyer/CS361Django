@@ -134,6 +134,11 @@ class DjangoModelInterface(DataInterface):
         return False
 
     def lab_exists(self, course_number, lab_number):
+        try:
+            course_number = int(course_number)
+            lab_number = int(lab_number)
+        except ValueError:
+            return False
         lab = Lab.objects.filter(number=lab_number, course__number=course_number).first()
         return lab is not None
 
