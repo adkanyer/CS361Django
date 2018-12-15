@@ -19,6 +19,14 @@ class EditInfo(Command.Command):
             self.environment.debug("You must be logged in to perform this action.")
             return "ERROR"
 
+        if args is None or args == {}:
+            self.environment.debug("You need to specify which field of information to edit")
+            return "ERROR"
+
+        if args["field"] is None:
+            self.environment.debug("You need to specify the new information to edit")
+            return "ERROR"
+
         valid_info = self.fields.keys()
 
         if args["field"] in valid_info:
