@@ -44,7 +44,7 @@ class CreateLabUnitTests(TestCase):
         lab_number = "801"
         response = create_command.action(["create_lab", course_number, lab_number])
 
-        self.assertEqual(response, "ERROR")
+        self.assertEqual(response, "Lab created.")
 
     def test_create_lab_correct_args_TA(self):
         self.environment.user = User("root", "TA")
@@ -137,7 +137,7 @@ class AssignLabUnitTests(TestCase):
         assign_command = AssignLab(self.environment)
         response = assign_command.action(["assign_lab", course_number, lab_number, "apoorv"])
 
-        self.assertEqual(response, "ERROR")
+        self.assertEqual(response, "Assigned to lab.")
 
     def test_assign_lab_correct_args_and_permissions_administrator(self):
         self.environment.user = User("jayson", "administrator")
