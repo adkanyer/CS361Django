@@ -75,6 +75,34 @@ class ContactInfoTests(TestCase):
                                            "address": "Address: 2311 E Hartford Ave Milwaukee, WI 53211"}),
                           "Address has been updated successfully.")
 
+    def test_command_Instructor_change_contact_info(self):
+        self.di.create_account("userTA", "password", "Instructor")
+        self.ui.command("login", {"username": "userTA", "password": "password"})
+
+        # Instructor changes own email, phone number, password; expected success
+        self.assertEquals(self.ui.command("edit_info", {"field": "email", "email": "erin erinfink@uwm.edu"}),
+                          "Email has been updated successfully.")
+        self.assertEquals(self.ui.command("edit_info", {"field": "phone", "phone": "1231231234"}),
+                          "Phone Number has been updated successfully")
+        self.assertEquals(self.ui.command("edit_info",
+                                          {"field": "address",
+                                           "address": "Address: 2311 E Hartford Ave Milwaukee, WI 53211"}),
+                          "Address has been updated successfully.")
+
+    def test_command_Administrator_change_contact_info(self):
+        self.di.create_account("userTA", "password", "Administrator")
+        self.ui.command("login", {"username": "userTA", "password": "password"})
+
+        # Instructor changes own email, phone number, password; expected success
+        self.assertEquals(self.ui.command("edit_info", {"field": "email", "email": "erin erinfink@uwm.edu"}),
+                          "Email has been updated successfully.")
+        self.assertEquals(self.ui.command("edit_info", {"field": "phone", "phone": "1231231234"}),
+                          "Phone Number has been updated successfully")
+        self.assertEquals(self.ui.command("edit_info",
+                                          {"field": "address",
+                                           "address": "Address: 2311 E Hartford Ave Milwaukee, WI 53211"}),
+                          "Address has been updated successfully.")
+
     def test_command_edit_contact_format(self):
         self.di.create_account("userInstructor", "password", "instructor")
         self.ui.command("login", {"username": "userInstructor", "password": "password"})
