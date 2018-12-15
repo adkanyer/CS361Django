@@ -157,7 +157,7 @@ class Courses(View):
             responses["view_course"] = self.ui.command("view_courses", {"course_number": request.POST["course_number"]})
 
         return render(request, "main/courses.html", {"user": user, "role": role, "courses": courses,
-                                                     "response": responses, "message": str(self.environ.message), "accounts": accounts})
+                                                     "responses": responses, "message": str(self.environ.message), "accounts": accounts})
 
 
 class Labs(View):
@@ -206,7 +206,7 @@ class Labs(View):
         if role == "administrator" or role == "supervisor" or role == "instructor" or role == "TA":
             labs = self.ui.command("view_labs", ["view_labs"])
 
-        return render(request, "main/labs.html", {"user": user, "role": role, "labs": labs, "accounts": accounts, "response": responses, "message": str(self.environ.message)})
+        return render(request, "main/labs.html", {"user": user, "role": role, "labs": labs, "accounts": accounts, "responses": responses, "message": str(self.environ.message)})
 
 
 class Settings(View):
