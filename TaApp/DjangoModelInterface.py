@@ -93,8 +93,8 @@ class DjangoModelInterface(DataInterface):
         for lab in Lab.objects.all():
             course = Course.objects.filter(labs__id=lab.id).first()
             ta_name = None
-            if lab.ta is not None:
-                ta_name = lab.ta.name
+            if lab.ta.first() is not None:
+                ta_name = lab.ta.first().name
             labs.append({"course_number": course.number, "lab_number": lab.number, "ta_name": ta_name})
         return labs
 
@@ -144,7 +144,7 @@ class DjangoModelInterface(DataInterface):
 
     def is_lab_assigned(self, course_number, lab_number):
         lab = Lab.objects.filter(number=lab_number, course__number=course_number).first()
-        return lab is not None and lab.ta is not None
+        return lab is not None and len(lab.ta.all()) > 0
 
     def is_valid_role(self, role):
         return role in ["administrator", "supervisor", "instructor", "TA"]
