@@ -82,7 +82,7 @@ class ContactInfoTests(TestCase):
         # Instructor changes own email, phone number, password; expected success
         self.assertEquals(self.ui.command("edit_info", {"field": "email", "email": "erin erinfink@uwm.edu"}),
                           "Email has been updated successfully.")
-        self.assertEquals(self.ui.command("edit_info", {"fsield": "phone", "phone": "1231231234"}),
+        self.assertEquals(self.ui.command("edit_info", {"field": "phone", "phone": "1231231234"}),
                           "Phone Number has been updated successfully")
         self.assertEquals(self.ui.command("edit_info",
                                           {"field": "address",

@@ -79,6 +79,12 @@ class CreateCourse(Command.Command):
         course_number = args[1]
         course_name = args[2]
 
+        try:
+            course_number = int(course_number)
+        except ValueError:
+            self.environment.debug("First argument should be a number.")
+            return "ERROR"
+
         if self.environment.database.course_exists(course_number):
             self.environment.debug("Course already exists.")
             return "ERROR"

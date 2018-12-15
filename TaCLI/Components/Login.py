@@ -21,6 +21,14 @@ class Login(Command.Command):
             self.environment.debug("Someone else is logged in.")
             return FAILURE_MESSAGE
 
+        if args is None or args == {}:
+            self.environment.debug("No arguments in.")
+            return FAILURE_MESSAGE
+
+        if "username" not in args or "password" not in args:
+            self.environment.debug("Username or Password were not given")
+            return FAILURE_MESSAGE
+
         if args["username"] is None or args["password"] is None:
             self.environment.debug("Username or Password is Incorrect")
             return FAILURE_MESSAGE
