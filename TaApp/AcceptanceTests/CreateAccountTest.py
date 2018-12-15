@@ -1,28 +1,27 @@
-import unittest
-import UI, Environment
-import TextFileInterface
+from django.test import TestCase
+from TaCLI import UI, Environment
+from TaApp.DjangoModelInterface import DjangoModelInterface
 
 
-class CreateAccountTest(unittest.TestCase):
+class CreateAccountTest(TestCase):
     def setUp(self):
         """
             create dummy account for each of the types of users:
             supervisor, administrator, instructor and TA and then
             log them in for their respected tests
         """
-        tfi = TextFileInterface.TextFileInterface(relative_directory="../UnitTests/TestDB/")
-        tfi.clear_database()
+        self.di = DjangoModelInterface()
 
-        tfi.create_account("userSupervisor", "password", "supervisor")
-        tfi.create_account("userAdministrator", "password", "administrator")
-        tfi.create_account("userInstructor", "password", "instructor")
-        tfi.create_account("userTA", "password", "TA")
+        self.di.create_account("Supervisor", "SupervisorPassword", "supervisor")
+        self.di.create_account("Administrator", "AdministratorPassword", "administrator")
+        self.di.create_account("Instructor", "InstructorPassword", "instructor")
+        self.di.create_account("TA", "TAPassword", "TA")
 
-        tfi.create_course("361", "CompSci361")
-        tfi.create_lab("361", "801")
+        self.di.create_course("361", "CompSci361")
+        self.di.create_lab("361", "801")
 
-        environment = Environment.Environment(tfi, DEBUG=True)
-        self.ui = UI.UI(environment)
+        self.environment = Environment.Environment(self.di, DEBUG=True)
+        self.ui = UI.UI(self.environment)
 
         """
             The supervisor and administrator are able to create accounts
@@ -38,39 +37,40 @@ class CreateAccountTest(unittest.TestCase):
     def test_command_create_account_supervisor(self):
 
         # login as supervisor
-        self.ui.command("login userSupervisor password")
-        self.assertEqual(self.ui.command("create_account john password TA"), "Account created.")
+        self.ui.command("login", {"username": "Supervisor", "password": "SupervisorPassword"})
+        self.assertEqual(self.ui.command("create_account", ["create_account", "john", "password", "TA"]), "Account created.")
 
     def test_command_create_account_administrator(self):
 
         # login as administrator
-        self.ui.command("login userAdministrator password")
-        self.assertEqual(self.ui.command("create_account adam password supervisor"), "Account created.")
+        self.ui.command("login", {"username": "Administrator", "password": "AdministratorPassword"})
+        self.assertEqual(self.ui.command("create_account", ["create_account", "adam", "password", "supervisor"]), "Account created.")
 
     def test_command_create_account_instructor(self):
 
         # login as instructor
-        self.ui.command("login userInstructor password")
+        self.ui.command("login", {"username": "Instructor", "password": "InstructorPassword"})
         # instructor cannot create accounts
-        self.assertEqual(self.ui.command("create_account aaron password instructor"), "Error creating account.")
+        self.assertEqual(self.ui.command("create_account", ["create_account", "aaron", "password", "instructor"]), "ERROR")
 
     def test_command_create_account_TA(self):
 
         # login as TA
-        self.ui.command("login TA password")
+        self.ui.command("login", {"username": "TA", "password": "TAPassword"})
         # TA cannot create accounts
-        self.assertEqual(self.ui.command("create_account tim@uwm.edu tim password"), "Error creating account.")
+        self.assertEqual(self.ui.command("create_account", ["create_account", "tim@uwm.edu", "tim", "password"]), "ERROR")
 
     def test_command_create_account_format(self):
         # login as administrator
-        self.ui.command("login userAdministrator password")
+        self.ui.command("login", {"username": "Administrator", "password": "AdministratorPassword"})
 
-        self.assertEqual(self.ui.command("create_account"), "Error creating account.")
-        self.assertEqual(self.ui.command("create_account tyler"), "Error creating account.")
-        self.assertEqual(self.ui.command("create_account james"), "Error creating account.")
-        self.assertEqual(self.ui.command("create_account jim password"), "Error creating account.")
+        self.assertEqual(self.ui.command("create_account", ["create_account"]), "ERROR")
+        self.assertEqual(self.ui.command("create_account", ["create_account", "tyler"]), "ERROR")
+        self.assertEqual(self.ui.command("create_account", ["create_account", "password"]), "ERROR")
+        self.assertEqual(self.ui.command("create_account", ["create_account", "Administrator", "pass"]), "ERROR")
 
     def test_command_create_account_duplicate(self):
         # login as supervisor
-        self.ui.command("login userSupervisor password")
-        self.assertEqual(self.ui.command("create_account userTA password instructor"), "Error creating account.")
+        self.ui.command("login", {"username": "Supervisor", "password": "SupervisorPassword"})
+        self.assertEqual(self.ui.command("create_account", ["create_account", "userTA", "password", "instructor"]), "Account created.")
+        self.assertEqual(self.ui.command("create_account", ["create_account", "userTA", "password", "instructor"]), "ERROR")

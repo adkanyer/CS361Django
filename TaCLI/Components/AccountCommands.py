@@ -16,6 +16,10 @@ class CreateAccount(Command.Command):
             self.environment.debug("You must be logged in to perform this action.")
             return "ERROR"
 
+        if args is None:
+            self.environment.debug("No arguments")
+            return "ERROR"
+
         if self.environment.user.get_role() not in ["supervisor", "administrator"]:
             self.environment.debug("Permission Denied.")
             return "ERROR"
@@ -113,13 +117,15 @@ class ViewInfo(Command.Command):
 
         if args == "":
             user = self.environment.database.get_user(self.environment.database.get_logged_in())
-            return self.environment.database.get_private_info(user)
+            data = self.environment.database.get_private_info(user)
+            return data
         else:
             user = self.environment.database.get_user(args["username"])
             if user is not None:
                 if self.environment.user.get_role() not in ["administrator", "supervisor"]:
                     print("public")
-                    return self.environment.database.get_public_info(user)
+                    data = self.environment.database.get_public_info(user)
+                    return data
                 else:
                     print("private")
                     return self.environment.database.get_private_info(user)

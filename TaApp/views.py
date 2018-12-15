@@ -24,7 +24,7 @@ class Home(View):
             data = self.ui.command("view_info", "")
             role = self.environ.user.role
 
-        return render(request, "main/index.html", {"user": user, "response": data, "role": role,})
+        return render(request, "main/index.html", {"user": user, "response": data, "role": role})
 
     def post(self, request):
         if request.POST["form"] == "login":
