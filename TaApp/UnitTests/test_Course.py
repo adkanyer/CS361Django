@@ -12,7 +12,7 @@ class CreateCourseUnitTests(TestCase):
         di = DjangoModelInterface()
         self.environment = Environment(di, DEBUG=True)
 
-    def test_create_course_correct_args(self):
+    def test_create_course_correct_args_supervisor(self):
         self.environment.user = User("root", "supervisor")
         create_course = CreateCourse(self.environment)
         response = create_course.action(["create_course", "1", "course1"])
@@ -26,6 +26,36 @@ class CreateCourseUnitTests(TestCase):
 
         self.assertTrue(self.environment.database.course_exists("2"))
         self.assertEqual(response, "Course Created Successfully.")
+
+    def test_create_course_correct_args_administrator(self):
+        self.environment.user = User("root", "administrator")
+        create_course = CreateCourse(self.environment)
+        response = create_course.action(["create_course", "1", "course1"])
+
+        self.assertTrue(self.environment.database.course_exists("1"))
+        self.assertEqual(response, "Course Created Successfully.")
+
+        self.environment.user = User("subroot", "administrator")
+        create_course = CreateCourse(self.environment)
+        response = create_course.action(["create_course", "2", "course2"])
+
+        self.assertTrue(self.environment.database.course_exists("2"))
+        self.assertEqual(response, "Course Created Successfully.")
+
+    def test_create_course_correct_args_instructor(self):
+        self.environment.user = User("root", "instructor")
+        create_course = CreateCourse(self.environment)
+        response = create_course.action(["create_course", "1", "course1"])
+
+        self.assertEqual(response, "ERROR")
+
+    def test_create_course_correct_args_ta(self):
+        self.environment.user = User("root", "ta")
+        create_course = CreateCourse(self.environment)
+        response = create_course.action(["create_course", "1", "course1"])
+
+        self.assertEqual(response, "ERROR")
+
 
     def test_create_course_no_permissions(self):
         self.environment.user = User("instructor_acct", "instructor")
@@ -81,7 +111,7 @@ class AssignCourseUnitTests(TestCase):
         di = DjangoModelInterface()
         self.environment = Environment(di, DEBUG=True)
 
-    def test_assign_course_correct_args_and_permissions(self):
+    def test_assign_course_correct_args_and_permissions_supervisor(self):
         self.environment.user = User("root", "supervisor")
         self.environment.database.create_account("jayson", "password", "instructor")
         self.environment.database.create_course("361", "Introduction to Software Engineering")
@@ -94,6 +124,36 @@ class AssignCourseUnitTests(TestCase):
         self.assertEqual(response, "Course assigned successfully.")
 
         self.environment.user = User("root", "supervisor")
+
+    def test_assign_course_correct_args_and_permissions_administrator(self):
+        self.environment.user = User("root", "supervisor")
+        self.environment.database.create_account("jayson", "password", "administrator")
+        self.environment.database.create_course("361", "Introduction to Software Engineering")
+
+        course_number = "361"
+        assign_command = AssignCourse(self.environment)
+        response = assign_command.action(["assign_course", course_number, "jayson"])
+        self.assertEqual(response, "ERROR")
+
+    def test_assign_course_correct_args_and_permissions_instructor(self):
+        self.environment.user = User("root", "instructor")
+        self.environment.database.create_account("jayson", "password", "instructor")
+        self.environment.database.create_course("361", "Introduction to Software Engineering")
+
+        course_number = "361"
+        assign_command = AssignCourse(self.environment)
+        response = assign_command.action(["assign_course", course_number, "jayson"])
+        self.assertEqual(response, "ERROR")
+
+    def test_assign_course_correct_args_and_permissions_TA(self):
+        self.environment.user = User("root", "TA  v")
+        self.environment.database.create_account("jayson", "password", "instructor")
+        self.environment.database.create_course("361", "Introduction to Software Engineering")
+
+        course_number = "361"
+        assign_command = AssignCourse(self.environment)
+        response = assign_command.action(["assign_course", course_number, "jayson"])
+        self.assertEqual(response, "ERROR")
 
     def test_assign_course_no_permissions(self):
         self.environment.user = User("admin", "administrator")
@@ -234,9 +294,30 @@ class ViewCoursesUnitTests(TestCase):
 
         self.assertEqual(response, "ERROR")
 
-    def test_view_courses_correct(self):
+    def test_view_courses_correct_supervisor(self):
         self.environment.user = User("root", "supervisor")
         view_command = ViewCourses(self.environment)
         response = view_command.action('')
 
         self.assertEqual(response,  [{'number': '361', 'name': 'SoftwareEngineering', 'instructor': None,  'tas':''}])
+
+    def test_view_courses_correct_administrator(self):
+        self.environment.user = User("root", "administrator")
+        view_command = ViewCourses(self.environment)
+        response = view_command.action('')
+
+        self.assertEqual(response,  [{'number': '361', 'name': 'SoftwareEngineering', 'instructor': None,  'tas':''}])
+
+    def test_view_courses_correct_instructor(self):
+        self.environment.user = User("root", "instructor")
+        view_command = ViewCourses(self.environment)
+        response = view_command.action('')
+
+        self.assertEqual(response,  [{'number': '361', 'name': 'SoftwareEngineering', 'instructor': None,  'tas':''}])
+
+    def test_view_courses_correct_TA(self):
+        self.environment.user = User("root", "TA")
+        view_command = ViewCourses(self.environment)
+        response = view_command.action('')
+
+        self.assertEqual(response, "ERROR")
