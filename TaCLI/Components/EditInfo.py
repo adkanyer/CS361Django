@@ -23,7 +23,8 @@ class EditInfo(Command.Command):
             self.environment.debug("You need to specify which field of information to edit")
             return "ERROR"
 
-        if args["field"] is None:
+
+        if "field" not in args or args["field"] is None:
             self.environment.debug("You need to specify the new information to edit")
             return "ERROR"
 
