@@ -29,7 +29,7 @@ class OfficeHour(models.Model):
 
 class Lab(models.Model):
     number = models.IntegerField()
-    ta = models.OneToOneField(Account, null=True, on_delete=models.CASCADE)
+    ta = models.ForeignKey(Account, null=True, on_delete=models.CASCADE)
 
 
 class Course(models.Model):

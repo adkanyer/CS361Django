@@ -1,6 +1,5 @@
 from django.test import TestCase
 from TaCLI import UI, Environment
-from TaApp.models import *
 from TaApp.DjangoModelInterface import DjangoModelInterface
 
 
