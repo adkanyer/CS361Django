@@ -83,11 +83,16 @@
                     </div>
                 </div>
             </div>
-            {% if role == "instructor" %}
+            {% if role == "instructor" or role == "supervisor"%}
                 <div class="col-lg-4">
                 <div class="card">
                     <div class="card-header">Assign Lab</div>
                     <div class="card-body">
+                        {% if message != "" and message is not None%}
+                            <div class="alert alert-danger" role="alert">
+                                {{  message }}
+                            </div>
+                        {% endif %}
                         <form method="post" action="/lab/" class="input-group">
                             <div class="form-group col-lg-12">
                                 {% csrf_token %}

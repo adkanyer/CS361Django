@@ -55,7 +55,7 @@ class AssignLab(Command.Command):
             self.environment.debug("You must be logged in to perform this action.")
             return "ERROR"
 
-        if self.environment.user.get_role() not in ["instructor"]:
+        if self.environment.user.get_role() not in ["instructor", "supervisor"]:
             self.environment.debug("Permission Denied.")
             return "ERROR"
 
