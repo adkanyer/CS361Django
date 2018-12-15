@@ -54,7 +54,7 @@
                                     <p><button class="btn btn-primary btn-lg btn-block" name="form" value="view_course" type="submit">Search</button></p>
                                 </div>
                             </form>
-                            {% if response.view_course is not None and response.view_course != "" and response.view_course != "ERROR"%}
+                            {% if response.view_course is not None and response.view_course != "" and response.view_course != "ERROR" %}
                                 <div class="card">
                                     <ul class="list-group list-group-flush">
                                         <li class="list-group-item">Number: {{ response.view_course.number }} </li>
@@ -106,6 +106,9 @@
                     <div class="card">
                         <div class="card-header">Create Course</div>
                         <div class="card-body">
+                            {% if responses.create_course is not None and responses.create_course != "" and responses.create_course != "ERROR"%}
+                                <div class="alert alert-success" role="alert">{{  responses.create_course }}</div>
+                            {% endif %}
                             <form method="post" action="/course/" class="input-group">
                                 <div class="form-group col-lg-12">
                                     {% csrf_token %}
@@ -124,6 +127,9 @@
                         <div class="card">
                             <div class="card-header">Assign Course</div>
                             <div class="card-body">
+                                {% if responses.assign_course is not None and responses.assign_course != "" and responses.assign_course != "ERROR"%}
+                                    <div class="alert alert-success" role="alert">{{  responses.assign_course }}</div>
+                                {% endif %}
                                 <form method="post" action="/course/" class="input-group">
                                     <div class="form-group col-lg-12">
                                         {% csrf_token %}
